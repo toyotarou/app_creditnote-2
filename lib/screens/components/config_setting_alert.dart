@@ -38,8 +38,13 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
       final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
-      configSelectedyear = exYearmonth[0].toInt();
-      configSelectedmonth = exYearmonth[1].toInt() - 1;
+
+      if (exYearmonth.length > 1) {
+        if (exYearmonth[0] != '' && exYearmonth[1] != '') {
+          configSelectedyear = exYearmonth[0].toInt();
+          configSelectedmonth = exYearmonth[1].toInt() - 1;
+        }
+      }
     }
     //==============================//
 

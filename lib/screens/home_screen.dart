@@ -102,26 +102,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
       final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
 
-      final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
+      if (exYearmonth.length > 1) {
+        if (exYearmonth[0] != '' && exYearmonth[1] != '') {
+          final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
 
-      final diff = DateTime.now().difference(firstDate).inDays;
+          final diff = DateTime.now().difference(firstDate).inDays;
 
-      final yearmonthList = <String>[];
+          final yearmonthList = <String>[];
 
-      for (var i = 0; i <= diff; i++) {
-        final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
+          for (var i = 0; i <= diff; i++) {
+            final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
 
-        if (!yearmonthList.contains(yearmonth)) {
-          list.add(Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(yearmonth),
-              Container(),
-            ],
-          ));
+            if (!yearmonthList.contains(yearmonth)) {
+              list.add(Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(yearmonth),
+                  Container(),
+                ],
+              ));
+            }
+
+            yearmonthList.add(yearmonth);
+          }
         }
-
-        yearmonthList.add(yearmonth);
       }
     }
 

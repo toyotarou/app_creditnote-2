@@ -36,4 +36,13 @@ class CreditInputNotifier extends StateNotifier<CreditInputResponseState> {
     prices[pos] = price;
     state = state.copyWith(creditPrices: prices);
   }
+
+  ///
+  Future<void> clearInputValue() async {
+    final dates = List.generate(10, (index) => '');
+    final names = List.generate(10, (index) => '');
+    final prices = List.generate(10, (index) => 0);
+
+    state = state.copyWith(creditDates: dates, creditNames: names, creditPrices: prices);
+  }
 }

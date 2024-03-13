@@ -1,13 +1,16 @@
 import 'dart:ui';
 
-import 'package:credit_note/state/credit_input/credit_input_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
+import '../../collections/credit.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/credit_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
+import '../../state/credit_input/credit_input_notifier.dart';
+import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
   const CreditInputAlert({super.key, required this.isar, required this.date});
@@ -205,5 +208,90 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   }
 
   ///
-  Future<void> _inputCredit() async {}
+  Future<void> _inputCredit() async {
+    final creditInputState = ref.watch(creditInputProvider);
+
+    final list = <Credit>[];
+
+    var errFlg = false;
+
+    ////////////////////////// 同数チェック
+    var creditDateCount = 0;
+    var creditNameCount = 0;
+    var creditPriceCount = 0;
+    ////////////////////////// 同数チェック
+
+    final insertCreditList = <String>[];
+
+    for (var i = 0; i < 10; i++) {
+      if (creditInputState.creditDates[i] != '' &&
+          creditInputState.creditNames[i] != '' &&
+          creditInputState.creditPrices[i] >= 0) {
+        list.add(
+          Credit()
+            ..date = creditInputState.creditDates[i]
+            ..name = creditInputState.creditNames[i]
+            ..price = creditInputState.creditPrices[i],
+        );
+
+        insertCreditList.add('${creditInputState.creditDates[i]}|${creditInputState.creditNames[i]}');
+      }
+
+      if (creditInputState.creditDates[i] != '') {
+        creditDateCount++;
+      }
+
+      if (creditInputState.creditNames[i] != '') {
+        creditNameCount++;
+      }
+
+      if (creditInputState.creditPrices[i] >= 0) {
+        creditPriceCount++;
+      }
+    }
+
+    if (list.isEmpty) {
+      errFlg = true;
+    }
+
+    ////////////////////////// 同数チェック
+    final countCheck = <int, String>{};
+    countCheck[creditDateCount] = '';
+    countCheck[creditNameCount] = '';
+    countCheck[creditPriceCount] = '';
+
+    // 同数の場合、要素数は1になる
+    if (countCheck.length > 1) {
+      errFlg = true;
+    }
+    ////////////////////////// 同数チェック
+
+    if (errFlg) {
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+      );
+
+      await ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
+      return;
+    }
+
+    //---------------------------//
+    final creditsCollection = CreditRepository().getCollection(isar: widget.isar);
+
+    insertCreditList.forEach((element) async {
+      final exElement = element.split('|');
+      final getCredits = await creditsCollection.filter().dateEqualTo(exElement[0]).nameEqualTo(exElement[1]).findAll();
+
+      if (getCredits.isNotEmpty) {
+        await CreditRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
+      }
+    });
+
+    //---------------------------//
+
+    await CreditRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
+        ref.read(creditInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
+  }
 }

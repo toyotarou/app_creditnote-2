@@ -170,35 +170,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ],
                         )),
                     Expanded(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: context.screenSize.height / 10),
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+                      child: Container(
+                        height: context.screenSize.height / 10,
+                        decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+                        child: SingleChildScrollView(
                           child: (creditMap[yearmonth] != null)
-                              ? Wrap(
-                                  children: creditMap[yearmonth]!.map((e) {
+                              ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: creditMap[yearmonth]!.map((e) {
                                   return Container(
-                                    width: context.screenSize.width / 4,
-                                    margin: const EdgeInsets.all(5),
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
+                                      ),
+                                    ),
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0')),
-                                        const SizedBox(width: 20),
-                                        Expanded(
-                                            child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(e.price.toString().toCurrency()),
-                                            Text(e.name, style: const TextStyle(color: Colors.grey)),
-                                          ],
-                                        )),
+                                        SizedBox(
+                                          width: 30,
+                                          child: Text(
+                                            DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'),
+                                          ),
+                                        ),
+                                        Expanded(child: Text(e.name, style: const TextStyle(color: Colors.grey))),
+                                        Container(
+                                          width: 70,
+                                          alignment: Alignment.topRight,
+                                          child: Text(e.price.toString().toCurrency()),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Icon(
+                                          Icons.input,
+                                          size: 20,
+                                          color: Colors.greenAccent.withOpacity(0.4),
+                                        ),
                                       ],
                                     ),
                                   );
-                                }).toList())
+                                }).toList(),
+                              )
                               : Container(),
                         ),
                       ),

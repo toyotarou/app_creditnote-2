@@ -129,6 +129,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
 
             if (!yearmonthList.contains(yearmonth)) {
+              var sum = 0;
+              if (creditMap[yearmonth] != null) {
+                creditMap[yearmonth]!.forEach((element) {
+                  sum += element.price;
+                });
+              }
+
               list.add(Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
@@ -151,9 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       onTap: () => CreditDialog(
                                         context: context,
                                         widget: CreditInputAlert(
-                                          isar: widget.isar,
-                                          date: DateTime.parse('$yearmonth-01 00:00:00'),
-                                        ),
+                                            isar: widget.isar, date: DateTime.parse('$yearmonth-01 00:00:00')),
                                       ),
                                       child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
@@ -166,23 +171,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         )),
                     Expanded(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
+                        constraints: BoxConstraints(minHeight: context.screenSize.height / 10),
                         child: DecoratedBox(
-                          decoration: BoxDecoration(color: Colors.orangeAccent.withOpacity(0.1)),
+                          decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
                           child: (creditMap[yearmonth] != null)
                               ? Wrap(
                                   children: creditMap[yearmonth]!.map((e) {
-                                  return Text(e.date);
+                                  return Container(
+                                    width: context.screenSize.width / 4,
+                                    margin: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0')),
+                                        const SizedBox(width: 20),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text(e.price.toString().toCurrency()),
+                                            Text(e.name, style: const TextStyle(color: Colors.grey)),
+                                          ],
+                                        )),
+                                      ],
+                                    ),
+                                  );
                                 }).toList())
                               : Container(),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 70,
-                      alignment: Alignment.topRight,
-                      child: const Text('9999,9999'),
-                    ),
+                    Container(width: 70, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),
                   ],
                 ),
               ));

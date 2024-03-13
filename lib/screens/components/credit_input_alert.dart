@@ -197,9 +197,9 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
       barrierColor: Colors.transparent,
       locale: const Locale('ja'),
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 360)),
+      initialDate: DateTime(widget.date.year, widget.date.month),
+      firstDate: DateTime(widget.date.year, widget.date.month),
+      lastDate: DateTime(widget.date.year, widget.date.month + 1, 0),
     );
 
     if (selectedDate != null) {

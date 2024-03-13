@@ -17,6 +17,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<Config>? configList = [];
 
   Map<String, String> settingConfigMap = {};
@@ -32,7 +34,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Future(_init);
 
     return Scaffold(
-      appBar: AppBar(),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Credit List'),
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+            icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
+          )
+        ],
+      ),
       body: Column(
         children: [
           if (settingConfigMap['start_yearmonth'] != null) ...[
@@ -114,12 +127,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
 
             if (!yearmonthList.contains(yearmonth)) {
-              list.add(Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(yearmonth),
-                  Container(),
-                ],
+              list.add(Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                        width: 70,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(yearmonth),
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    alignment: Alignment.topRight,
+                                    child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        )),
+                    Expanded(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.orangeAccent.withOpacity(0.1)),
+                          child: const Text('aaa'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 70,
+                      alignment: Alignment.topRight,
+                      child: const Text('9999,9999'),
+                    ),
+                  ],
+                ),
               ));
             }
 
@@ -129,6 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     }
 
-    return SingleChildScrollView(child: Column(children: list));
+    return SingleChildScrollView(
+        child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
   }
 }

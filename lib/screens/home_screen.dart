@@ -158,7 +158,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       onTap: () => CreditDialog(
                                         context: context,
                                         widget: CreditInputAlert(
-                                            isar: widget.isar, date: DateTime.parse('$yearmonth-01 00:00:00')),
+                                          isar: widget.isar,
+                                          date: DateTime.parse('$yearmonth-01 00:00:00'),
+                                          creditList: creditMap[yearmonth],
+                                        ),
                                       ),
                                       child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
@@ -176,40 +179,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: SingleChildScrollView(
                           child: (creditMap[yearmonth] != null)
                               ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: creditMap[yearmonth]!.map((e) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: creditMap[yearmonth]!.map((e) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
+                                        ),
                                       ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 30,
-                                          child: Text(
-                                            DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                            child: Text(
+                                              DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'),
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(child: Text(e.name, style: const TextStyle(color: Colors.grey))),
-                                        Container(
-                                          width: 70,
-                                          alignment: Alignment.topRight,
-                                          child: Text(e.price.toString().toCurrency()),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Icon(
-                                          Icons.input,
-                                          size: 20,
-                                          color: Colors.greenAccent.withOpacity(0.4),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              )
+                                          Expanded(child: Text(e.name, style: const TextStyle(color: Colors.grey))),
+                                          Container(
+                                            width: 70,
+                                            alignment: Alignment.topRight,
+                                            child: Text(e.price.toString().toCurrency()),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Icon(
+                                            Icons.input,
+                                            size: 20,
+                                            color: Colors.greenAccent.withOpacity(0.4),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
                               : Container(),
                         ),
                       ),

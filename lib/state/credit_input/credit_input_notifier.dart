@@ -1,3 +1,4 @@
+import 'package:credit_note/collections/credit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'credit_input_response_state.dart';
@@ -44,5 +45,24 @@ class CreditInputNotifier extends StateNotifier<CreditInputResponseState> {
     final prices = List.generate(10, (index) => 0);
 
     state = state.copyWith(creditDates: dates, creditNames: names, creditPrices: prices);
+  }
+
+  ///
+  Future<void> setUpdateCredit({required List<Credit> updateCredit}) async {
+    try {
+      final dates = <String>[...state.creditDates];
+      final names = <String>[...state.creditNames];
+      final prices = <int>[...state.creditPrices];
+
+      for (var i = 0; i < updateCredit.length; i++) {
+        dates[i] = updateCredit[i].date;
+        names[i] = updateCredit[i].name;
+        prices[i] = updateCredit[i].price;
+      }
+
+      state = state.copyWith(creditDates: dates, creditNames: names, creditPrices: prices);
+
+      // ignore: avoid_catches_without_on_clauses, empty_catches
+    } catch (e) {}
   }
 }

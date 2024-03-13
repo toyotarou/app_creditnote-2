@@ -13,10 +13,11 @@ import '../../state/credit_input/credit_input_notifier.dart';
 import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
-  const CreditInputAlert({super.key, required this.isar, required this.date});
+  const CreditInputAlert({super.key, required this.isar, required this.date, this.creditList});
 
   final Isar isar;
   final DateTime date;
+  final List<Credit>? creditList;
 
   @override
   ConsumerState<CreditInputAlert> createState() => _CreditInputAlertState();
@@ -32,6 +33,23 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     super.initState();
 
     _makeTecs();
+  }
+
+  ///
+  Future<void> _makeTecs() async {
+    for (var i = 0; i < 10; i++) {
+      _creditNameTecs.add(TextEditingController(text: ''));
+      _creditPriceTecs.add(TextEditingController(text: ''));
+    }
+
+    if (widget.creditList!.isNotEmpty) {
+      await Future(() => ref.read(creditInputProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
+
+      for (var i = 0; i < widget.creditList!.length; i++) {
+        _creditNameTecs[i].text = widget.creditList![i].name;
+        _creditPriceTecs[i].text = widget.creditList![i].price.toString();
+      }
+    }
   }
 
   ///
@@ -87,20 +105,16 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   }
 
   ///
-  void _makeTecs() {
-    for (var i = 0; i < 10; i++) {
-      _creditNameTecs.add(TextEditingController(text: ''));
-      _creditPriceTecs.add(TextEditingController(text: ''));
-    }
-  }
-
-  ///
   Widget _displayInputParts() {
     final list = <Widget>[];
 
     final creditInputState = ref.watch(creditInputProvider);
 
     for (var i = 0; i < 10; i++) {
+      final date = creditInputState.creditDates[i];
+      final name = creditInputState.creditNames[i];
+      final price = creditInputState.creditPrices[i];
+
       list.add(DecoratedBox(
         decoration: BoxDecoration(
           boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
@@ -126,7 +140,11 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+                    border: Border.all(
+                        color: (date != '' && name != '' && price != 0)
+                            ? Colors.orangeAccent.withOpacity(0.4)
+                            : Colors.white.withOpacity(0.2),
+                        width: 2),
                   ),
                   child: Column(
                     children: [

@@ -1,3 +1,4 @@
+import 'package:credit_note/repository/config_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -183,45 +184,45 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   }
 
   ///
+  Future<void> makeSettingConfigMap() async {
+    await ConfigRepository().getConfigList(isar: widget.isar).then((value) {
+      setState(() {
+        configList = value;
+
+        if (value!.isNotEmpty) {
+          value.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
+        }
+      });
+    });
+  }
+
+  ///
   Future<void> inputConfig({required String key, required String value, required bool closeFlag}) async {
     final config = Config()
       ..configKey = key
       ..configValue = value;
 
-    await widget.isar.writeTxn(() async => widget.isar.configs.put(config)).then((value) {
+    await ConfigRepository().inputConfig(isar: widget.isar, config: config).then((value) {
       if (closeFlag) {
         Navigator.pop(context);
         Navigator.pop(context);
       }
-    });
-  }
-
-  ///
-  Future<void> makeSettingConfigMap() async {
-    final configsCollection = widget.isar.configs;
-
-    final getConfigs = await configsCollection.where().findAll();
-
-    setState(() {
-      configList = getConfigs;
-
-      getConfigs.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
     });
   }
 
   ///
   Future<void> updateConfig({required String key, required String value, required bool closeFlag}) async {
-    final configsCollection = widget.isar.configs;
-
     await widget.isar.writeTxn(() async {
-      final config = await configsCollection.filter().configKeyEqualTo(key).findFirst();
-      config!.configValue = value;
-      await configsCollection.put(config);
-    }).then((value) {
-      if (closeFlag) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      }
+      await ConfigRepository().getConfigByKeyString(isar: widget.isar, key: key).then((value2) async {
+        value2!.configValue = value;
+
+        await ConfigRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
+          if (closeFlag) {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
+        });
+      });
     });
   }
 }

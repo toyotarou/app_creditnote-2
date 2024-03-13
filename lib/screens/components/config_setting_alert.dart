@@ -143,19 +143,27 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
                           Container(),
                           GestureDetector(
                             onTap: () {
-                              (settingConfigMap['start_yearmonth'] != null)
-                                  ? updateConfig(
-                                      key: 'start_yearmonth',
-                                      value:
-                                          '${configStartYearmonthState.selectedStartYear}-${(configStartYearmonthState.selectedStartMonth + 1).toString().padLeft(2, '0')}',
-                                      closeFlag: true,
-                                    )
-                                  : inputConfig(
-                                      key: 'start_yearmonth',
-                                      value:
-                                          '${configStartYearmonthState.selectedStartYear}-${(configStartYearmonthState.selectedStartMonth + 1).toString().padLeft(2, '0')}',
-                                      closeFlag: true,
-                                    );
+                              final year = configStartYearmonthState.selectedStartYear;
+                              final month = configStartYearmonthState.selectedStartMonth;
+
+                              if (settingConfigMap['start_yearmonth'] != null) {
+                                if (year == -1 || month == -1) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } else {
+                                  updateConfig(
+                                    key: 'start_yearmonth',
+                                    value: '$year-${(month + 1).toString().padLeft(2, '0')}',
+                                    closeFlag: true,
+                                  );
+                                }
+                              } else {
+                                inputConfig(
+                                  key: 'start_yearmonth',
+                                  value: '$year-${(month + 1).toString().padLeft(2, '0')}',
+                                  closeFlag: true,
+                                );
+                              }
                             },
                             child: Text(
                               '設定する',

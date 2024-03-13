@@ -221,8 +221,6 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     var creditPriceCount = 0;
     ////////////////////////// 同数チェック
 
-    final insertCreditList = <String>[];
-
     for (var i = 0; i < 10; i++) {
       if (creditInputState.creditDates[i] != '' &&
           creditInputState.creditNames[i] != '' &&
@@ -233,8 +231,6 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
             ..name = creditInputState.creditNames[i]
             ..price = creditInputState.creditPrices[i],
         );
-
-        insertCreditList.add('${creditInputState.creditDates[i]}|${creditInputState.creditNames[i]}');
       }
 
       if (creditInputState.creditDates[i] != '') {
@@ -279,16 +275,10 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
     //---------------------------//
     final creditsCollection = CreditRepository().getCollection(isar: widget.isar);
-
-    insertCreditList.forEach((element) async {
-      final exElement = element.split('|');
-      final getCredits = await creditsCollection.filter().dateEqualTo(exElement[0]).nameEqualTo(exElement[1]).findAll();
-
-      if (getCredits.isNotEmpty) {
-        await CreditRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
-      }
-    });
-
+    final getCredits = await creditsCollection.filter().dateStartsWith(widget.date.yyyymm).findAll();
+    if (getCredits.isNotEmpty) {
+      await CreditRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
+    }
     //---------------------------//
 
     await CreditRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>

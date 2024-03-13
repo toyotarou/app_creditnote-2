@@ -7,6 +7,12 @@ class CreditRepository {
   IsarCollection<Credit> getCollection({required Isar isar}) => isar.credits;
 
   ///
+  Future<List<Credit>?> getCreditList({required Isar isar}) async {
+    final creditsCollection = getCollection(isar: isar);
+    return creditsCollection.where().sortByDate().findAll();
+  }
+
+  ///
   Future<void> inputCreditList({required Isar isar, required List<Credit> creditList}) async {
     creditList.forEach((element) => inputCredit(isar: isar, credit: element));
   }

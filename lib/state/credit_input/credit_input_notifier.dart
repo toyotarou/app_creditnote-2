@@ -5,7 +5,7 @@ import 'credit_input_response_state.dart';
 final creditInputProvider = StateNotifierProvider.autoDispose<CreditInputNotifier, CreditInputResponseState>((ref) {
   final dates = List.generate(10, (index) => '');
   final names = List.generate(10, (index) => '');
-  final prices = List.generate(10, (index) => 0);
+  final prices = List.generate(10, (index) => -1);
 
   return CreditInputNotifier(CreditInputResponseState(creditDates: dates, creditNames: names, creditPrices: prices));
 });

@@ -1,11 +1,13 @@
-import 'package:credit_note/screens/components/credit_input_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../collections/config.dart';
+import '../collections/credit.dart';
 import '../extensions/extensions.dart';
+import '../repository/credit_repository.dart';
 import 'components/config_setting_alert.dart';
+import 'components/credit_input_alert.dart';
 import 'components/parts/credit_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -24,9 +26,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Map<String, String> settingConfigMap = {};
 
+  List<Credit>? creditList = [];
+
+  Map<String, List<Credit>> creditMap = {};
+
   ///
   void _init() {
     makeSettingConfigMap();
+
+    makeCreditList();
   }
 
   ///
@@ -49,9 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       body: Column(
         children: [
-          if (settingConfigMap['start_yearmonth'] != null) ...[
-            Expanded(child: _displayYearmonthList()),
-          ],
+          if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
         ],
       ),
       endDrawer: _dispDrawer(),
@@ -70,12 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               const SizedBox(height: 60),
               GestureDetector(
-                onTap: () {
-                  CreditDialog(
-                    context: context,
-                    widget: ConfigSettingAlert(isar: widget.isar),
-                  );
-                },
+                onTap: () => CreditDialog(context: context, widget: ConfigSettingAlert(isar: widget.isar)),
                 child: Row(
                   children: [
                     Expanded(
@@ -168,7 +169,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
                         child: DecoratedBox(
                           decoration: BoxDecoration(color: Colors.orangeAccent.withOpacity(0.1)),
-                          child: const Text('aaa'),
+                          child: (creditMap[yearmonth] != null)
+                              ? Wrap(
+                                  children: creditMap[yearmonth]!.map((e) {
+                                  return Text(e.date);
+                                }).toList())
+                              : Container(),
                         ),
                       ),
                     ),
@@ -190,5 +196,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return SingleChildScrollView(
         child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
+  }
+
+  ///
+  Future<void> makeCreditList() async {
+    await CreditRepository().getCreditList(isar: widget.isar).then((value) {
+      creditList = value;
+
+      if (value!.isNotEmpty) {
+        value
+          ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm] = [])
+          ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm]?.add(element));
+      }
+    });
   }
 }

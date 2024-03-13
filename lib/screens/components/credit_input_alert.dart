@@ -224,7 +224,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     for (var i = 0; i < 10; i++) {
       if (creditInputState.creditDates[i] != '' &&
           creditInputState.creditNames[i] != '' &&
-          creditInputState.creditPrices[i] >= 0) {
+          creditInputState.creditPrices[i] > -1) {
         list.add(
           Credit()
             ..date = creditInputState.creditDates[i]
@@ -241,7 +241,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
         creditNameCount++;
       }
 
-      if (creditInputState.creditPrices[i] >= 0) {
+      if (creditInputState.creditPrices[i] > -1) {
         creditPriceCount++;
       }
     }

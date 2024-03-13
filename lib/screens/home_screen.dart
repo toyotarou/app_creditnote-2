@@ -1,3 +1,4 @@
+import 'package:credit_note/screens/components/credit_input_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -145,7 +146,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   const SizedBox(height: 5),
                                   Container(
                                     alignment: Alignment.topRight,
-                                    child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
+                                    child: GestureDetector(
+                                      onTap: () => CreditDialog(
+                                        context: context,
+                                        widget: CreditInputAlert(
+                                          isar: widget.isar,
+                                          date: DateTime.parse('$yearmonth-01 00:00:00'),
+                                        ),
+                                      ),
+                                      child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -156,7 +166,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Expanded(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
-                        child: Container(
+                        child: DecoratedBox(
                           decoration: BoxDecoration(color: Colors.orangeAccent.withOpacity(0.1)),
                           child: const Text('aaa'),
                         ),

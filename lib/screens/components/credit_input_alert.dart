@@ -78,7 +78,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 children: [
                   Column(
                     children: [
-                      Text(widget.date.yyyymmdd),
+                      Text(widget.date.yyyymm),
                       const Text('Credit Input'),
                     ],
                   ),
@@ -141,7 +141,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: (date != '' && name != '' && price != 0)
+                        color: (date != '' && name != '' && price != -1)
                             ? Colors.orangeAccent.withOpacity(0.4)
                             : Colors.white.withOpacity(0.2),
                         width: 2),
@@ -149,15 +149,24 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () => _showDP(pos: i),
-                            child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => _showDP(pos: i),
+                                child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                              ),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: context.screenSize.width / 6,
+                                child: Text(creditInputState.creditDates[i], style: const TextStyle(fontSize: 10)),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: context.screenSize.width / 6,
-                            child: Text(creditInputState.creditDates[i], style: const TextStyle(fontSize: 10)),
+                          GestureDetector(
+                            onTap: () => _clearOneBox(pos: i),
+                            child: const Icon(Icons.close, color: Colors.redAccent),
                           ),
                         ],
                       ),
@@ -301,5 +310,13 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
     await CreditRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
         ref.read(creditInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
+  }
+
+  ///
+  Future<void> _clearOneBox({required int pos}) async {
+    _creditNameTecs[pos].clear();
+    _creditPriceTecs[pos].clear();
+
+    await ref.read(creditInputProvider.notifier).clearOneBox(pos: pos);
   }
 }

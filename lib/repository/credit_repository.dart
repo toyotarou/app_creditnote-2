@@ -9,7 +9,7 @@ class CreditRepository {
   ///
   Future<List<Credit>?> getCreditList({required Isar isar}) async {
     final creditsCollection = getCollection(isar: isar);
-    return creditsCollection.where().sortByDate().findAll();
+    return creditsCollection.where().sortByDate().thenByPriceDesc().findAll();
   }
 
   ///

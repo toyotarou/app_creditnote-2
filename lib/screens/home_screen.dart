@@ -50,7 +50,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+            onPressed: () {
+              CreditDialog(context: context, widget: ConfigSettingAlert(isar: widget.isar));
+            },
             icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
           )
         ],
@@ -60,7 +62,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
         ],
       ),
-      endDrawer: _dispDrawer(),
+      drawer: _dispDrawer(),
+      endDrawer: _dispEndDrawer(),
     );
   }
 
@@ -71,26 +74,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 10),
-          child: Column(
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 60),
-              GestureDetector(
-                onTap: () => CreditDialog(context: context, widget: ConfigSettingAlert(isar: widget.isar)),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-                        margin: const EdgeInsets.all(5),
-                        child: const Text('設定'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///
+  Widget _dispEndDrawer() {
+    return Drawer(
+      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.only(left: 10),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
           ),
         ),
       ),
@@ -166,6 +166,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.topRight,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _scaffoldKey.currentState!.openEndDrawer();
+                                      },
+                                      child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -196,9 +206,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'),
                                             ),
                                           ),
-                                          Expanded(child: Text(e.name, style: const TextStyle(color: Colors.grey))),
+                                          Expanded(
+                                            child: Text(
+                                              e.name,
+                                              style: const TextStyle(color: Colors.grey),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                           Container(
-                                            width: 70,
+                                            width: 60,
                                             alignment: Alignment.topRight,
                                             child: Text(e.price.toString().toCurrency()),
                                           ),
@@ -207,6 +224,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             Icons.input,
                                             size: 20,
                                             color: Colors.greenAccent.withOpacity(0.4),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _scaffoldKey.currentState!.openDrawer();
+                                            },
+                                            child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                           ),
                                         ],
                                       ),

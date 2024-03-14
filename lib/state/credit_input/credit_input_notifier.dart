@@ -1,6 +1,6 @@
-import 'package:credit_note/collections/credit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../collections/credit.dart';
 import 'credit_input_response_state.dart';
 
 final creditInputProvider = StateNotifierProvider.autoDispose<CreditInputNotifier, CreditInputResponseState>((ref) {
@@ -64,5 +64,18 @@ class CreditInputNotifier extends StateNotifier<CreditInputResponseState> {
 
       // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
+  }
+
+  ///
+  Future<void> clearOneBox({required int pos}) async {
+    final dates = <String>[...state.creditDates];
+    final names = <String>[...state.creditNames];
+    final prices = <int>[...state.creditPrices];
+
+    dates[pos] = '';
+    names[pos] = '';
+    prices[pos] = -1;
+
+    state = state.copyWith(creditDates: dates, creditNames: names, creditPrices: prices);
   }
 }

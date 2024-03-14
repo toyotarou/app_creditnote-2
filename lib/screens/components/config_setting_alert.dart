@@ -1,4 +1,6 @@
 import 'package:credit_note/repository/config_repository.dart';
+import 'package:credit_note/screens/components/credit_item_input_alert.dart';
+import 'package:credit_note/screens/components/parts/credit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -53,6 +55,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
               const Text('設定'),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayStartYearmonthSettingWidget(),
+              _displayCreditItemSettingWidget(),
             ],
           ),
         ),
@@ -171,12 +174,41 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
                         : inputConfig(key: 'start_yearmonth', value: val, closeFlag: true);
                   },
                   child: Text(
-                    '設定する',
+                    (settingConfigMap['start_yearmonth'] != null) ? '更新する' : '設定する',
                     style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
                   ),
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  ///
+  Widget _displayCreditItemSettingWidget() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.only(bottom: 5),
+      decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(width: context.screenSize.width),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('分類アイテムを作成する'),
+              ElevatedButton(
+                onPressed: () {
+                  CreditDialog(context: context, widget: CreditItemInputAlert(isar: widget.isar, creditItemList: const []));
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                child: const Text('input'),
+              ),
+            ],
           ),
         ],
       ),
@@ -205,7 +237,6 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
     await ConfigRepository().inputConfig(isar: widget.isar, config: config).then((value) {
       if (closeFlag) {
         Navigator.pop(context);
-        Navigator.pop(context);
       }
     });
   }
@@ -218,7 +249,6 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
         await ConfigRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
           if (closeFlag) {
-            Navigator.pop(context);
             Navigator.pop(context);
           }
         });

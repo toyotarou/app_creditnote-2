@@ -62,23 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
         ],
       ),
-      drawer: _dispDrawer(),
       endDrawer: _dispEndDrawer(),
-    );
-  }
-
-  ///
-  Widget _dispDrawer() {
-    return Drawer(
-      backgroundColor: Colors.blueGrey.withOpacity(0.2),
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 10),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
-        ),
-      ),
     );
   }
 
@@ -224,13 +208,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             Icons.input,
                                             size: 20,
                                             color: Colors.greenAccent.withOpacity(0.4),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          GestureDetector(
-                                            onTap: () {
-                                              _scaffoldKey.currentState!.openDrawer();
-                                            },
-                                            child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                           ),
                                         ],
                                       ),

@@ -1,16 +1,16 @@
-import 'package:credit_note/collections/credit_item.dart';
-import 'package:credit_note/repository/configs_repository.dart';
-import 'package:credit_note/repository/credit_items_repository.dart';
-import 'package:credit_note/screens/components/credit_item_input_alert.dart';
-import 'package:credit_note/screens/components/parts/credit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/config.dart';
+import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/configs_repository.dart';
+import '../../repository/credit_items_repository.dart';
 import '../../state/config_start_yearmonth/config_start_yearmonth_notifier.dart';
+import 'credit_item_input_alert.dart';
+import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
 
 class ConfigSettingAlert extends ConsumerStatefulWidget {

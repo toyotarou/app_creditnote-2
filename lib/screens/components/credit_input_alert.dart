@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:credit_note/collections/credit_detail.dart';
+import 'package:credit_note/repository/credit_details_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,6 +28,8 @@ class CreditInputAlert extends ConsumerStatefulWidget {
 class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   final List<TextEditingController> _creditNameTecs = [];
   final List<TextEditingController> _creditPriceTecs = [];
+
+  List<Credit> deleteCreditList = [];
 
   ///
   @override
@@ -160,12 +164,16 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                               const SizedBox(width: 10),
                               SizedBox(
                                 width: context.screenSize.width / 6,
-                                child: Text(creditInputState.creditDates[i], style: const TextStyle(fontSize: 10)),
+                                child: Text(date, style: const TextStyle(fontSize: 10)),
                               ),
                             ],
                           ),
                           GestureDetector(
-                            onTap: () => _clearOneBox(pos: i),
+                            onTap: () {
+                              addingDeleteCreditList(date: date, price: price);
+
+                              _clearOneBox(pos: i);
+                            },
                             child: const Icon(Icons.close, color: Colors.redAccent),
                           ),
                         ],
@@ -308,6 +316,23 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
     //---------------------------//
 
+    //---------------------------//
+    final creditDetailList = <CreditDetail>[];
+    deleteCreditList.forEach((element) {
+      final param = <String, dynamic>{};
+      param['date'] = element.date;
+      param['price'] = element.price;
+      CreditDetailsRepository()
+          .getCreditDetailList(isar: widget.isar, param: param)
+          .then((value) => value?.forEach((element2) => creditDetailList.add(element2
+            ..creditDate = ''
+            ..creditPrice = '')));
+    });
+    if (creditDetailList.isNotEmpty) {
+      await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList);
+    }
+    //---------------------------//
+
     await CreditsRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
         ref.read(creditInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
@@ -318,5 +343,12 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     _creditPriceTecs[pos].clear();
 
     await ref.read(creditInputProvider.notifier).clearOneBox(pos: pos);
+  }
+
+  ///
+  void addingDeleteCreditList({required String date, required int price}) {
+    setState(() => deleteCreditList.add(Credit()
+      ..date = date
+      ..price = price));
   }
 }

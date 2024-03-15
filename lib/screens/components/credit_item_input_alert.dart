@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
+import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_items_repository.dart';
@@ -237,74 +238,25 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
-  // ///
-  // Future<void> _deleteSpendItem({required int id}) async {
-  //   await SpendItemsRepository().getSpendItem(isar: widget.isar, id: id).then((value) {
-  //     final param = <String, dynamic>{};
-  //     param['item'] = value!.spendItemName;
-  //
-  //     SpendTimePlacesRepository().getSpendTypeSpendTimePlaceList(isar: widget.isar, param: param).then((value2) {
-  //       final spendTimePriceList = <SpendTimePlace>[];
-  //       value2!.forEach((element) => spendTimePriceList.add(element..spendType = ''));
-  //
-  //       SpendTimePlacesRepository()
-  //           .updateSpendTimePriceList(isar: widget.isar, spendTimePriceList: spendTimePriceList)
-  //           .then((value3) => SpendItemsRepository()
-  //               .deleteSpendItem(isar: widget.isar, id: id)
-  //               .then((value4) => Navigator.pop(context)));
-  //     });
-  //   });
-  // }
-
   ///
   Future<void> _deleteCreditItem({required int id}) async {
-    // //-----------------------------------
-    // final spendTimePlacesCollection = widget.isar.spendTimePlaces;
-    //
-    // final getSpendTimePlaces =
-    //     await spendTimePlacesCollection.filter().spendTypeEqualTo(spendItemNameMap[id]!).findAll();
-    //
-    // await widget.isar.writeTxn(() async =>
-    //     getSpendTimePlaces.forEach((element) async => widget.isar.spendTimePlaces.put(element..spendType = '')));
-    // //-----------------------------------
-    //
-    // final spendItemsCollection = widget.isar.spendItems; //TODO
-    // await widget.isar.writeTxn(() async => spendItemsCollection.delete(id));
-    //
-    // if (mounted) {
-    //   Navigator.pop(context);
-    // }
-  }
+    //-----------------------------------
+    final creditDetailsCollection = widget.isar.creditDetails;
 
-  // ///
-  // Future<void> _settingReorderIds() async {
-  //   orderedIdList = [];
-  //
-  //   for (final value in ddList) {
-  //     for (final child in value.children) {
-  //       orderedIdList.add(child.child.key
-  //           .toString()
-  //           .replaceAll('[', '')
-  //           .replaceAll('<', '')
-  //           .replaceAll("'", '')
-  //           .replaceAll('>', '')
-  //           .replaceAll(']', '')
-  //           .toInt());
-  //     }
-  //   }
-  //
-  //   await widget.isar.writeTxn(() async {
-  //     for (var i = 0; i < orderedIdList.length; i++) {
-  //       await SpendItemsRepository().getSpendItem(isar: widget.isar, id: orderedIdList[i]).then((value) {
-  //         value!.order = i;
-  //
-  //         SpendItemsRepository()
-  //             .updateSpendItem(isar: widget.isar, spendItem: value)
-  //             .then((value) => Navigator.pop(context));
-  //       });
-  //     }
-  //   });
-  // }
+    final getCreditDetails =
+        await creditDetailsCollection.filter().creditDetailItemEqualTo(creditItemNameMap[id]!).findAll();
+
+    await widget.isar.writeTxn(() async =>
+        getCreditDetails.forEach((element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
+    //-----------------------------------
+
+    final creditItemsCollection = widget.isar.creditItems; //TODO
+    await widget.isar.writeTxn(() async => creditItemsCollection.delete(id));
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  }
 
   ///
   Future<void> _settingReorderIds() async {
@@ -327,13 +279,13 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
     await widget.isar.writeTxn(() async {
       for (var i = 0; i < orderedIdList.length; i++) {
-        final getSpendItem = await creditItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
-        if (getSpendItem != null) {
-          getSpendItem
+        final getCreditItem = await creditItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
+        if (getCreditItem != null) {
+          getCreditItem
             ..name = creditItemNameMap[orderedIdList[i]].toString()
             ..order = i;
 
-          await widget.isar.creditItems.put(getSpendItem);
+          await widget.isar.creditItems.put(getCreditItem);
         }
       }
     });

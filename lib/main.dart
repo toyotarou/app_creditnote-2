@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'collections/config.dart';
 import 'collections/credit.dart';
+import 'collections/credit_detail.dart';
 import 'collections/credit_item.dart';
 import 'screens/home_screen.dart';
 
@@ -19,6 +20,7 @@ void main() async {
     ConfigSchema,
     CreditSchema,
     CreditItemSchema,
+    CreditDetailSchema,
   ], directory: dir.path);
 
   runApp(ProviderScope(child: MyApp(isar: isar)));

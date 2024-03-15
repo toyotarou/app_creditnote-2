@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../collections/config.dart';
 
-class ConfigRepository {
+class ConfigsRepository {
   ///
   IsarCollection<Config> getCollection({required Isar isar}) => isar.configs;
 

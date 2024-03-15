@@ -7,7 +7,7 @@ import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
 import '../../extensions/extensions.dart';
-import '../../repository/credit_repository.dart';
+import '../../repository/credits_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
 import '../../state/credit_input/credit_input_notifier.dart';
 import 'parts/error_dialog.dart';
@@ -301,14 +301,14 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
 
     //---------------------------//
-    final creditsCollection = CreditRepository().getCollection(isar: widget.isar);
+    final creditsCollection = CreditsRepository().getCollection(isar: widget.isar);
     final getCredits = await creditsCollection.filter().dateStartsWith(widget.date.yyyymm).findAll();
     if (getCredits.isNotEmpty) {
-      await CreditRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
+      await CreditsRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
     }
     //---------------------------//
 
-    await CreditRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
+    await CreditsRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
         ref.read(creditInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
 

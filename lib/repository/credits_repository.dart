@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../collections/credit.dart';
 
-class CreditRepository {
+class CreditsRepository {
   ///
   IsarCollection<Credit> getCollection({required Isar isar}) => isar.credits;
 

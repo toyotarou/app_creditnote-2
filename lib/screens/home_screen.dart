@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import '../collections/config.dart';
 import '../collections/credit.dart';
 import '../extensions/extensions.dart';
-import '../repository/credit_repository.dart';
+import '../repository/credits_repository.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/parts/credit_dialog.dart';
@@ -236,7 +236,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Future<void> makeCreditList() async {
-    await CreditRepository().getCreditList(isar: widget.isar).then((value) {
+    await CreditsRepository().getCreditList(isar: widget.isar).then((value) {
       creditList = value;
 
       if (value!.isNotEmpty) {

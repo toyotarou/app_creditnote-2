@@ -9,7 +9,9 @@ import 'package:isar/isar.dart';
 
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/credit_items_repository.dart';
 import 'parts/credit_item_card.dart';
+import 'parts/error_dialog.dart';
 
 class CreditItemInputAlert extends ConsumerStatefulWidget {
   const CreditItemInputAlert({super.key, required this.isar, required this.creditItemList});
@@ -33,8 +35,6 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   Color mycolor = Colors.white;
 
   Map<int, String> creditItemColorMap = {};
-
-  Map<int, String> creditItemDefaultTimeMap = {};
 
   Map<int, String> creditItemNameMap = {};
 
@@ -184,25 +184,24 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _inputCreditItem() async {
-    // if (_spendItemEditingController.text == '') {
-    //   Future.delayed(
-    //     Duration.zero,
-    //     () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
-    //   );
-    //
-    //   return;
-    // }
-    //
-    // final spendItem = SpendItem()
-    //   ..spendItemName = _spendItemEditingController.text
-    //   ..order = widget.spendItemList.length + 1
-    //   ..defaultTime = '08:00'
-    //   ..color = '0xffffffff';
-    //
-    // await SpendItemsRepository().inputSpendItem(isar: widget.isar, spendItem: spendItem).then((value) {
-    //   _spendItemEditingController.clear();
-    //   Navigator.pop(context);
-    // });
+    if (_creditItemEditingController.text == '') {
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+      );
+
+      return;
+    }
+
+    var creditItem = CreditItem()
+      ..name = _creditItemEditingController.text
+      ..order = widget.creditItemList.length + 1
+      ..color = '0xffffffff';
+
+    await CreditItemsRepository().inputCreditItem(isar: widget.isar, creditItem: creditItem).then((value) {
+      _creditItemEditingController.clear();
+      Navigator.pop(context);
+    });
   }
 
   ///
@@ -324,24 +323,24 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       }
     }
 
-    // final spendItemsCollection = widget.isar.spendItems;
-    //
-    // await widget.isar.writeTxn(() async {
-    //   for (var i = 0; i < orderedIdList.length; i++) {
-    //     final getSpendItem = await spendItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
-    //     if (getSpendItem != null) {
-    //       getSpendItem
-    //         ..spendItemName = spendItemNameMap[orderedIdList[i]].toString()
-    //         ..order = i;
-    //
-    //       await widget.isar.spendItems.put(getSpendItem);
-    //     }
-    //   }
-    // });
-    //
-    // if (mounted) {
-    //   Navigator.pop(context);
-    // }
+    final creditItemsCollection = widget.isar.creditItems;
+
+    await widget.isar.writeTxn(() async {
+      for (var i = 0; i < orderedIdList.length; i++) {
+        final getSpendItem = await creditItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
+        if (getSpendItem != null) {
+          getSpendItem
+            ..name = creditItemNameMap[orderedIdList[i]].toString()
+            ..order = i;
+
+          await widget.isar.creditItems.put(getSpendItem);
+        }
+      }
+    });
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   ///
@@ -397,52 +396,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     );
   }
 
-  // ///
-  // Future<void> _showDefaultTimeDialog({required int id}) async {
-  //   final initialHour = (creditItemDefaultTimeMap[id] != null && creditItemDefaultTimeMap[id] != '')
-  //       ? creditItemDefaultTimeMap[id]!.split(':')[0].toInt()
-  //       : 8;
-  //
-  //   final selectedTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay(hour: initialHour, minute: 0),
-  //     builder: (context, child) {
-  //       return MediaQuery(
-  //         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-  //         child: child ?? Container(),
-  //       );
-  //     },
-  //   );
-  //
-  //   if (selectedTime != null) {
-  //     final time = '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
-  //
-  //     await _updateDefaultTime(id: id, time: time).then((value) {
-  //       Navigator.pop(context);
-  //       Navigator.pop(context);
-  //     });
-  //   }
-  // }
-
   ///
   Future<void> _updateColorCode({required int id, required String color}) async {
-    // await widget.isar.writeTxn(() async {
-    //   await SpendItemsRepository().getSpendItem(isar: widget.isar, id: id).then((value) async {
-    //     value!.color = color;
-    //
-    //     await SpendItemsRepository().updateSpendItem(isar: widget.isar, spendItem: value);
-    //   });
-    // });
-  }
+    await widget.isar.writeTxn(() async {
+      await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((value) async {
+        value!.color = color;
 
-// ///
-// Future<void> _updateDefaultTime({required int id, required String time}) async {
-//   // await widget.isar.writeTxn(() async {
-//   //   await SpendItemsRepository().getSpendItem(isar: widget.isar, id: id).then((value) async {
-//   //     value!.defaultTime = time;
-//   //
-//   //     await SpendItemsRepository().updateSpendItem(isar: widget.isar, spendItem: value);
-//   //   });
-//   // });
-// }
+        await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);
+      });
+    });
+  }
 }

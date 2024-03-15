@@ -1,4 +1,6 @@
-import 'package:credit_note/repository/config_repository.dart';
+import 'package:credit_note/collections/credit_item.dart';
+import 'package:credit_note/repository/configs_repository.dart';
+import 'package:credit_note/repository/credit_items_repository.dart';
 import 'package:credit_note/screens/components/credit_item_input_alert.dart';
 import 'package:credit_note/screens/components/parts/credit_dialog.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +28,13 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
   Map<String, String> settingConfigMap = {};
 
+  List<CreditItem>? creditItemList = [];
+
   ///
   void _init() {
     makeSettingConfigMap();
+
+    _makeCreditItemList();
   }
 
   ///
@@ -203,7 +209,13 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
               const Text('分類アイテムを作成する'),
               ElevatedButton(
                 onPressed: () {
-                  CreditDialog(context: context, widget: CreditItemInputAlert(isar: widget.isar, creditItemList: const []));
+                  CreditDialog(
+                    context: context,
+                    widget: CreditItemInputAlert(
+                      isar: widget.isar,
+                      creditItemList: creditItemList ?? [],
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
                 child: const Text('input'),
@@ -217,7 +229,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
   ///
   Future<void> makeSettingConfigMap() async {
-    await ConfigRepository().getConfigList(isar: widget.isar).then((value) {
+    await ConfigsRepository().getConfigList(isar: widget.isar).then((value) {
       setState(() {
         configList = value;
 
@@ -234,7 +246,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
       ..configKey = key
       ..configValue = value;
 
-    await ConfigRepository().inputConfig(isar: widget.isar, config: config).then((value) {
+    await ConfigsRepository().inputConfig(isar: widget.isar, config: config).then((value) {
       if (closeFlag) {
         Navigator.pop(context);
       }
@@ -244,15 +256,22 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   ///
   Future<void> updateConfig({required String key, required String value, required bool closeFlag}) async {
     await widget.isar.writeTxn(() async {
-      await ConfigRepository().getConfigByKeyString(isar: widget.isar, key: key).then((value2) async {
+      await ConfigsRepository().getConfigByKeyString(isar: widget.isar, key: key).then((value2) async {
         value2!.configValue = value;
 
-        await ConfigRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
+        await ConfigsRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
           if (closeFlag) {
             Navigator.pop(context);
           }
         });
       });
+    });
+  }
+
+  ///
+  Future<void> _makeCreditItemList() async {
+    await CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) {
+      setState(() => creditItemList = value);
     });
   }
 }

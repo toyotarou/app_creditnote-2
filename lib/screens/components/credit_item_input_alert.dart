@@ -193,7 +193,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       return;
     }
 
-    var creditItem = CreditItem()
+    final creditItem = CreditItem()
       ..name = _creditItemEditingController.text
       ..order = widget.creditItemList.length + 1
       ..color = '0xffffffff';

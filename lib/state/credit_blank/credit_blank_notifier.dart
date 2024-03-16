@@ -12,7 +12,7 @@ class CreditBlankNotifier extends StateNotifier<CreditBlankResponseState> {
   CreditBlankNotifier(super.state);
 
   ///
-  Future<void> setSelectedCreditBlankInputValues({required int pos, required CreditBlankInputValue value}) async {
+  Future<void> setSelectedCreditBlankInputValue({required int pos, required CreditBlankInputValue value}) async {
     final values = [...state.creditBlankInputValues];
     values[pos] = value;
     state = state.copyWith(creditBlankInputValues: values);

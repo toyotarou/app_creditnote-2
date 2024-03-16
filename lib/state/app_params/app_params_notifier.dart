@@ -10,4 +10,11 @@ class AppParamNotifier extends StateNotifier<AppParamsResponseState> {
 
   ///
   Future<void> setInputButtonClicked({required bool flag}) async => state = state.copyWith(inputButtonClicked: flag);
+
+  ///
+  Future<void> setCreditBlankSettingMap({required int pos, required String creditName}) async {
+    final map = <int, String>{...state.creditBlankSettingMap};
+    map[pos] = creditName;
+    state = state.copyWith(creditBlankSettingMap: map);
+  }
 }

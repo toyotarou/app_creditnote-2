@@ -83,6 +83,8 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
   Widget _displayInputParts() {
     final list = <Widget>[];
 
+    final creditBlankSettingMap = ref.watch(appParamProvider.select((value) => value.creditBlankSettingMap));
+
     for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
       list.add(DecoratedBox(
         decoration: BoxDecoration(
@@ -123,23 +125,31 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                             children: widget.creditList!.map((e) {
                           return GestureDetector(
                             onTap: () {
-                              ref.read(creditBlankProvider.notifier).setSelectedCreditBlankInputValues(
+                              ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: e.name);
+
+                              ref.read(creditBlankProvider.notifier).setSelectedCreditBlankInputValue(
                                   pos: i, value: CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name, e.price));
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 5),
-                              child: CircleAvatar(child: Text(e.name, style: const TextStyle(fontSize: 8))),
+                              child: CircleAvatar(
+                                backgroundColor: (creditBlankSettingMap[i] == e.name) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black,
+                                child: Text(e.name, style: const TextStyle(fontSize: 8, color: Colors.white)),
+                              ),
                             ),
                           );
                         }).toList()),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                       ],
-                      Text(widget.creditBlankCreditDetailList[i].id.toString()),
-                      Text(widget.creditBlankCreditDetailList[i].yearmonth),
-                      Text(widget.creditBlankCreditDetailList[i].creditDetailDate),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(widget.creditBlankCreditDetailList[i].creditDetailDate),
+                          Text(widget.creditBlankCreditDetailList[i].creditDetailPrice.toString().toCurrency()),
+                        ],
+                      ),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailItem),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailDescription),
-                      Text(widget.creditBlankCreditDetailList[i].creditDetailPrice.toString().toCurrency()),
                     ],
                   ),
                 ),

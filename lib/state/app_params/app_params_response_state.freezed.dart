@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AppParamsResponseState {
   bool get inputButtonClicked => throw _privateConstructorUsedError;
+  Map<int, String> get creditBlankSettingMap =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AppParamsResponseStateCopyWith<AppParamsResponseState> get copyWith =>
@@ -29,7 +31,7 @@ abstract class $AppParamsResponseStateCopyWith<$Res> {
           $Res Function(AppParamsResponseState) then) =
       _$AppParamsResponseStateCopyWithImpl<$Res, AppParamsResponseState>;
   @useResult
-  $Res call({bool inputButtonClicked});
+  $Res call({bool inputButtonClicked, Map<int, String> creditBlankSettingMap});
 }
 
 /// @nodoc
@@ -47,12 +49,17 @@ class _$AppParamsResponseStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? inputButtonClicked = null,
+    Object? creditBlankSettingMap = null,
   }) {
     return _then(_value.copyWith(
       inputButtonClicked: null == inputButtonClicked
           ? _value.inputButtonClicked
           : inputButtonClicked // ignore: cast_nullable_to_non_nullable
               as bool,
+      creditBlankSettingMap: null == creditBlankSettingMap
+          ? _value.creditBlankSettingMap
+          : creditBlankSettingMap // ignore: cast_nullable_to_non_nullable
+              as Map<int, String>,
     ) as $Val);
   }
 }
@@ -66,7 +73,7 @@ abstract class _$$AppParamsResponseStateImplCopyWith<$Res>
       __$$AppParamsResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool inputButtonClicked});
+  $Res call({bool inputButtonClicked, Map<int, String> creditBlankSettingMap});
 }
 
 /// @nodoc
@@ -83,12 +90,17 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? inputButtonClicked = null,
+    Object? creditBlankSettingMap = null,
   }) {
     return _then(_$AppParamsResponseStateImpl(
       inputButtonClicked: null == inputButtonClicked
           ? _value.inputButtonClicked
           : inputButtonClicked // ignore: cast_nullable_to_non_nullable
               as bool,
+      creditBlankSettingMap: null == creditBlankSettingMap
+          ? _value._creditBlankSettingMap
+          : creditBlankSettingMap // ignore: cast_nullable_to_non_nullable
+              as Map<int, String>,
     ));
   }
 }
@@ -96,15 +108,27 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
-  const _$AppParamsResponseStateImpl({this.inputButtonClicked = false});
+  const _$AppParamsResponseStateImpl(
+      {this.inputButtonClicked = false,
+      final Map<int, String> creditBlankSettingMap = const {}})
+      : _creditBlankSettingMap = creditBlankSettingMap;
 
   @override
   @JsonKey()
   final bool inputButtonClicked;
+  final Map<int, String> _creditBlankSettingMap;
+  @override
+  @JsonKey()
+  Map<int, String> get creditBlankSettingMap {
+    if (_creditBlankSettingMap is EqualUnmodifiableMapView)
+      return _creditBlankSettingMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_creditBlankSettingMap);
+  }
 
   @override
   String toString() {
-    return 'AppParamsResponseState(inputButtonClicked: $inputButtonClicked)';
+    return 'AppParamsResponseState(inputButtonClicked: $inputButtonClicked, creditBlankSettingMap: $creditBlankSettingMap)';
   }
 
   @override
@@ -113,11 +137,14 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
         (other.runtimeType == runtimeType &&
             other is _$AppParamsResponseStateImpl &&
             (identical(other.inputButtonClicked, inputButtonClicked) ||
-                other.inputButtonClicked == inputButtonClicked));
+                other.inputButtonClicked == inputButtonClicked) &&
+            const DeepCollectionEquality()
+                .equals(other._creditBlankSettingMap, _creditBlankSettingMap));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, inputButtonClicked);
+  int get hashCode => Object.hash(runtimeType, inputButtonClicked,
+      const DeepCollectionEquality().hash(_creditBlankSettingMap));
 
   @JsonKey(ignore: true)
   @override
@@ -128,11 +155,15 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
 }
 
 abstract class _AppParamsResponseState implements AppParamsResponseState {
-  const factory _AppParamsResponseState({final bool inputButtonClicked}) =
+  const factory _AppParamsResponseState(
+          {final bool inputButtonClicked,
+          final Map<int, String> creditBlankSettingMap}) =
       _$AppParamsResponseStateImpl;
 
   @override
   bool get inputButtonClicked;
+  @override
+  Map<int, String> get creditBlankSettingMap;
   @override
   @JsonKey(ignore: true)
   _$$AppParamsResponseStateImplCopyWith<_$AppParamsResponseStateImpl>

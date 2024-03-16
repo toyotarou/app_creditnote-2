@@ -8,7 +8,9 @@ import 'package:isar/isar.dart';
 import '../../collections/credit.dart';
 import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
+import '../../model/credit_blank_input_value.dart';
 import '../../state/app_params/app_params_notifier.dart';
+import '../../state/credit_blank/credit_blank_notifier.dart';
 
 class CreditBlankReInputAlert extends ConsumerStatefulWidget {
   const CreditBlankReInputAlert(
@@ -24,6 +26,7 @@ class CreditBlankReInputAlert extends ConsumerStatefulWidget {
 }
 
 class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAlert> {
+  ///
   @override
   Widget build(BuildContext context) {
     final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
@@ -115,10 +118,24 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (widget.creditList!.isNotEmpty) ...[
+                        Wrap(
+                            children: widget.creditList!.map((e) {
+                          return GestureDetector(
+                            onTap: () {
+                              ref.read(creditBlankProvider.notifier).setSelectedCreditBlankInputValues(
+                                  pos: i, value: CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name, e.price));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
+                              child: CircleAvatar(child: Text(e.name, style: const TextStyle(fontSize: 8))),
+                            ),
+                          );
+                        }).toList()),
+                        const SizedBox(height: 20),
+                      ],
                       Text(widget.creditBlankCreditDetailList[i].id.toString()),
                       Text(widget.creditBlankCreditDetailList[i].yearmonth),
-                      Text(widget.creditBlankCreditDetailList[i].creditDate),
-                      Text(widget.creditBlankCreditDetailList[i].creditPrice),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailDate),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailItem),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailDescription),

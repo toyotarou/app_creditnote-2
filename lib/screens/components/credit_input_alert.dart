@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
-import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
@@ -82,10 +81,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Credit Input'),
-                      Text(widget.date.yyyymm),
-                    ],
+                    children: [const Text('Credit Input'), Text(widget.date.yyyymm)],
                   ),
                   ElevatedButton(
                     onPressed: inputButtonClicked
@@ -146,9 +142,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: (date != '' && name != '' && price != -1)
-                            ? Colors.orangeAccent.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.2),
+                        color: (date != '' && name != '' && price != -1) ? Colors.orangeAccent.withOpacity(0.4) : Colors.white.withOpacity(0.2),
                         width: 2),
                   ),
                   child: Column(
@@ -163,10 +157,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                                 child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
                               ),
                               const SizedBox(width: 10),
-                              SizedBox(
-                                width: context.screenSize.width / 6,
-                                child: Text(date, style: const TextStyle(fontSize: 10)),
-                              ),
+                              SizedBox(width: context.screenSize.width / 6, child: Text(date, style: const TextStyle(fontSize: 10))),
                             ],
                           ),
                           GestureDetector(
@@ -258,9 +249,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     ////////////////////////// 同数チェック
 
     for (var i = 0; i < 10; i++) {
-      if (creditInputState.creditDates[i] != '' &&
-          creditInputState.creditNames[i] != '' &&
-          creditInputState.creditPrices[i] > -1) {
+      if (creditInputState.creditDates[i] != '' && creditInputState.creditNames[i] != '' && creditInputState.creditPrices[i] > -1) {
         list.add(
           Credit()
             ..date = creditInputState.creditDates[i]
@@ -318,24 +307,23 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     //---------------------------//
 
     //---------------------------//
-    final creditDetailList = <CreditDetail>[];
     deleteCreditList.forEach((element) {
       final param = <String, dynamic>{};
       param['date'] = element.date;
-      param['price'] = element.price;
+      param['price'] = element.price.toString();
       CreditDetailsRepository()
           .getCreditDetailListByDateAndPrice(isar: widget.isar, param: param)
-          .then((value) => value?.forEach((element2) => creditDetailList.add(element2
-            ..creditDate = ''
-            ..creditPrice = '')));
+          .then((value) async => widget.isar.writeTxn(() async => value?.forEach((element2) => CreditDetailsRepository().updateCreditDetail(
+              isar: widget.isar,
+              creditDetail: element2
+                ..creditDate = ''
+                ..creditPrice = ''))));
     });
-    if (creditDetailList.isNotEmpty) {
-      await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList);
-    }
     //---------------------------//
 
-    await CreditsRepository().inputCreditList(isar: widget.isar, creditList: list).then(
-        (value) async => ref.read(creditProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
+    await CreditsRepository()
+        .inputCreditList(isar: widget.isar, creditList: list)
+        .then((value) async => ref.read(creditProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
 
   ///

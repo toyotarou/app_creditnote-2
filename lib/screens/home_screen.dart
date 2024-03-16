@@ -33,12 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<Credit>? creditList = [];
 
-  Map<String, List<Credit>> creditMap = {};
-
   List<CreditItem>? creditItemList = [];
 
   List<CreditDetail>? creditDetailList = [];
-  Map<String, List<CreditDetail>> creditDetailMap = {};
 
   ///
   void _init() {
@@ -87,9 +84,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 10),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
+          child: const Column(crossAxisAlignment: CrossAxisAlignment.start),
         ),
       ),
     );
@@ -128,11 +123,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
             if (!yearmonthList.contains(yearmonth)) {
               var sum = 0;
-              if (creditMap[yearmonth] != null) {
-                creditMap[yearmonth]!.forEach((element) {
+
+              final creList = <Credit>[];
+
+              creditList?.forEach((element) {
+                final exDate = element.date.split('-');
+                if (yearmonth == '${exDate[0]}-${exDate[1]}') {
                   sum += element.price;
-                });
-              }
+                  creList.add(element);
+                }
+              });
 
               list.add(Container(
                 padding: const EdgeInsets.all(10),
@@ -153,14 +153,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   Container(
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
-                                      onTap: () => CreditDialog(
-                                        context: context,
-                                        widget: CreditInputAlert(
-                                          isar: widget.isar,
-                                          date: DateTime.parse('$yearmonth-01 00:00:00'),
-                                          creditList: creditMap[yearmonth],
-                                        ),
-                                      ),
+                                      onTap: () {
+                                        CreditDialog(
+                                          context: context,
+                                          widget: CreditInputAlert(
+                                              isar: widget.isar, date: DateTime.parse('$yearmonth-01 00:00:00'), creditList: creList),
+                                        );
+                                      },
                                       child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
@@ -168,9 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   Container(
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
-                                      onTap: () {
-                                        _scaffoldKey.currentState!.openEndDrawer();
-                                      },
+                                      onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
                                       child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
@@ -185,41 +182,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         height: context.screenSize.height / 10,
                         decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
                         child: SingleChildScrollView(
-                          child: (creditMap[yearmonth] != null)
+                          child: (creList.isNotEmpty)
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: creditMap[yearmonth]!.map((e) {
+                                  children: creList.map((e) {
                                     return Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
-                                        ),
-                                      ),
+                                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
                                       child: Row(
                                         children: [
-                                          SizedBox(
-                                            width: 30,
-                                            child: Text(
-                                              DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'),
-                                            ),
-                                          ),
+                                          SizedBox(width: 30, child: Text(DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'))),
                                           Expanded(
-                                            child: Text(
-                                              e.name,
-                                              style: const TextStyle(color: Colors.grey),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                            child: Text(e.name,
+                                                style: const TextStyle(color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis),
                                           ),
-                                          Container(
-                                            width: 60,
-                                            alignment: Alignment.topRight,
-                                            child: Text(e.price.toString().toCurrency()),
-                                          ),
+                                          Container(width: 60, alignment: Alignment.topRight, child: Text(e.price.toString().toCurrency())),
                                           const SizedBox(width: 10),
                                           GestureDetector(
                                             onTap: () {
+                                              //-----------------------------
+                                              final list = <CreditDetail>[];
+                                              creditDetailList?.forEach((element) {
+                                                if (element.creditDate == e.date && element.creditPrice == e.price.toString()) {
+                                                  list.add(element);
+                                                }
+                                              });
+                                              //-----------------------------
+
                                               CreditDialog(
                                                 context: context,
                                                 widget: CreditDetailInputAlert(
@@ -227,15 +216,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                   creditDate: DateTime.parse('${e.date} 00:00:00'),
                                                   creditPrice: e.price,
                                                   creditItemList: creditItemList ?? [],
-                                                  creditDetailList: creditDetailMap['${e.date}|${e.price}'] ?? [],
+                                                  creditDetailList: list,
                                                 ),
                                               );
                                             },
-                                            child: Icon(
-                                              Icons.input,
-                                              size: 20,
-                                              color: Colors.greenAccent.withOpacity(0.4),
-                                            ),
+                                            child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
                                           ),
                                         ],
                                       ),
@@ -258,48 +243,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     }
 
-    return SingleChildScrollView(
-        child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
+    return SingleChildScrollView(child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
   }
 
   ///
-  Future<void> makeCreditList() async {
-    creditMap = {};
-
-    await CreditsRepository().getCreditList(isar: widget.isar).then((value) {
-      setState(() {
-        creditList = value;
-
-        if (value!.isNotEmpty) {
-          value
-            ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm] = [])
-            ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm]?.add(element));
-        }
-      });
-    });
-  }
+  Future<void> makeCreditList() async => CreditsRepository().getCreditList(isar: widget.isar).then((value) => setState(() => creditList = value));
 
   ///
-  Future<void> _makeCreditItemList() async {
-    await CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) {
-      setState(() => creditItemList = value);
-    });
-  }
+  Future<void> _makeCreditItemList() async =>
+      CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) => setState(() => creditItemList = value));
 
   ///
-  Future<void> _makeCreditDetailList() async {
-    creditDetailMap = {};
-
-    await CreditDetailsRepository().getCreditDetailList(isar: widget.isar).then((value) {
-      setState(() {
-        creditDetailList = value;
-
-        if (value!.isNotEmpty) {
-          value
-            ..forEach((element) => creditDetailMap['${element.creditDate}|${element.creditPrice}'] = [])
-            ..forEach((element) => creditDetailMap['${element.creditDate}|${element.creditPrice}']?.add(element));
-        }
-      });
-    });
-  }
+  Future<void> _makeCreditDetailList() async =>
+      CreditDetailsRepository().getCreditDetailList(isar: widget.isar).then((value) => setState(() => creditDetailList = value));
 }

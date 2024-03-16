@@ -50,10 +50,20 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
   }
 
   ///
-  void _makeTecs() {
+  Future<void> _makeTecs() async {
     for (var i = 0; i < roopNum; i++) {
       _priceTecs.add(TextEditingController(text: ''));
       _descriptionTecs.add(TextEditingController(text: ''));
+    }
+
+    if (widget.creditDetailList!.isNotEmpty) {
+      await Future(() =>
+          ref.read(creditDetailProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetailList!));
+
+      for (var i = 0; i < widget.creditDetailList!.length; i++) {
+        _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString();
+        _descriptionTecs[i].text = widget.creditDetailList![i].creditDetailDescription;
+      }
     }
   }
 

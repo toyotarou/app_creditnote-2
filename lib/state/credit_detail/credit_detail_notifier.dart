@@ -1,3 +1,4 @@
+import 'package:credit_note/collections/credit_detail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
@@ -83,5 +84,31 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
       creditDetailPrices: prices,
       creditDetailDescriptions: descriptions,
     );
+  }
+
+  ///
+  Future<void> setUpdateCreditDetail({required List<CreditDetail> updateCreditDetail}) async {
+    try {
+      final dates = List.generate(roopNum, (index) => '');
+      final items = List.generate(roopNum, (index) => '');
+      final prices = List.generate(roopNum, (index) => 0);
+      final descriptions = List.generate(roopNum, (index) => '');
+
+      for (var i = 0; i < updateCreditDetail.length; i++) {
+        dates[i] = updateCreditDetail[i].creditDetailDate;
+        items[i] = updateCreditDetail[i].creditDetailItem;
+        prices[i] = updateCreditDetail[i].creditDetailPrice;
+        descriptions[i] = updateCreditDetail[i].creditDetailDescription;
+      }
+
+      state = state.copyWith(
+        creditDetailDates: dates,
+        creditDetailItems: items,
+        creditDetailPrices: prices,
+        creditDetailDescriptions: descriptions,
+      );
+
+      // ignore: avoid_catches_without_on_clauses, empty_catches
+    } catch (e) {}
   }
 }

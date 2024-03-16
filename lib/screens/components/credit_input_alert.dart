@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+import 'package:credit_note/screens/components/credit_blank_re_input_alert.dart';
+import 'package:credit_note/screens/components/parts/credit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
+import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
@@ -14,11 +17,13 @@ import '../../state/credit/credit_notifier.dart';
 import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
-  const CreditInputAlert({super.key, required this.isar, required this.date, this.creditList});
+  const CreditInputAlert({super.key, required this.isar, required this.date, this.creditList, required this.creditBlankCreditDetailList});
 
   final Isar isar;
   final DateTime date;
   final List<Credit>? creditList;
+
+  final List<CreditDetail> creditBlankCreditDetailList;
 
   @override
   ConsumerState<CreditInputAlert> createState() => _CreditInputAlertState();
@@ -97,6 +102,34 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+              if (widget.creditBlankCreditDetailList.isNotEmpty) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'クレジットカードに紐づいていない当月の詳細情報が存在します。',
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        CreditDialog(
+                          context: context,
+                          widget: CreditBlankReInputAlert(
+                            isar: widget.isar,
+                            date: widget.date,
+                            creditList: widget.creditList,
+                            creditBlankCreditDetailList: widget.creditBlankCreditDetailList,
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.info_outline, color: Colors.greenAccent.withOpacity(0.6)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
               Expanded(child: _displayInputParts()),
             ],
           ),

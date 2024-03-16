@@ -122,10 +122,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
 
             if (!yearmonthList.contains(yearmonth)) {
+              //===============================
               var sum = 0;
-
               final creList = <Credit>[];
-
               creditList?.forEach((element) {
                 final exDate = element.date.split('-');
                 if (yearmonth == '${exDate[0]}-${exDate[1]}') {
@@ -133,6 +132,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   creList.add(element);
                 }
               });
+              //===============================
+
+              //===============================
+              final itemBlankCreditDetailList = <CreditDetail>[];
+              creditDetailList?.forEach((element) {
+                if (element.creditDate == '' && element.creditPrice == '') {
+                  if (yearmonth == element.yearmonth) {
+                    itemBlankCreditDetailList.add(element);
+                  }
+                }
+              });
+              //===============================
 
               list.add(Container(
                 padding: const EdgeInsets.all(10),
@@ -157,7 +168,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         CreditDialog(
                                           context: context,
                                           widget: CreditInputAlert(
-                                              isar: widget.isar, date: DateTime.parse('$yearmonth-01 00:00:00'), creditList: creList),
+                                            isar: widget.isar,
+                                            date: DateTime.parse('$yearmonth-01 00:00:00'),
+                                            creditList: creList,
+                                            creditBlankCreditDetailList: itemBlankCreditDetailList,
+                                          ),
                                         );
                                       },
                                       child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),

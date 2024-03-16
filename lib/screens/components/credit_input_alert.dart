@@ -1,17 +1,17 @@
 import 'dart:ui';
 
-import 'package:credit_note/collections/credit_detail.dart';
-import 'package:credit_note/repository/credit_details_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
+import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
-import '../../state/credit_input/credit_input_notifier.dart';
+import '../../state/credit/credit_notifier.dart';
 import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
@@ -47,7 +47,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
 
     if (widget.creditList!.isNotEmpty) {
-      await Future(() => ref.read(creditInputProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
+      await Future(() => ref.read(creditProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
 
       for (var i = 0; i < widget.creditList!.length; i++) {
         _creditNameTecs[i].text = widget.creditList![i].name;
@@ -81,9 +81,10 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.date.yyyymm),
                       const Text('Credit Input'),
+                      Text(widget.date.yyyymm),
                     ],
                   ),
                   ElevatedButton(
@@ -112,7 +113,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   Widget _displayInputParts() {
     final list = <Widget>[];
 
-    final creditInputState = ref.watch(creditInputProvider);
+    final creditInputState = ref.watch(creditProvider);
 
     for (var i = 0; i < 10; i++) {
       final date = creditInputState.creditDates[i];
@@ -188,7 +189,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
                                 if (value != '') {
-                                  ref.read(creditInputProvider.notifier).setCreditName(pos: i, name: value);
+                                  ref.read(creditProvider.notifier).setCreditName(pos: i, name: value);
                                 }
                               },
                             ),
@@ -206,7 +207,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
                                 if (value != '') {
-                                  ref.read(creditInputProvider.notifier).setCreditPrice(pos: i, price: value.toInt());
+                                  ref.read(creditProvider.notifier).setCreditPrice(pos: i, price: value.toInt());
                                 }
                               },
                             ),
@@ -238,13 +239,13 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     );
 
     if (selectedDate != null) {
-      await ref.read(creditInputProvider.notifier).setCreditDate(pos: pos, date: selectedDate.yyyymmdd);
+      await ref.read(creditProvider.notifier).setCreditDate(pos: pos, date: selectedDate.yyyymmdd);
     }
   }
 
   ///
   Future<void> _inputCredit() async {
-    final creditInputState = ref.watch(creditInputProvider);
+    final creditInputState = ref.watch(creditProvider);
 
     final list = <Credit>[];
 
@@ -323,7 +324,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
       param['date'] = element.date;
       param['price'] = element.price;
       CreditDetailsRepository()
-          .getCreditDetailList(isar: widget.isar, param: param)
+          .getCreditDetailListByDateAndPrice(isar: widget.isar, param: param)
           .then((value) => value?.forEach((element2) => creditDetailList.add(element2
             ..creditDate = ''
             ..creditPrice = '')));
@@ -333,8 +334,8 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
     //---------------------------//
 
-    await CreditsRepository().inputCreditList(isar: widget.isar, creditList: list).then((value) async =>
-        ref.read(creditInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
+    await CreditsRepository().inputCreditList(isar: widget.isar, creditList: list).then(
+        (value) async => ref.read(creditProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
 
   ///
@@ -342,7 +343,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     _creditNameTecs[pos].clear();
     _creditPriceTecs[pos].clear();
 
-    await ref.read(creditInputProvider.notifier).clearOneBox(pos: pos);
+    await ref.read(creditProvider.notifier).clearOneBox(pos: pos);
   }
 
   ///

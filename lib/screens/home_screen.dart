@@ -4,9 +4,14 @@ import 'package:isar/isar.dart';
 
 import '../collections/config.dart';
 import '../collections/credit.dart';
+import '../collections/credit_detail.dart';
+import '../collections/credit_item.dart';
 import '../extensions/extensions.dart';
+import '../repository/credit_details_repository.dart';
+import '../repository/credit_items_repository.dart';
 import '../repository/credits_repository.dart';
 import 'components/config_setting_alert.dart';
+import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/parts/credit_dialog.dart';
 
@@ -30,11 +35,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Map<String, List<Credit>> creditMap = {};
 
+  List<CreditItem>? creditItemList = [];
+
+  List<CreditDetail>? creditDetailList = [];
+  Map<String, List<CreditDetail>> creditDetailMap = {};
+
   ///
   void _init() {
     makeSettingConfigMap();
 
     makeCreditList();
+
+    _makeCreditItemList();
+
+    _makeCreditDetailList();
   }
 
   ///
@@ -204,10 +218,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             child: Text(e.price.toString().toCurrency()),
                                           ),
                                           const SizedBox(width: 10),
-                                          Icon(
-                                            Icons.input,
-                                            size: 20,
-                                            color: Colors.greenAccent.withOpacity(0.4),
+                                          GestureDetector(
+                                            onTap: () {
+                                              CreditDialog(
+                                                context: context,
+                                                widget: CreditDetailInputAlert(
+                                                  isar: widget.isar,
+                                                  creditDate: DateTime.parse('${e.date} 00:00:00'),
+                                                  creditPrice: e.price,
+                                                  creditItemList: creditItemList ?? [],
+                                                  creditDetailList: creditDetailMap['${e.date}|${e.price}'] ?? [],
+                                                ),
+                                              );
+                                            },
+                                            child: Icon(
+                                              Icons.input,
+                                              size: 20,
+                                              color: Colors.greenAccent.withOpacity(0.4),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -236,14 +264,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Future<void> makeCreditList() async {
-    await CreditsRepository().getCreditList(isar: widget.isar).then((value) {
-      creditList = value;
+    creditMap = {};
 
-      if (value!.isNotEmpty) {
-        value
-          ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm] = [])
-          ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm]?.add(element));
-      }
+    await CreditsRepository().getCreditList(isar: widget.isar).then((value) {
+      setState(() {
+        creditList = value;
+
+        if (value!.isNotEmpty) {
+          value
+            ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm] = [])
+            ..forEach((element) => creditMap[DateTime.parse('${element.date} 00:00:00').yyyymm]?.add(element));
+        }
+      });
+    });
+  }
+
+  ///
+  Future<void> _makeCreditItemList() async {
+    await CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) {
+      setState(() => creditItemList = value);
+    });
+  }
+
+  ///
+  Future<void> _makeCreditDetailList() async {
+    creditDetailMap = {};
+
+    await CreditDetailsRepository().getCreditDetailList(isar: widget.isar).then((value) {
+      setState(() {
+        creditDetailList = value;
+
+        if (value!.isNotEmpty) {
+          value
+            ..forEach((element) => creditDetailMap['${element.creditDate}|${element.creditPrice}'] = [])
+            ..forEach((element) => creditDetailMap['${element.creditDate}|${element.creditPrice}']?.add(element));
+        }
+      });
     });
   }
 }

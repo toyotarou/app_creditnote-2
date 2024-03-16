@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'credit_input_response_state.dart';
+part of 'credit_response_state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,22 +15,22 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$CreditInputResponseState {
+mixin _$CreditResponseState {
   int get itemPos => throw _privateConstructorUsedError;
   List<String> get creditDates => throw _privateConstructorUsedError;
   List<String> get creditNames => throw _privateConstructorUsedError;
   List<int> get creditPrices => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $CreditInputResponseStateCopyWith<CreditInputResponseState> get copyWith =>
+  $CreditResponseStateCopyWith<CreditResponseState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CreditInputResponseStateCopyWith<$Res> {
-  factory $CreditInputResponseStateCopyWith(CreditInputResponseState value,
-          $Res Function(CreditInputResponseState) then) =
-      _$CreditInputResponseStateCopyWithImpl<$Res, CreditInputResponseState>;
+abstract class $CreditResponseStateCopyWith<$Res> {
+  factory $CreditResponseStateCopyWith(
+          CreditResponseState value, $Res Function(CreditResponseState) then) =
+      _$CreditResponseStateCopyWithImpl<$Res, CreditResponseState>;
   @useResult
   $Res call(
       {int itemPos,
@@ -40,10 +40,9 @@ abstract class $CreditInputResponseStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CreditInputResponseStateCopyWithImpl<$Res,
-        $Val extends CreditInputResponseState>
-    implements $CreditInputResponseStateCopyWith<$Res> {
-  _$CreditInputResponseStateCopyWithImpl(this._value, this._then);
+class _$CreditResponseStateCopyWithImpl<$Res, $Val extends CreditResponseState>
+    implements $CreditResponseStateCopyWith<$Res> {
+  _$CreditResponseStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -80,12 +79,11 @@ class _$CreditInputResponseStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$CreditInputResponseStateImplCopyWith<$Res>
-    implements $CreditInputResponseStateCopyWith<$Res> {
-  factory _$$CreditInputResponseStateImplCopyWith(
-          _$CreditInputResponseStateImpl value,
-          $Res Function(_$CreditInputResponseStateImpl) then) =
-      __$$CreditInputResponseStateImplCopyWithImpl<$Res>;
+abstract class _$$CreditResponseStateImplCopyWith<$Res>
+    implements $CreditResponseStateCopyWith<$Res> {
+  factory _$$CreditResponseStateImplCopyWith(_$CreditResponseStateImpl value,
+          $Res Function(_$CreditResponseStateImpl) then) =
+      __$$CreditResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -96,13 +94,11 @@ abstract class _$$CreditInputResponseStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$CreditInputResponseStateImplCopyWithImpl<$Res>
-    extends _$CreditInputResponseStateCopyWithImpl<$Res,
-        _$CreditInputResponseStateImpl>
-    implements _$$CreditInputResponseStateImplCopyWith<$Res> {
-  __$$CreditInputResponseStateImplCopyWithImpl(
-      _$CreditInputResponseStateImpl _value,
-      $Res Function(_$CreditInputResponseStateImpl) _then)
+class __$$CreditResponseStateImplCopyWithImpl<$Res>
+    extends _$CreditResponseStateCopyWithImpl<$Res, _$CreditResponseStateImpl>
+    implements _$$CreditResponseStateImplCopyWith<$Res> {
+  __$$CreditResponseStateImplCopyWithImpl(_$CreditResponseStateImpl _value,
+      $Res Function(_$CreditResponseStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -113,7 +109,7 @@ class __$$CreditInputResponseStateImplCopyWithImpl<$Res>
     Object? creditNames = null,
     Object? creditPrices = null,
   }) {
-    return _then(_$CreditInputResponseStateImpl(
+    return _then(_$CreditResponseStateImpl(
       itemPos: null == itemPos
           ? _value.itemPos
           : itemPos // ignore: cast_nullable_to_non_nullable
@@ -136,8 +132,8 @@ class __$$CreditInputResponseStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$CreditInputResponseStateImpl implements _CreditInputResponseState {
-  const _$CreditInputResponseStateImpl(
+class _$CreditResponseStateImpl implements _CreditResponseState {
+  const _$CreditResponseStateImpl(
       {this.itemPos = 0,
       final List<String> creditDates = const [],
       final List<String> creditNames = const [],
@@ -178,14 +174,14 @@ class _$CreditInputResponseStateImpl implements _CreditInputResponseState {
 
   @override
   String toString() {
-    return 'CreditInputResponseState(itemPos: $itemPos, creditDates: $creditDates, creditNames: $creditNames, creditPrices: $creditPrices)';
+    return 'CreditResponseState(itemPos: $itemPos, creditDates: $creditDates, creditNames: $creditNames, creditPrices: $creditPrices)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CreditInputResponseStateImpl &&
+            other is _$CreditResponseStateImpl &&
             (identical(other.itemPos, itemPos) || other.itemPos == itemPos) &&
             const DeepCollectionEquality()
                 .equals(other._creditDates, _creditDates) &&
@@ -206,17 +202,17 @@ class _$CreditInputResponseStateImpl implements _CreditInputResponseState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$CreditInputResponseStateImplCopyWith<_$CreditInputResponseStateImpl>
-      get copyWith => __$$CreditInputResponseStateImplCopyWithImpl<
-          _$CreditInputResponseStateImpl>(this, _$identity);
+  _$$CreditResponseStateImplCopyWith<_$CreditResponseStateImpl> get copyWith =>
+      __$$CreditResponseStateImplCopyWithImpl<_$CreditResponseStateImpl>(
+          this, _$identity);
 }
 
-abstract class _CreditInputResponseState implements CreditInputResponseState {
-  const factory _CreditInputResponseState(
+abstract class _CreditResponseState implements CreditResponseState {
+  const factory _CreditResponseState(
       {final int itemPos,
       final List<String> creditDates,
       final List<String> creditNames,
-      final List<int> creditPrices}) = _$CreditInputResponseStateImpl;
+      final List<int> creditPrices}) = _$CreditResponseStateImpl;
 
   @override
   int get itemPos;
@@ -228,6 +224,6 @@ abstract class _CreditInputResponseState implements CreditInputResponseState {
   List<int> get creditPrices;
   @override
   @JsonKey(ignore: true)
-  _$$CreditInputResponseStateImplCopyWith<_$CreditInputResponseStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CreditResponseStateImplCopyWith<_$CreditResponseStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

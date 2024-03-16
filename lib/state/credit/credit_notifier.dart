@@ -1,18 +1,18 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../collections/credit.dart';
-import 'credit_input_response_state.dart';
+import 'credit_response_state.dart';
 
-final creditInputProvider = StateNotifierProvider.autoDispose<CreditInputNotifier, CreditInputResponseState>((ref) {
+final creditProvider = StateNotifierProvider.autoDispose<CreditNotifier, CreditResponseState>((ref) {
   final dates = List.generate(10, (index) => '');
   final names = List.generate(10, (index) => '');
   final prices = List.generate(10, (index) => -1);
 
-  return CreditInputNotifier(CreditInputResponseState(creditDates: dates, creditNames: names, creditPrices: prices));
+  return CreditNotifier(CreditResponseState(creditDates: dates, creditNames: names, creditPrices: prices));
 });
 
-class CreditInputNotifier extends StateNotifier<CreditInputResponseState> {
-  CreditInputNotifier(super.state);
+class CreditNotifier extends StateNotifier<CreditResponseState> {
+  CreditNotifier(super.state);
 
   ///
   Future<void> setItemPos({required int pos}) async => state = state.copyWith(itemPos: pos);

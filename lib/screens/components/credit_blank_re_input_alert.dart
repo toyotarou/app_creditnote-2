@@ -9,8 +9,9 @@ import '../../collections/credit.dart';
 import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 import '../../model/credit_blank_input_value.dart';
+import '../../repository/credit_details_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
-import '../../state/credit_blank/credit_blank_notifier.dart';
+import 'parts/error_dialog.dart';
 
 class CreditBlankReInputAlert extends ConsumerStatefulWidget {
   const CreditBlankReInputAlert(
@@ -26,6 +27,18 @@ class CreditBlankReInputAlert extends ConsumerStatefulWidget {
 }
 
 class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAlert> {
+  Map<int, CreditBlankInputValue> creditBlankInputValueMap = {};
+
+  ///
+  @override
+  void initState() {
+    super.initState();
+
+    for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
+      ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: '');
+    }
+  }
+
   ///
   @override
   Widget build(BuildContext context) {
@@ -77,9 +90,6 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
   }
 
   ///
-  Future<void> _inputCreditBlankReInput() async {}
-
-  ///
   Widget _displayInputParts() {
     final list = <Widget>[];
 
@@ -112,9 +122,7 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-//                        color: (date != '' && name != '' && price != -1) ? Colors.orangeAccent.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-
-                        color: Colors.white.withOpacity(0.2),
+                        color: (creditBlankInputValueMap[i] != null) ? Colors.orangeAccent.withOpacity(0.4) : Colors.white.withOpacity(0.2),
                         width: 2),
                   ),
                   child: Column(
@@ -127,10 +135,12 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                             onTap: () {
                               ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: e.name);
 
-                              ref.read(creditBlankProvider.notifier).setSelectedCreditBlankInputValue(
-                                    pos: i,
-                                    value: CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name),
-                                  );
+                              creditBlankInputValueMap[i] = CreditBlankInputValue(
+                                widget.creditBlankCreditDetailList[i].id,
+                                e.name,
+                                e.date,
+                                e.price.toString(),
+                              );
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -163,5 +173,38 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
     }
 
     return SingleChildScrollView(child: Column(children: list));
+  }
+
+  ///
+  Future<void> _inputCreditBlankReInput() async {
+    final updateCreditDetailList = <CreditDetail>[];
+
+    await widget.isar.writeTxn(() async {
+      creditBlankInputValueMap.forEach((key, value) {
+        CreditDetailsRepository().getCreditDetail(isar: widget.isar, id: value.creditDetailId).then((value2) {
+          updateCreditDetailList.add(value2!
+            ..creditDate = value.creditDate
+            ..creditPrice = value.creditPrice);
+        });
+      });
+    });
+
+    if (updateCreditDetailList.isEmpty) {
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+      );
+
+      await ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
+      return;
+    }
+
+    await widget.isar.writeTxn(() async {
+      await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: updateCreditDetailList).then((value) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
+    });
   }
 }

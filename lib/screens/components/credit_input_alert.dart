@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:credit_note/screens/components/credit_blank_re_input_alert.dart';
-import 'package:credit_note/screens/components/parts/credit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +12,8 @@ import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
 import '../../state/credit/credit_notifier.dart';
+import 'credit_blank_re_input_alert.dart';
+import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
@@ -114,6 +114,8 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
+                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
                         CreditDialog(
                           context: context,
                           widget: CreditBlankReInputAlert(

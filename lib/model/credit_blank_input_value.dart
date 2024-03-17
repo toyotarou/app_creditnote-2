@@ -1,6 +1,8 @@
 class CreditBlankInputValue {
+  CreditBlankInputValue(this.creditDetailId, this.creditName, this.creditDate, this.creditPrice);
 
-  CreditBlankInputValue(this.creditDetailId, this.creditName);
   int creditDetailId;
   String creditName;
+  String creditDate;
+  String creditPrice;
 }

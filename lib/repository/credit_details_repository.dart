@@ -6,6 +6,11 @@ class CreditDetailsRepository {
   ///
   IsarCollection<CreditDetail> getCollection({required Isar isar}) => isar.creditDetails;
 
+  Future<CreditDetail?> getCreditDetail({required Isar isar, required int id}) async {
+    final creditDetailsCollection = getCollection(isar: isar);
+    return creditDetailsCollection.get(id);
+  }
+
   ///
   Future<List<CreditDetail>?> getCreditDetailList({required Isar isar}) async {
     final creditDetailsCollection = getCollection(isar: isar);
@@ -29,6 +34,13 @@ class CreditDetailsRepository {
   Future<void> inputCreditDetail({required Isar isar, required CreditDetail creditDetail}) async {
     final creditDetailsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => creditDetailsCollection.put(creditDetail));
+  }
+
+  ///
+  Future<void> updateCreditDetailList({required Isar isar, required List<CreditDetail> creditDetailList}) async {
+    creditDetailList.forEach((element) {
+      updateCreditDetail(isar: isar, creditDetail: element);
+    });
   }
 
   ///

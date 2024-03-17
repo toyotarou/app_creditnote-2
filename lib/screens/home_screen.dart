@@ -1,3 +1,4 @@
+import 'package:credit_note/state/app_params/app_params_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -71,7 +72,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       body: Stack(
         children: [
-          BackGroundImage(),
+          const BackGroundImage(),
           Container(
             width: context.screenSize.width,
             height: context.screenSize.height,
@@ -176,6 +177,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () {
+                                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
                                         CreditDialog(
                                           context: context,
                                           widget: CreditInputAlert(
@@ -226,6 +229,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           const SizedBox(width: 10),
                                           GestureDetector(
                                             onTap: () {
+                                              ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
                                               //-----------------------------
                                               final list = <CreditDetail>[];
                                               creditDetailList?.forEach((element) {

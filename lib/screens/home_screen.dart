@@ -13,6 +13,7 @@ import '../repository/credits_repository.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
+import 'components/parts/back_ground_image.dart';
 import 'components/parts/credit_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -68,9 +69,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           )
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
+          BackGroundImage(),
+          Container(
+            width: context.screenSize.width,
+            height: context.screenSize.height,
+            decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
+          ),
+          Column(
+            children: [
+              if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
+            ],
+          ),
         ],
       ),
       endDrawer: _dispEndDrawer(),

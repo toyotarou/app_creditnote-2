@@ -7,6 +7,6 @@ part 'credit_blank_response_state.freezed.dart';
 @freezed
 class CreditBlankResponseState with _$CreditBlankResponseState {
   const factory CreditBlankResponseState({
-    @Default([]) List<CreditBlankInputValue> creditBlankInputValues,
+    @Default([]) List<CreditBlankInputValue> creditBlankInputValueList,
   }) = _CreditBlankResponseState;
 }

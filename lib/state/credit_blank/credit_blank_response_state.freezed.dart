@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CreditBlankResponseState {
-  List<CreditBlankInputValue> get creditBlankInputValues =>
+  List<CreditBlankInputValue> get creditBlankInputValueList =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +30,7 @@ abstract class $CreditBlankResponseStateCopyWith<$Res> {
           $Res Function(CreditBlankResponseState) then) =
       _$CreditBlankResponseStateCopyWithImpl<$Res, CreditBlankResponseState>;
   @useResult
-  $Res call({List<CreditBlankInputValue> creditBlankInputValues});
+  $Res call({List<CreditBlankInputValue> creditBlankInputValueList});
 }
 
 /// @nodoc
@@ -47,12 +47,12 @@ class _$CreditBlankResponseStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? creditBlankInputValues = null,
+    Object? creditBlankInputValueList = null,
   }) {
     return _then(_value.copyWith(
-      creditBlankInputValues: null == creditBlankInputValues
-          ? _value.creditBlankInputValues
-          : creditBlankInputValues // ignore: cast_nullable_to_non_nullable
+      creditBlankInputValueList: null == creditBlankInputValueList
+          ? _value.creditBlankInputValueList
+          : creditBlankInputValueList // ignore: cast_nullable_to_non_nullable
               as List<CreditBlankInputValue>,
     ) as $Val);
   }
@@ -67,7 +67,7 @@ abstract class _$$CreditBlankResponseStateImplCopyWith<$Res>
       __$$CreditBlankResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<CreditBlankInputValue> creditBlankInputValues});
+  $Res call({List<CreditBlankInputValue> creditBlankInputValueList});
 }
 
 /// @nodoc
@@ -83,12 +83,12 @@ class __$$CreditBlankResponseStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? creditBlankInputValues = null,
+    Object? creditBlankInputValueList = null,
   }) {
     return _then(_$CreditBlankResponseStateImpl(
-      creditBlankInputValues: null == creditBlankInputValues
-          ? _value._creditBlankInputValues
-          : creditBlankInputValues // ignore: cast_nullable_to_non_nullable
+      creditBlankInputValueList: null == creditBlankInputValueList
+          ? _value._creditBlankInputValueList
+          : creditBlankInputValueList // ignore: cast_nullable_to_non_nullable
               as List<CreditBlankInputValue>,
     ));
   }
@@ -98,22 +98,22 @@ class __$$CreditBlankResponseStateImplCopyWithImpl<$Res>
 
 class _$CreditBlankResponseStateImpl implements _CreditBlankResponseState {
   const _$CreditBlankResponseStateImpl(
-      {final List<CreditBlankInputValue> creditBlankInputValues = const []})
-      : _creditBlankInputValues = creditBlankInputValues;
+      {final List<CreditBlankInputValue> creditBlankInputValueList = const []})
+      : _creditBlankInputValueList = creditBlankInputValueList;
 
-  final List<CreditBlankInputValue> _creditBlankInputValues;
+  final List<CreditBlankInputValue> _creditBlankInputValueList;
   @override
   @JsonKey()
-  List<CreditBlankInputValue> get creditBlankInputValues {
-    if (_creditBlankInputValues is EqualUnmodifiableListView)
-      return _creditBlankInputValues;
+  List<CreditBlankInputValue> get creditBlankInputValueList {
+    if (_creditBlankInputValueList is EqualUnmodifiableListView)
+      return _creditBlankInputValueList;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_creditBlankInputValues);
+    return EqualUnmodifiableListView(_creditBlankInputValueList);
   }
 
   @override
   String toString() {
-    return 'CreditBlankResponseState(creditBlankInputValues: $creditBlankInputValues)';
+    return 'CreditBlankResponseState(creditBlankInputValueList: $creditBlankInputValueList)';
   }
 
   @override
@@ -122,12 +122,12 @@ class _$CreditBlankResponseStateImpl implements _CreditBlankResponseState {
         (other.runtimeType == runtimeType &&
             other is _$CreditBlankResponseStateImpl &&
             const DeepCollectionEquality().equals(
-                other._creditBlankInputValues, _creditBlankInputValues));
+                other._creditBlankInputValueList, _creditBlankInputValueList));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_creditBlankInputValues));
+      const DeepCollectionEquality().hash(_creditBlankInputValueList));
 
   @JsonKey(ignore: true)
   @override
@@ -139,11 +139,11 @@ class _$CreditBlankResponseStateImpl implements _CreditBlankResponseState {
 
 abstract class _CreditBlankResponseState implements CreditBlankResponseState {
   const factory _CreditBlankResponseState(
-          {final List<CreditBlankInputValue> creditBlankInputValues}) =
+          {final List<CreditBlankInputValue> creditBlankInputValueList}) =
       _$CreditBlankResponseStateImpl;
 
   @override
-  List<CreditBlankInputValue> get creditBlankInputValues;
+  List<CreditBlankInputValue> get creditBlankInputValueList;
   @override
   @JsonKey(ignore: true)
   _$$CreditBlankResponseStateImplCopyWith<_$CreditBlankResponseStateImpl>

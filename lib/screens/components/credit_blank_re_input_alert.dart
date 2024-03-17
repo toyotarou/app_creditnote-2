@@ -128,7 +128,9 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                               ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: e.name);
 
                               ref.read(creditBlankProvider.notifier).setSelectedCreditBlankInputValue(
-                                  pos: i, value: CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name, e.price));
+                                    pos: i,
+                                    value: CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name),
+                                  );
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 5),

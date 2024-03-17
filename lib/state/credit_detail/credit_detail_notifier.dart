@@ -111,4 +111,14 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
       // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
   }
+
+  ///
+  Future<void> clearOneBox({required int pos}) async {
+    final dates = List.generate(roopNum, (index) => '');
+    final items = List.generate(roopNum, (index) => '');
+    final prices = List.generate(roopNum, (index) => 0);
+    final descriptions = List.generate(roopNum, (index) => '');
+
+    state = state.copyWith(creditDetailDates: dates, creditDetailItems: items, creditDetailPrices: prices, creditDetailDescriptions: descriptions);
+  }
 }

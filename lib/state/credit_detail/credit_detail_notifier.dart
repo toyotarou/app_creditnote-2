@@ -114,10 +114,15 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
 
   ///
   Future<void> clearOneBox({required int pos}) async {
-    final dates = List.generate(roopNum, (index) => '');
-    final items = List.generate(roopNum, (index) => '');
-    final prices = List.generate(roopNum, (index) => 0);
-    final descriptions = List.generate(roopNum, (index) => '');
+    final dates = <String>[...state.creditDetailDates];
+    final items = <String>[...state.creditDetailItems];
+    final prices = <int>[...state.creditDetailPrices];
+    final descriptions = <String>[...state.creditDetailDescriptions];
+
+    dates[pos] = '';
+    items[pos] = '';
+    prices[pos] = 0;
+    descriptions[pos] = '';
 
     state = state.copyWith(creditDetailDates: dates, creditDetailItems: items, creditDetailPrices: prices, creditDetailDescriptions: descriptions);
   }

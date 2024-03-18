@@ -111,7 +111,10 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                   right: 15,
                   child: Text(
                     (i + 1).toString().padLeft(2, '0'),
-                    style: TextStyle(fontSize: 60, color: Colors.grey.withOpacity(0.3)),
+                    style: TextStyle(
+                      fontSize: 60,
+                      color: (creditBlankInputValueMap[i] != null) ? Colors.orangeAccent.withOpacity(0.2) : Colors.white.withOpacity(0.2),
+                    ),
                   ),
                 ),
                 Container(

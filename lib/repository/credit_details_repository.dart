@@ -20,7 +20,7 @@ class CreditDetailsRepository {
   ///
   Future<List<CreditDetail>?> getCreditDetailListByDateAndPrice({required Isar isar, required Map<String, dynamic> param}) async {
     final creditDetailsCollection = getCollection(isar: isar);
-    return creditDetailsCollection.filter().creditDateEqualTo(param['date']).creditPriceEqualTo(param['price']).findAll();
+    return creditDetailsCollection.filter().creditDateEqualTo(param['date']).creditPriceEqualTo(param['price']).sortByCreditDetailDate().findAll();
   }
 
   ///

@@ -167,7 +167,12 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                 right: 5,
                 child: Text(
                   (i + 1).toString().padLeft(2, '0'),
-                  style: TextStyle(fontSize: 60, color: Colors.grey.withOpacity(0.3)),
+                  style: TextStyle(
+                    fontSize: 60,
+                    color: (date != '' && item != '' && price != 0 && detail != '')
+                        ? Colors.orangeAccent.withOpacity(0.2)
+                        : Colors.white.withOpacity(0.2),
+                  ),
                 ),
               ),
               Column(
@@ -262,9 +267,9 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
       barrierColor: Colors.transparent,
       locale: const Locale('ja'),
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 360)),
+      initialDate: DateTime(widget.creditDate.year, widget.creditDate.month),
+      firstDate: DateTime(widget.creditDate.year, widget.creditDate.month - 3),
+      lastDate: DateTime(widget.creditDate.year, widget.creditDate.month + 1, 0),
     );
 
     if (selectedDate != null) {

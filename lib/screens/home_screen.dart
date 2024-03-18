@@ -240,6 +240,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               });
                                               //-----------------------------
 
+                                              list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
+
                                               CreditDialog(
                                                 context: context,
                                                 widget: CreditDetailInputAlert(

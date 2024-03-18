@@ -215,6 +215,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: creList.map((e) {
+                                    //-----------------------------
+                                    final list = <CreditDetail>[];
+                                    creditDetailList?.forEach((element) {
+                                      if (element.creditDate == e.date && element.creditPrice == e.price.toString()) {
+                                        list.add(element);
+                                      }
+                                    });
+                                    //-----------------------------
+
+                                    list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
+
+                                    var sum = 0;
+                                    list.forEach((element) => sum += element.creditDetailPrice);
+
                                     return Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
@@ -231,17 +245,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             onTap: () {
                                               ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
-                                              //-----------------------------
-                                              final list = <CreditDetail>[];
-                                              creditDetailList?.forEach((element) {
-                                                if (element.creditDate == e.date && element.creditPrice == e.price.toString()) {
-                                                  list.add(element);
-                                                }
-                                              });
-                                              //-----------------------------
-
-                                              list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
-
                                               CreditDialog(
                                                 context: context,
                                                 widget: CreditDetailInputAlert(
@@ -254,6 +257,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               );
                                             },
                                             child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Container(
+                                            width: 10,
+                                            height: 10,
+                                            decoration: BoxDecoration(
+                                              color: (e.price == sum) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
                                           ),
                                         ],
                                       ),

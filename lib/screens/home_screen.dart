@@ -1,4 +1,3 @@
-import 'package:credit_note/state/app_params/app_params_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -11,6 +10,7 @@ import '../extensions/extensions.dart';
 import '../repository/credit_details_repository.dart';
 import '../repository/credit_items_repository.dart';
 import '../repository/credits_repository.dart';
+import '../state/app_params/app_params_notifier.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
@@ -64,7 +64,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              CreditDialog(context: context, widget: ConfigSettingAlert(isar: widget.isar));
+              final creditItemCountMap = <String, List<CreditDetail>>{};
+              creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem] = []);
+              creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem]?.add(element));
+
+              CreditDialog(
+                context: context,
+                widget: ConfigSettingAlert(isar: widget.isar, creditItemCountMap: creditItemCountMap),
+              );
             },
             icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
           )
@@ -275,91 +282,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             itemCount: creList.length,
                           ),
                         ),
-
-                        /*
-
-
-
-
-                        //////////////////////////////
-
-                        child: SingleChildScrollView(
-                          child: (creList.isNotEmpty)
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: creList.map((e) {
-                                    //-----------------------------
-                                    final list = <CreditDetail>[];
-                                    creditDetailList?.forEach((element) {
-                                      if (element.creditDate == e.date && element.creditPrice == e.price.toString()) {
-                                        list.add(element);
-                                      }
-                                    });
-                                    //-----------------------------
-
-                                    list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
-
-                                    var sum = 0;
-                                    list.forEach((element) => sum += element.creditDetailPrice);
-
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 30, child: Text(DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'))),
-
-
-
-
-
-                                          Expanded(
-                                            child: Text(e.name,
-                                                style: const TextStyle(color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis),
-                                          ),
-                                          Container(width: 60, alignment: Alignment.topRight, child: Text(e.price.toString().toCurrency())),
-                                          const SizedBox(width: 10),
-                                          GestureDetector(
-                                            onTap: () {
-                                              ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
-
-                                              CreditDialog(
-                                                context: context,
-                                                widget: CreditDetailInputAlert(
-                                                  isar: widget.isar,
-                                                  creditDate: DateTime.parse('${e.date} 00:00:00'),
-                                                  creditPrice: e.price,
-                                                  creditItemList: creditItemList ?? [],
-                                                  creditDetailList: list,
-                                                ),
-                                              );
-                                            },
-                                            child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Container(
-                                            width: 10,
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              color: (e.price == sum) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                )
-                              : Container(),
-                        ),
-
-                        //////////////////////////////
-
-
-
-
-
-                        */
                       ),
                     ),
                     Container(width: 70, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/config.dart';
+import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/configs_repository.dart';
@@ -14,9 +15,11 @@ import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
 
 class ConfigSettingAlert extends ConsumerStatefulWidget {
-  const ConfigSettingAlert({super.key, required this.isar});
+  const ConfigSettingAlert({super.key, required this.isar, required this.creditItemCountMap});
 
   final Isar isar;
+
+  final Map<String, List<CreditDetail>> creditItemCountMap;
 
   ///
   @override
@@ -211,10 +214,8 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
                 onPressed: () {
                   CreditDialog(
                     context: context,
-                    widget: CreditItemInputAlert(
-                      isar: widget.isar,
-                      creditItemList: creditItemList ?? [],
-                    ),
+                    widget:
+                        CreditItemInputAlert(isar: widget.isar, creditItemList: creditItemList ?? [], creditItemCountMap: widget.creditItemCountMap),
                   );
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
@@ -269,9 +270,6 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   }
 
   ///
-  Future<void> _makeCreditItemList() async {
-    await CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) {
-      setState(() => creditItemList = value);
-    });
-  }
+  Future<void> _makeCreditItemList() async =>
+      CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) => setState(() => creditItemList = value));
 }

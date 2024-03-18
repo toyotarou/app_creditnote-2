@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
+import '../../../collections/credit_detail.dart';
 import '../../../extensions/extensions.dart';
 
 class CreditItemCard extends StatelessWidget {
@@ -11,6 +12,7 @@ class CreditItemCard extends StatelessWidget {
     required this.colorPickerButtonPress,
     required this.colorCode,
     required this.isar,
+    required this.creditItemCountMap,
   });
 
   final String name;
@@ -21,6 +23,8 @@ class CreditItemCard extends StatelessWidget {
   final String colorCode;
 
   final Isar isar;
+
+  final Map<String, List<CreditDetail>> creditItemCountMap;
 
   ///
   @override
@@ -40,56 +44,19 @@ class CreditItemCard extends StatelessWidget {
                   Container(
                     alignment: Alignment.topRight,
                     child: Text(
-                      // (spendTimePlaceCountMap[spendItemName] != null)
-                      //     ? spendTimePlaceCountMap[spendItemName]!.length.toString()
-                      //     :
-
-                      0.toString(),
+                      (creditItemCountMap[name] != null) ? creditItemCountMap[name]!.length.toString() : 0.toString(),
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),
-                  // const SizedBox(width: 5),
-                  // (spendTimePlaceCountMap[spendItemName] == null)
-                  //     ? Container()
-                  //     : (spendTimePlaceCountMap[spendItemName]!.isEmpty)
-                  //         ? const Icon(Icons.check_box_outline_blank, color: Colors.transparent)
-                  //         : GestureDetector(
-                  //             onTap: () {
-                  //               MoneyDialog(
-                  //                 context: context,
-                  //                 widget: SpendItemHistoryAlert(
-                  //                   date: DateTime.now(),
-                  //                   isar: isar,
-                  //                   item: spendItemName,
-                  //                   sum: 0,
-                  //                   from: 'spend_item_card',
-                  //                 ),
-                  //               );
-                  //             },
-                  //             child: Icon(Icons.list, color: Colors.white.withOpacity(0.2)),
-                  //           ),
                 ],
               ),
               const SizedBox(width: 20),
-              // GestureDetector(
-              //   onTap: defaultTimeButtonPress,
-              //   child: Icon(
-              //     Icons.access_time_outlined,
-              //     color: (exDefaultTime[0].toInt() == 0)
-              //         ? Colors.yellowAccent.withOpacity(0.3)
-              //         : Colors.white.withOpacity(0.2),
-              //   ),
-              // ),
-              // const SizedBox(width: 10),
               GestureDetector(
                 onTap: colorPickerButtonPress,
                 child: Icon(Icons.color_lens_outlined, color: Colors.white.withOpacity(0.2)),
               ),
               const SizedBox(width: 10),
-              GestureDetector(
-                onTap: deleteButtonPress,
-                child: Icon(Icons.delete, color: Colors.white.withOpacity(0.2)),
-              ),
+              GestureDetector(onTap: deleteButtonPress, child: Icon(Icons.delete, color: Colors.white.withOpacity(0.2))),
             ],
           ),
         ],

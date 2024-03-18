@@ -210,6 +210,79 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: Container(
                         height: context.screenSize.height / 10,
                         decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              //-----------------------------
+                              final list = <CreditDetail>[];
+                              creditDetailList?.forEach((element) {
+                                if (element.creditDate == creList[index].date && element.creditPrice == creList[index].price.toString()) {
+                                  list.add(element);
+                                }
+                              });
+                              //-----------------------------
+
+                              list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
+
+                              var sum = 0;
+                              list.forEach((element) => sum += element.creditDetailPrice);
+
+                              return Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                        width: 30, child: Text(DateTime.parse('${creList[index].date} 00:00:00').day.toString().padLeft(2, '0'))),
+                                    Expanded(
+                                      child: Text(creList[index].name,
+                                          style: const TextStyle(color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis),
+                                    ),
+                                    Container(width: 60, alignment: Alignment.topRight, child: Text(creList[index].price.toString().toCurrency())),
+                                    const SizedBox(width: 10),
+                                    GestureDetector(
+                                      onTap: () {
+                                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+
+                                        CreditDialog(
+                                          context: context,
+                                          widget: CreditDetailInputAlert(
+                                            isar: widget.isar,
+                                            creditDate: DateTime.parse('${creList[index].date} 00:00:00'),
+                                            creditPrice: creList[index].price,
+                                            creditItemList: creditItemList ?? [],
+                                            creditDetailList: list,
+                                          ),
+                                        );
+                                      },
+                                      child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        color: (creList[index].price == sum) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => Container(),
+                            itemCount: creList.length,
+                          ),
+                        ),
+
+                        /*
+
+
+
+
+                        //////////////////////////////
+
                         child: SingleChildScrollView(
                           child: (creList.isNotEmpty)
                               ? Column(
@@ -235,6 +308,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       child: Row(
                                         children: [
                                           SizedBox(width: 30, child: Text(DateTime.parse('${e.date} 00:00:00').day.toString().padLeft(2, '0'))),
+
+
+
+
+
                                           Expanded(
                                             child: Text(e.name,
                                                 style: const TextStyle(color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -274,6 +352,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 )
                               : Container(),
                         ),
+
+                        //////////////////////////////
+
+
+
+
+
+                        */
                       ),
                     ),
                     Container(width: 70, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),

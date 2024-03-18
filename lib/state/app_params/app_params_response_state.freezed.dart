@@ -19,6 +19,7 @@ mixin _$AppParamsResponseState {
   bool get inputButtonClicked => throw _privateConstructorUsedError;
   Map<int, String> get creditBlankSettingMap =>
       throw _privateConstructorUsedError;
+  String get homeListSelectedYearmonth => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AppParamsResponseStateCopyWith<AppParamsResponseState> get copyWith =>
@@ -31,7 +32,10 @@ abstract class $AppParamsResponseStateCopyWith<$Res> {
           $Res Function(AppParamsResponseState) then) =
       _$AppParamsResponseStateCopyWithImpl<$Res, AppParamsResponseState>;
   @useResult
-  $Res call({bool inputButtonClicked, Map<int, String> creditBlankSettingMap});
+  $Res call(
+      {bool inputButtonClicked,
+      Map<int, String> creditBlankSettingMap,
+      String homeListSelectedYearmonth});
 }
 
 /// @nodoc
@@ -50,6 +54,7 @@ class _$AppParamsResponseStateCopyWithImpl<$Res,
   $Res call({
     Object? inputButtonClicked = null,
     Object? creditBlankSettingMap = null,
+    Object? homeListSelectedYearmonth = null,
   }) {
     return _then(_value.copyWith(
       inputButtonClicked: null == inputButtonClicked
@@ -60,6 +65,10 @@ class _$AppParamsResponseStateCopyWithImpl<$Res,
           ? _value.creditBlankSettingMap
           : creditBlankSettingMap // ignore: cast_nullable_to_non_nullable
               as Map<int, String>,
+      homeListSelectedYearmonth: null == homeListSelectedYearmonth
+          ? _value.homeListSelectedYearmonth
+          : homeListSelectedYearmonth // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -73,7 +82,10 @@ abstract class _$$AppParamsResponseStateImplCopyWith<$Res>
       __$$AppParamsResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool inputButtonClicked, Map<int, String> creditBlankSettingMap});
+  $Res call(
+      {bool inputButtonClicked,
+      Map<int, String> creditBlankSettingMap,
+      String homeListSelectedYearmonth});
 }
 
 /// @nodoc
@@ -91,6 +103,7 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
   $Res call({
     Object? inputButtonClicked = null,
     Object? creditBlankSettingMap = null,
+    Object? homeListSelectedYearmonth = null,
   }) {
     return _then(_$AppParamsResponseStateImpl(
       inputButtonClicked: null == inputButtonClicked
@@ -101,6 +114,10 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
           ? _value._creditBlankSettingMap
           : creditBlankSettingMap // ignore: cast_nullable_to_non_nullable
               as Map<int, String>,
+      homeListSelectedYearmonth: null == homeListSelectedYearmonth
+          ? _value.homeListSelectedYearmonth
+          : homeListSelectedYearmonth // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -110,7 +127,8 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
 class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
   const _$AppParamsResponseStateImpl(
       {this.inputButtonClicked = false,
-      final Map<int, String> creditBlankSettingMap = const {}})
+      final Map<int, String> creditBlankSettingMap = const {},
+      this.homeListSelectedYearmonth = ''})
       : _creditBlankSettingMap = creditBlankSettingMap;
 
   @override
@@ -127,8 +145,12 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
   }
 
   @override
+  @JsonKey()
+  final String homeListSelectedYearmonth;
+
+  @override
   String toString() {
-    return 'AppParamsResponseState(inputButtonClicked: $inputButtonClicked, creditBlankSettingMap: $creditBlankSettingMap)';
+    return 'AppParamsResponseState(inputButtonClicked: $inputButtonClicked, creditBlankSettingMap: $creditBlankSettingMap, homeListSelectedYearmonth: $homeListSelectedYearmonth)';
   }
 
   @override
@@ -139,12 +161,18 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
             (identical(other.inputButtonClicked, inputButtonClicked) ||
                 other.inputButtonClicked == inputButtonClicked) &&
             const DeepCollectionEquality()
-                .equals(other._creditBlankSettingMap, _creditBlankSettingMap));
+                .equals(other._creditBlankSettingMap, _creditBlankSettingMap) &&
+            (identical(other.homeListSelectedYearmonth,
+                    homeListSelectedYearmonth) ||
+                other.homeListSelectedYearmonth == homeListSelectedYearmonth));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, inputButtonClicked,
-      const DeepCollectionEquality().hash(_creditBlankSettingMap));
+  int get hashCode => Object.hash(
+      runtimeType,
+      inputButtonClicked,
+      const DeepCollectionEquality().hash(_creditBlankSettingMap),
+      homeListSelectedYearmonth);
 
   @JsonKey(ignore: true)
   @override
@@ -156,14 +184,16 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
 
 abstract class _AppParamsResponseState implements AppParamsResponseState {
   const factory _AppParamsResponseState(
-          {final bool inputButtonClicked,
-          final Map<int, String> creditBlankSettingMap}) =
-      _$AppParamsResponseStateImpl;
+      {final bool inputButtonClicked,
+      final Map<int, String> creditBlankSettingMap,
+      final String homeListSelectedYearmonth}) = _$AppParamsResponseStateImpl;
 
   @override
   bool get inputButtonClicked;
   @override
   Map<int, String> get creditBlankSettingMap;
+  @override
+  String get homeListSelectedYearmonth;
   @override
   @JsonKey(ignore: true)
   _$$AppParamsResponseStateImplCopyWith<_$AppParamsResponseStateImpl>

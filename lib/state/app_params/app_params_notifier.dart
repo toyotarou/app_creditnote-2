@@ -17,4 +17,7 @@ class AppParamNotifier extends StateNotifier<AppParamsResponseState> {
     map[pos] = creditName;
     state = state.copyWith(creditBlankSettingMap: map);
   }
+
+  ///
+  Future<void> setHomeListSelectedYearmonth({required String yearmonth}) async => state = state.copyWith(homeListSelectedYearmonth: yearmonth);
 }

@@ -41,9 +41,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   void _init() {
-    makeSettingConfigMap();
+    _makeSettingConfigMap();
 
-    makeCreditList();
+    _makeCreditList();
 
     _makeCreditItemList();
 
@@ -98,19 +98,90 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget _dispEndDrawer() {
+    final homeListSelectedYearmonth = ref.watch(appParamProvider.select((value) => value.homeListSelectedYearmonth));
+
+    //===============================
+    var sum = 0;
+    final creList = <Credit>[];
+    creditList?.forEach((element) {
+      final exDate = element.date.split('-');
+      if (homeListSelectedYearmonth == '${exDate[0]}-${exDate[1]}') {
+        sum += element.price;
+        creList.add(element);
+      }
+    });
+    //===============================
+
     return Drawer(
       backgroundColor: Colors.blueGrey.withOpacity(0.2),
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 10),
-          child: const Column(crossAxisAlignment: CrossAxisAlignment.start),
+      child: Container(
+        padding: const EdgeInsets.only(left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(homeListSelectedYearmonth),
+                Text(sum.toString().toCurrency()),
+              ],
+            ),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            Expanded(child: _displayCreditDetailList()),
+          ],
         ),
       ),
     );
   }
 
   ///
-  Future<void> makeSettingConfigMap() async {
+  Widget _displayCreditDetailList() {
+    final list = <Widget>[];
+
+    final homeListSelectedYearmonth = ref.watch(appParamProvider.select((value) => value.homeListSelectedYearmonth));
+
+    if (creditDetailList != null) {
+      creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
+        ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
+        ..forEach((element) {
+          list.add(Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(element.creditDetailDate),
+                    Text(element.creditDetailPrice.toString().toCurrency()),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(element.creditDetailDescription),
+                    Container(
+                      width: context.screenSize.width / 4,
+                      margin: const EdgeInsets.symmetric(vertical: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                      child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ));
+        });
+    }
+
+    return SingleChildScrollView(child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
+  }
+
+  ///
+  Future<void> _makeSettingConfigMap() async {
     final configsCollection = widget.isar.configs;
 
     final getConfigs = await configsCollection.where().findAll();
@@ -203,7 +274,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   Container(
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
-                                      onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
+                                      onTap: () {
+                                        ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: yearmonth);
+
+                                        _scaffoldKey.currentState!.openEndDrawer();
+                                      },
                                       child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
@@ -300,7 +375,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   ///
-  Future<void> makeCreditList() async => CreditsRepository().getCreditList(isar: widget.isar).then((value) => setState(() => creditList = value));
+  Future<void> _makeCreditList() async => CreditsRepository().getCreditList(isar: widget.isar).then((value) => setState(() => creditList = value));
 
   ///
   Future<void> _makeCreditItemList() async =>

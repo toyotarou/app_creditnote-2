@@ -31,18 +31,14 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
 
   ///
   @override
-  void initState() {
-    super.initState();
-
-    for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
-      ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: '');
-    }
-  }
-
-  ///
-  @override
   Widget build(BuildContext context) {
     final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
+
+    Future(() {
+      for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
+        ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: '');
+      }
+    });
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -165,6 +161,21 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                       ),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailItem),
                       Text(widget.creditBlankCreditDetailList[i].creditDetailDescription),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(),
+                          GestureDetector(
+                            onTap: () {
+                              deleteCreditBlankData(id: widget.creditBlankCreditDetailList[i].id);
+                            },
+                            child: Text(
+                              'delete',
+                              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -208,6 +219,14 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
         Navigator.pop(context);
         Navigator.pop(context);
       });
+    });
+  }
+
+  ///
+  Future<void> deleteCreditBlankData({required Id id}) async {
+    await CreditDetailsRepository().deleteCreditDetail(isar: widget.isar, id: id).then((value) {
+      Navigator.pop(context);
+      Navigator.pop(context);
     });
   }
 }

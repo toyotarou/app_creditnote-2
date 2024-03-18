@@ -52,6 +52,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: false,
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark),
         fontFamily: 'KiwiMaru',
+        highlightColor: Colors.grey,
       ),
       themeMode: ThemeMode.dark,
       title: 'credit note',

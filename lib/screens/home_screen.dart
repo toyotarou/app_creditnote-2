@@ -64,8 +64,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (exYearmonth[0] != '' && exYearmonth[1] != '') {
           final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
           final diff = DateTime.now().difference(firstDate).inDays;
+          final yearmonthList = <String>[];
           for (var i = 0; i <= diff; i++) {
-            _scrollControllers.add(ScrollController());
+            final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
+            if (!yearmonthList.contains(yearmonth)) {
+              _scrollControllers.add(ScrollController());
+            }
+            yearmonthList.add(yearmonth);
           }
         }
       }

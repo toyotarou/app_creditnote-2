@@ -200,7 +200,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              addingDeleteCreditList(date: date, price: price);
+                              _addingDeleteCreditList(date: date, price: price);
 
                               _clearOneBox(pos: i);
                             },
@@ -373,7 +373,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   }
 
   ///
-  void addingDeleteCreditList({required String date, required int price}) {
+  void _addingDeleteCreditList({required String date, required int price}) {
     setState(() => deleteCreditList.add(Credit()
       ..date = date
       ..price = price));

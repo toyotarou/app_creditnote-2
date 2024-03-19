@@ -226,13 +226,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               //===============================
               final itemBlankCreditDetailList = <CreditDetail>[];
+
               creditDetailList?.forEach((element) {
-                if (element.creditDate == '' && element.creditPrice == '') {
-                  if (yearmonth == element.yearmonth) {
+                if (yearmonth == element.yearmonth) {
+                  //-----------------------------
+                  if (element.creditDate == '' && element.creditPrice == '') {
                     itemBlankCreditDetailList.add(element);
                   }
+                  //-----------------------------
                 }
               });
+
               //===============================
 
               list.add(Container(
@@ -297,18 +301,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               //-----------------------------
-                              final list = <CreditDetail>[];
+                              final creDetList = <CreditDetail>[];
                               creditDetailList?.forEach((element) {
                                 if (element.creditDate == creList[index].date && element.creditPrice == creList[index].price.toString()) {
-                                  list.add(element);
+                                  creDetList.add(element);
                                 }
                               });
                               //-----------------------------
 
-                              list.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
+                              creDetList.sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate));
+
+                              ////////////////////////// 同数チェック
+                              var inputedCreditDetailDateCount = 0;
+                              var inputedCreditDetailItemCount = 0;
+                              var inputedCreditDetailPriceCount = 0;
+                              var inputedCreditDetailDescriptionCount = 0;
+                              ////////////////////////// 同数チェック
 
                               var sum = 0;
-                              list.forEach((element) => sum += element.creditDetailPrice);
+                              creDetList.forEach((element) {
+                                sum += element.creditDetailPrice;
+
+                                ////////////////////////// 同数チェック
+                                if (element.creditDetailDate != '') {
+                                  inputedCreditDetailDateCount++;
+                                }
+                                if (element.creditDetailItem != '') {
+                                  inputedCreditDetailItemCount++;
+                                }
+                                if (element.creditDetailPrice != 0) {
+                                  inputedCreditDetailPriceCount++;
+                                }
+                                if (element.creditDetailDescription != '') {
+                                  inputedCreditDetailDescriptionCount++;
+                                }
+                                ////////////////////////// 同数チェック
+                              });
+
+                              ////////////////////////// 同数チェック
+                              final countCheck = <int, String>{};
+                              countCheck[inputedCreditDetailDateCount] = '';
+                              countCheck[inputedCreditDetailItemCount] = '';
+                              countCheck[inputedCreditDetailPriceCount] = '';
+                              countCheck[inputedCreditDetailDescriptionCount] = '';
+                              final bool sameNumFlag;
+                              if (countCheck.length > 1) {
+                                sameNumFlag = false;
+                              } else {
+                                sameNumFlag = true;
+                              }
+                              ////////////////////////// 同数チェック
 
                               return Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -334,7 +376,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             creditDate: DateTime.parse('${creList[index].date} 00:00:00'),
                                             creditPrice: creList[index].price,
                                             creditItemList: creditItemList ?? [],
-                                            creditDetailList: list,
+                                            creditDetailList: creDetList,
                                           ),
                                         );
                                       },
@@ -345,7 +387,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       width: 10,
                                       height: 10,
                                       decoration: BoxDecoration(
-                                        color: (creList[index].price == sum) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+                                        color: (creList[index].price == sum)
+                                            ? sameNumFlag
+                                                ? Colors.greenAccent.withOpacity(0.3)
+                                                : Colors.yellowAccent.withOpacity(0.3)
+                                            : Colors.black.withOpacity(0.3),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),

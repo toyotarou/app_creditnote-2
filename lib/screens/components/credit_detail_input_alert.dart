@@ -285,26 +285,9 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
 
     var errFlg = false;
 
-    ////////////////////////// 同数チェック
-    var creditDetailDateCount = 0;
-    var creditDetailItemCount = 0;
-    var creditDetailPriceCount = 0;
-    var creditDetailDescriptionCount = 0;
-    ////////////////////////// 同数チェック
-
     for (var i = 0; i < roopNum; i++) {
       //===============================================
-      if (
-
-//
-// creditDetailState.creditDetailDates[i] != '' &&
-// creditDetailState.creditDetailItems[i] != '' &&
-// creditDetailState.creditDetailPrices[i] != 0 &&
-// creditDetailState.creditDetailDescriptions[i] != ''
-//
-//
-
-          creditDetailState.creditDetailPrices[i] != 0) {
+      if (creditDetailState.creditDetailPrices[i] != 0) {
         list.add(CreditDetail()
           ..yearmonth = widget.creditDate.yyyymm
           ..creditDate = widget.creditDate.yyyymmdd
@@ -315,46 +298,11 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
           ..creditDetailDescription = creditDetailState.creditDetailDescriptions[i]);
       }
       //===============================================
-
-      ////////////////////////// 同数チェック
-      if (creditDetailState.creditDetailDates[i] != '') {
-        creditDetailDateCount++;
-      }
-
-      if (creditDetailState.creditDetailItems[i] != '') {
-        creditDetailItemCount++;
-      }
-
-      if (creditDetailState.creditDetailPrices[i] != 0) {
-        creditDetailPriceCount++;
-      }
-
-      if (creditDetailState.creditDetailDescriptions[i] != '') {
-        creditDetailDescriptionCount++;
-      }
-
-      ////////////////////////// 同数チェック
     }
 
     if (list.isEmpty) {
       errFlg = true;
     }
-
-    ////////////////////////// 同数チェック
-    final countCheck = <int, String>{};
-    countCheck[creditDetailDateCount] = '';
-    countCheck[creditDetailItemCount] = '';
-    countCheck[creditDetailPriceCount] = '';
-    countCheck[creditDetailDescriptionCount] = '';
-
-    // 同数の場合、要素数は1になる
-    if (countCheck.length > 1) {
-      // errFlg = true;
-      //
-      //
-      //
-    }
-    ////////////////////////// 同数チェック
 
     final diff = creditDetailState.diff;
 

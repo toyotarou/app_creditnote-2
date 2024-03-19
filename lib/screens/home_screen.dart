@@ -39,6 +39,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<CreditDetail>? creditDetailList = [];
 
+  final List<ScrollController> _scrollControllers = [];
+
   ///
   void _init() {
     _makeSettingConfigMap();
@@ -54,6 +56,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Future(_init);
+
+    //==================================
+    if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
+      final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
+      if (exYearmonth.length > 1) {
+        if (exYearmonth[0] != '' && exYearmonth[1] != '') {
+          final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
+          final diff = DateTime.now().difference(firstDate).inDays;
+          for (var i = 0; i <= diff; i++) {
+            _scrollControllers.add(ScrollController());
+          }
+        }
+      }
+    }
+    //==================================
 
     return Scaffold(
       key: _scaffoldKey,
@@ -298,7 +315,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
                         child: Scrollbar(
                           thumbVisibility: true,
+                          controller: _scrollControllers[i],
                           child: ListView.separated(
+                            controller: _scrollControllers[i],
                             itemBuilder: (context, index) {
                               //-----------------------------
                               final creDetList = <CreditDetail>[];

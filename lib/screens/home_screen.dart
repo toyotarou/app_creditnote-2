@@ -213,9 +213,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
 
     if (creditDetailList != null) {
+      /// 複数条件でソートする
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
-        ..sort((a, b) => -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice))
-        ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
+        ..sort((a, b) {
+          final result = a.creditDetailDate.compareTo(b.creditDetailDate);
+          if (result != 0) {
+            return result;
+          }
+          return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
+        })
         ..forEach((element) {
           final lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
               ? spendItemColorMap[element.creditDetailItem]

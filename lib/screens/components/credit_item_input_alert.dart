@@ -227,7 +227,6 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     final Widget continueButton = TextButton(
         onPressed: () {
           _deleteCreditItem(id: id);
-
           Navigator.pop(context);
         },
         child: const Text('はい'));
@@ -256,7 +255,6 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     await widget.isar.writeTxn(() async => creditItemsCollection.delete(id));
 
     if (mounted) {
-      Navigator.pop(context);
       Navigator.pop(context);
     }
   }
@@ -288,7 +286,6 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     });
 
     if (mounted) {
-      Navigator.pop(context);
       Navigator.pop(context);
     }
   }
@@ -336,6 +333,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
               }
 
               await _updateColorCode(id: id, color: colorCode).then((value) {
+                /// ここは2回閉じる
                 Navigator.pop(context);
                 Navigator.pop(context);
               });

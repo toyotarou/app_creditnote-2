@@ -145,7 +145,16 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
       final date = creditDetailState.creditDetailDates[i];
       final item = creditDetailState.creditDetailItems[i];
       final price = creditDetailState.creditDetailPrices[i];
-      final detail = creditDetailState.creditDetailDescriptions[i];
+      final description = creditDetailState.creditDetailDescriptions[i];
+
+      var blankAlert = false;
+      if (price != 0) {
+        [date, item, description].forEach((element) {
+          if (element == '') {
+            blankAlert = true;
+          }
+        });
+      }
 
       list.add(
         Container(
@@ -156,8 +165,9 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
             color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-                color:
-                    (date != '' && item != '' && price != 0 && detail != '') ? Colors.orangeAccent.withOpacity(0.4) : Colors.white.withOpacity(0.2),
+                color: (date != '' && item != '' && price != 0 && description != '')
+                    ? Colors.orangeAccent.withOpacity(0.4)
+                    : Colors.white.withOpacity(0.2),
                 width: 2),
           ),
           child: Stack(
@@ -169,7 +179,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                   (i + 1).toString().padLeft(2, '0'),
                   style: TextStyle(
                     fontSize: 60,
-                    color: (date != '' && item != '' && price != 0 && detail != '')
+                    color: (date != '' && item != '' && price != 0 && description != '')
                         ? Colors.orangeAccent.withOpacity(0.2)
                         : Colors.white.withOpacity(0.2),
                   ),
@@ -249,7 +259,17 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     style: const TextStyle(fontSize: 12),
                     onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailDescription(pos: i, description: value),
                     onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                  )
+                  ),
+                  if (blankAlert) ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(),
+                        const Icon(Icons.ac_unit, size: 16, color: Colors.yellowAccent),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ],

@@ -207,11 +207,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final homeListSelectedYearmonth = ref.watch(appParamProvider.select((value) => value.homeListSelectedYearmonth));
 
+    final spendItemColorMap = <String, String>{};
+    creditItemList?.forEach((element) {
+      spendItemColorMap[element.name] = element.color;
+    });
+
     if (creditDetailList != null) {
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
         ..sort((a, b) => -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice))
         ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
         ..forEach((element) {
+          final lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
+              ? spendItemColorMap[element.creditDetailItem]
+              : '0xffffffff';
+
           list.add(Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
@@ -230,7 +239,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       margin: const EdgeInsets.symmetric(vertical: 3),
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                       child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
                     ),
                   ],

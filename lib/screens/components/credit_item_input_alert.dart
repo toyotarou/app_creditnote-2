@@ -257,6 +257,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
     if (mounted) {
       Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 
@@ -287,6 +288,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     });
 
     if (mounted) {
+      Navigator.pop(context);
       Navigator.pop(context);
     }
   }

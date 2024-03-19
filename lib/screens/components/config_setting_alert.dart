@@ -10,8 +10,8 @@ import '../../extensions/extensions.dart';
 import '../../repository/configs_repository.dart';
 import '../../repository/credit_items_repository.dart';
 import '../../state/config_start_yearmonth/config_start_yearmonth_notifier.dart';
-import 'credit_item_input_alert.dart';
-import 'parts/credit_dialog.dart';
+
+
 import 'parts/error_dialog.dart';
 
 class ConfigSettingAlert extends ConsumerStatefulWidget {
@@ -64,7 +64,6 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
               const Text('設定'),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayStartYearmonthSettingWidget(),
-              _displayCreditItemSettingWidget(),
             ],
           ),
         ),
@@ -197,38 +196,6 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   }
 
   ///
-  Widget _displayCreditItemSettingWidget() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      margin: const EdgeInsets.only(bottom: 5),
-      decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(width: context.screenSize.width),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('分類アイテムを作成する'),
-              ElevatedButton(
-                onPressed: () {
-                  CreditDialog(
-                    context: context,
-                    widget:
-                        CreditItemInputAlert(isar: widget.isar, creditItemList: creditItemList ?? [], creditItemCountMap: widget.creditItemCountMap),
-                  );
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
-                child: const Text('input'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  ///
   Future<void> makeSettingConfigMap() async {
     await ConfigsRepository().getConfigList(isar: widget.isar).then((value) {
       setState(() {
@@ -250,6 +217,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
     await ConfigsRepository().inputConfig(isar: widget.isar, config: config).then((value) {
       if (closeFlag) {
         Navigator.pop(context);
+        Navigator.pop(context);
       }
     });
   }
@@ -262,6 +230,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
         await ConfigsRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
           if (closeFlag) {
+            Navigator.pop(context);
             Navigator.pop(context);
           }
         });

@@ -14,8 +14,10 @@ import '../state/app_params/app_params_notifier.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
+import 'components/credit_item_input_alert.dart';
 import 'components/parts/back_ground_image.dart';
 import 'components/parts/credit_dialog.dart';
+import 'components/parts/menu_head_icon.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -39,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<CreditDetail>? creditDetailList = [];
 
-  final List<ScrollController> _scrollControllers = [];
+  List<ScrollController> _scrollControllers = [];
 
   ///
   void _init() {
@@ -57,48 +59,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     Future(_init);
 
-    //==================================
-    if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
-      final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
-      if (exYearmonth.length > 1) {
-        if (exYearmonth[0] != '' && exYearmonth[1] != '') {
-          final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
-          final diff = DateTime.now().difference(firstDate).inDays;
-          final yearmonthList = <String>[];
-          for (var i = 0; i <= diff; i++) {
-            final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
-            if (!yearmonthList.contains(yearmonth)) {
-              _scrollControllers.add(ScrollController());
-            }
-            yearmonthList.add(yearmonth);
-          }
-        }
-      }
-    }
-    //==================================
+    _scrollControllers = List.generate(1000, (index) => ScrollController());
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Credit List'),
-        centerTitle: false,
-        backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: () {
-              final creditItemCountMap = <String, List<CreditDetail>>{};
-              creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem] = []);
-              creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem]?.add(element));
-
-              CreditDialog(
-                context: context,
-                widget: ConfigSettingAlert(isar: widget.isar, creditItemCountMap: creditItemCountMap),
-              );
-            },
-            icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
-          )
-        ],
-      ),
       body: Stack(
         children: [
           const BackGroundImage(),
@@ -107,14 +71,97 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: context.screenSize.height,
             decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
           ),
-          Column(
-            children: [
-              if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
-            ],
+          SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Credit Note'),
+                      IconButton(
+                        onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+                        icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
+                      )
+                    ],
+                  ),
+                ),
+                if (settingConfigMap['start_yearmonth'] != null) ...[Expanded(child: _displayYearmonthList())],
+              ],
+            ),
           ),
         ],
       ),
+      drawer: _dispDrawer(),
       endDrawer: _dispEndDrawer(),
+    );
+  }
+
+  ///
+  Widget _dispDrawer() {
+    return Drawer(
+      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+      child: Container(
+        padding: const EdgeInsets.only(left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 60),
+            GestureDetector(
+              onTap: () {
+                final creditItemCountMap = <String, List<CreditDetail>>{};
+                creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem] = []);
+                creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem]?.add(element));
+
+                CreditDialog(
+                  context: context,
+                  widget: ConfigSettingAlert(isar: widget.isar, creditItemCountMap: creditItemCountMap),
+                );
+              },
+              child: Row(
+                children: [
+                  const MenuHeadIcon(),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                      margin: const EdgeInsets.all(5),
+                      child: const Text('設定'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                final creditItemCountMap = <String, List<CreditDetail>>{};
+                creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem] = []);
+                creditDetailList?.forEach((element) => creditItemCountMap[element.creditDetailItem]?.add(element));
+
+                CreditDialog(
+                  context: context,
+                  widget: CreditItemInputAlert(isar: widget.isar, creditItemList: creditItemList ?? [], creditItemCountMap: creditItemCountMap),
+                );
+              },
+              child: Row(
+                children: [
+                  const MenuHeadIcon(),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                      margin: const EdgeInsets.all(5),
+                      child: const Text('分類アイテム管理'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -144,10 +191,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 60),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(homeListSelectedYearmonth),
-                Text(sum.toString().toCurrency()),
-              ],
+              children: [Text(homeListSelectedYearmonth), Text(sum.toString().toCurrency())],
             ),
             Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
             Expanded(child: _displayCreditDetailList()),
@@ -174,10 +218,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(element.creditDetailDate),
-                    Text(element.creditDetailPrice.toString().toCurrency()),
-                  ],
+                  children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,17 +289,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               //===============================
               final itemBlankCreditDetailList = <CreditDetail>[];
-
               creditDetailList?.forEach((element) {
                 if (yearmonth == element.yearmonth) {
-                  //-----------------------------
                   if (element.creditDate == '' && element.creditPrice == '') {
                     itemBlankCreditDetailList.add(element);
                   }
-                  //-----------------------------
                 }
               });
-
               //===============================
 
               list.add(Container(

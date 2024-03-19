@@ -209,6 +209,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (creditDetailList != null) {
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
+        ..sort((a, b) => -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice))
         ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
         ..forEach((element) {
           list.add(Container(

@@ -57,7 +57,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     }
 
     if (widget.creditDetailList!.isNotEmpty) {
-      await Future(() => ref.read(creditDetailProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetailList!));
+      await Future(() => ref.read(creditDetailInputProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetailList!));
 
       for (var i = 0; i < widget.creditDetailList!.length; i++) {
         _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString();
@@ -71,9 +71,9 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
   Widget build(BuildContext context) {
     final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
 
-    final creditDetailState = ref.watch(creditDetailProvider);
+    final creditDetailState = ref.watch(creditDetailInputProvider);
 
-    Future(() => ref.read(creditDetailProvider.notifier).setBaseDiff(baseDiff: widget.creditPrice.toString()));
+    Future(() => ref.read(creditDetailInputProvider.notifier).setBaseDiff(baseDiff: widget.creditPrice.toString()));
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -136,7 +136,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
   Widget _displayInputParts() {
     final list = <Widget>[];
 
-    final creditDetailState = ref.watch(creditDetailProvider);
+    final creditDetailState = ref.watch(creditDetailInputProvider);
 
     final itemList = <CreditItem>[CreditItem()..name = ''];
     widget.creditItemList.forEach(itemList.add);
@@ -187,6 +187,14 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
               ),
               Column(
                 children: [
+
+
+
+
+
+
+
+
                   Row(
                     children: [
                       Row(
@@ -221,7 +229,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                       );
                     }).toList(),
                     value: creditDetailState.creditDetailInputItems[i],
-                    onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailItem(pos: i, item: value!),
+                    onChanged: (value) => ref.read(creditDetailInputProvider.notifier).setCreditDetailItem(pos: i, item: value!),
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -238,9 +246,9 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     style: const TextStyle(fontSize: 12),
                     onChanged: (value) {
                       if (value != '') {
-                        ref.read(creditDetailProvider.notifier).setCreditDetailPrice(pos: i, price: value.toInt());
+                        ref.read(creditDetailInputProvider.notifier).setCreditDetailPrice(pos: i, price: value.toInt());
                       } else {
-                        ref.read(creditDetailProvider.notifier).setCreditDetailPrice(pos: i, price: creditDetailState.baseDiff.toInt());
+                        ref.read(creditDetailInputProvider.notifier).setCreditDetailPrice(pos: i, price: creditDetailState.baseDiff.toInt());
                       }
                     },
                     onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
@@ -257,7 +265,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
                     ),
                     style: const TextStyle(fontSize: 12),
-                    onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailDescription(pos: i, description: value),
+                    onChanged: (value) => ref.read(creditDetailInputProvider.notifier).setCreditDetailDescription(pos: i, description: value),
                     onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                   ),
                   if (blankAlert) ...[
@@ -293,13 +301,13 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     );
 
     if (selectedDate != null) {
-      await ref.read(creditDetailProvider.notifier).setCreditDetailDate(pos: pos, date: selectedDate.yyyymmdd);
+      await ref.read(creditDetailInputProvider.notifier).setCreditDetailDate(pos: pos, date: selectedDate.yyyymmdd);
     }
   }
 
   ///
   Future<void> _inputCreditDetail() async {
-    final creditDetailState = ref.watch(creditDetailProvider);
+    final creditDetailState = ref.watch(creditDetailInputProvider);
 
     final list = <CreditDetail>[];
 
@@ -339,7 +347,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
 
     await CreditDetailsRepository()
         .inputCreditDetailList(isar: widget.isar, creditDetailList: list)
-        .then((value) async => ref.read(creditDetailProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
+        .then((value) async => ref.read(creditDetailInputProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
 
   ///
@@ -347,6 +355,6 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     _priceTecs[pos].clear();
     _descriptionTecs[pos].clear();
 
-    await ref.read(creditDetailProvider.notifier).clearOneBox(pos: pos);
+    await ref.read(creditDetailInputProvider.notifier).clearOneBox(pos: pos);
   }
 }

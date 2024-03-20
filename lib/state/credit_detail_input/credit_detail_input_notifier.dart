@@ -1,10 +1,10 @@
-import 'package:credit_note/collections/credit_detail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 import 'credit_detail_input_response_state.dart';
 
-final creditDetailProvider = StateNotifierProvider.autoDispose<CreditDetailNotifier, CreditDetailInputResponseState>((ref) {
+final creditDetailInputProvider = StateNotifierProvider.autoDispose<CreditDetailInputNotifier, CreditDetailInputResponseState>((ref) {
   const roopNum = 60;
 
   final dates = List.generate(roopNum, (index) => '');
@@ -12,15 +12,15 @@ final creditDetailProvider = StateNotifierProvider.autoDispose<CreditDetailNotif
   final prices = List.generate(roopNum, (index) => 0);
   final descriptions = List.generate(roopNum, (index) => '');
 
-  return CreditDetailNotifier(
+  return CreditDetailInputNotifier(
     CreditDetailInputResponseState(
         creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions),
     roopNum: roopNum,
   );
 });
 
-class CreditDetailNotifier extends StateNotifier<CreditDetailInputResponseState> {
-  CreditDetailNotifier(super.state, {required this.roopNum});
+class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseState> {
+  CreditDetailInputNotifier(super.state, {required this.roopNum});
 
   final int roopNum;
 
@@ -75,11 +75,7 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailInputResponseState>
     final descriptions = List.generate(roopNum, (index) => '');
 
     state = state.copyWith(
-      creditDetailInputDates: dates,
-      creditDetailInputItems: items,
-      creditDetailInputPrices: prices,
-      creditDetailInputDescriptions: descriptions,
-    );
+        creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions);
   }
 
   ///
@@ -98,11 +94,7 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailInputResponseState>
       }
 
       state = state.copyWith(
-        creditDetailInputDates: dates,
-        creditDetailInputItems: items,
-        creditDetailInputPrices: prices,
-        creditDetailInputDescriptions: descriptions,
-      );
+          creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions);
 
       // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
@@ -121,10 +113,6 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailInputResponseState>
     descriptions[pos] = '';
 
     state = state.copyWith(
-      creditDetailInputDates: dates,
-      creditDetailInputItems: items,
-      creditDetailInputPrices: prices,
-      creditDetailInputDescriptions: descriptions,
-    );
+        creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions);
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:credit_note/collections/credit_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
@@ -6,10 +9,11 @@ import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 
 class CreditDetailEditAlert extends StatefulWidget {
-  const CreditDetailEditAlert({super.key, required this.isar, required this.creditDetail});
+  const CreditDetailEditAlert({super.key, required this.isar, required this.creditDetail, this.creditItemList});
 
   final Isar isar;
   final CreditDetail creditDetail;
+  final List<CreditItem>? creditItemList;
 
   @override
   State<CreditDetailEditAlert> createState() => _CreditDetailEditAlertState();
@@ -45,54 +49,134 @@ class _CreditDetailEditAlertState extends State<CreditDetailEditAlert> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [Text('Credit Detail Edit')],
                   ),
-                  // ElevatedButton(
-                  //   onPressed: inputButtonClicked
-                  //       ? null
-                  //       : () {
-                  //     ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
-                  //
-                  //     _inputCredit();
-                  //   },
-                  //   style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
-                  //   child: const Text('input'),
-                  // ),
-
                   Container(),
                 ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-              // if (widget.creditBlankCreditDetailList.isNotEmpty) ...[
-              //   Row(
-              //     children: [
-              //       Expanded(
-              //         child: Text(
-              //           'クレジットカードに紐づいていない当月の詳細情報が存在します。',
-              //           style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
-              //         ),
-              //       ),
-              //       const SizedBox(width: 10),
-              //       GestureDetector(
-              //         onTap: () {
-              //           ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
-              //
-              //           CreditDialog(
-              //             context: context,
-              //             widget: CreditBlankReInputAlert(
-              //               isar: widget.isar,
-              //               date: widget.date,
-              //               creditList: widget.creditList,
-              //               creditBlankCreditDetailList: widget.creditBlankCreditDetailList,
-              //             ),
-              //           );
-              //         },
-              //         child: Icon(Icons.info_outline, color: Colors.greenAccent.withOpacity(0.6)),
-              //       ),
-              //     ],
-              //   ),
-              //   const SizedBox(height: 20),
-              // ],
-              // Expanded(child: _displayInputParts()),
+              _displayInputParts(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///
+  Widget _displayInputParts() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+          child: Container(
+            width: context.screenSize.width,
+            margin: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          // onTap: () => _showDP(pos: i),
+                          //
+                          //
+                          //
+
+                          child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                        ),
+                        const SizedBox(width: 10),
+                        // SizedBox(
+                        //   width: context.screenSize.width / 6,
+                        //   child: Text(creditDetailState.creditDetailInputDates[i], style: const TextStyle(fontSize: 10)),
+                        // ),
+                        //
+                        //
+                        //
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // _clearOneBox(pos: i);
+                        //
+                        //
+                        //
+                      },
+                      child: const Icon(Icons.close, color: Colors.redAccent),
+                    ),
+                  ],
+                ),
+                // DropdownButton(
+                //   isExpanded: true,
+                //   dropdownColor: Colors.pinkAccent.withOpacity(0.1),
+                //   iconEnabledColor: Colors.white,
+                //   items: itemList.map((e) {
+                //     return DropdownMenuItem(
+                //       value: e.name,
+                //       child: Text(e.name, style: const TextStyle(fontSize: 12)),
+                //     );
+                //   }).toList(),
+                //   value: creditDetailState.creditDetailInputItems[i],
+                //   onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailItem(pos: i, item: value!),
+                // ),
+                // const SizedBox(height: 10),
+                // TextField(
+                //   keyboardType: TextInputType.number,
+                //   controller: _priceTecs[i],
+                //   decoration: const InputDecoration(
+                //     isDense: true,
+                //     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                //     hintText: '金額',
+                //     filled: true,
+                //     border: OutlineInputBorder(),
+                //     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
+                //   ),
+                //   style: const TextStyle(fontSize: 12),
+                //   onChanged: (value) {
+                //     if (value != '') {
+                //       ref.read(creditDetailProvider.notifier).setCreditDetailPrice(pos: i, price: value.toInt());
+                //     } else {
+                //       ref.read(creditDetailProvider.notifier).setCreditDetailPrice(pos: i, price: creditDetailState.baseDiff.toInt());
+                //     }
+                //   },
+                //   onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                // ),
+                // const SizedBox(height: 10),
+                // TextField(
+                //   controller: _descriptionTecs[i],
+                //   decoration: const InputDecoration(
+                //     isDense: true,
+                //     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                //     hintText: '詳細',
+                //     filled: true,
+                //     border: OutlineInputBorder(),
+                //     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
+                //   ),
+                //   style: const TextStyle(fontSize: 12),
+                //   onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailDescription(pos: i, description: value),
+                //   onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                // ),
+                // if (blankAlert) ...[
+                //   const SizedBox(height: 10),
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Container(),
+                //       const Icon(Icons.ac_unit, size: 16, color: Colors.yellowAccent),
+                //     ],
+                //   ),
+                // ],
+              ],
+            ),
           ),
         ),
       ),

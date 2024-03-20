@@ -260,7 +260,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
-                    CreditDialog(context: context, widget: CreditDetailEditAlert(isar: widget.isar, creditDetail: element));
+                    CreditDialog(
+                      context: context,
+                      widget: CreditDetailEditAlert(isar: widget.isar, creditDetail: element, creditItemList: creditItemList),
+                    );
                   },
                   child: Icon(Icons.edit, size: 16, color: Colors.greenAccent.withOpacity(0.4)),
                 ),

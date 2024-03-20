@@ -12,6 +12,7 @@ import '../repository/credit_items_repository.dart';
 import '../repository/credits_repository.dart';
 import '../state/app_params/app_params_notifier.dart';
 import 'components/config_setting_alert.dart';
+import 'components/credit_detail_edit_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/credit_item_input_alert.dart';
@@ -230,25 +231,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           list.add(Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-            child: Column(
+            child: Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(element.creditDetailDescription),
+                          Container(
+                            width: context.screenSize.width / 6,
+                            margin: const EdgeInsets.symmetric(vertical: 3),
+                            padding: const EdgeInsets.symmetric(vertical: 3),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                            child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(element.creditDetailDescription),
-                    Container(
-                      width: context.screenSize.width / 4,
-                      margin: const EdgeInsets.symmetric(vertical: 3),
-                      padding: const EdgeInsets.symmetric(vertical: 3),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                      child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
-                    ),
-                  ],
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    CreditDialog(context: context, widget: CreditDetailEditAlert(isar: widget.isar, creditDetail: element));
+                  },
+                  child: Icon(Icons.edit, size: 16, color: Colors.greenAccent.withOpacity(0.4)),
                 ),
               ],
             ),

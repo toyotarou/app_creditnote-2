@@ -8,7 +8,7 @@ import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
-import '../../state/credit_detail/credit_detail_notifier.dart';
+import '../../state/credit_detail_input/credit_detail_input_notifier.dart';
 import 'parts/error_dialog.dart';
 
 class CreditDetailInputAlert extends ConsumerStatefulWidget {
@@ -142,10 +142,10 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     widget.creditItemList.forEach(itemList.add);
 
     for (var i = 0; i < roopNum; i++) {
-      final date = creditDetailState.creditDetailDates[i];
-      final item = creditDetailState.creditDetailItems[i];
-      final price = creditDetailState.creditDetailPrices[i];
-      final description = creditDetailState.creditDetailDescriptions[i];
+      final date = creditDetailState.creditDetailInputDates[i];
+      final item = creditDetailState.creditDetailInputItems[i];
+      final price = creditDetailState.creditDetailInputPrices[i];
+      final description = creditDetailState.creditDetailInputDescriptions[i];
 
       var blankAlert = false;
       if (price != 0) {
@@ -198,7 +198,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                           const SizedBox(width: 10),
                           SizedBox(
                             width: context.screenSize.width / 6,
-                            child: Text(creditDetailState.creditDetailDates[i], style: const TextStyle(fontSize: 10)),
+                            child: Text(creditDetailState.creditDetailInputDates[i], style: const TextStyle(fontSize: 10)),
                           ),
                         ],
                       ),
@@ -220,7 +220,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                         child: Text(e.name, style: const TextStyle(fontSize: 12)),
                       );
                     }).toList(),
-                    value: creditDetailState.creditDetailItems[i],
+                    value: creditDetailState.creditDetailInputItems[i],
                     onChanged: (value) => ref.read(creditDetailProvider.notifier).setCreditDetailItem(pos: i, item: value!),
                   ),
                   const SizedBox(height: 10),
@@ -307,15 +307,15 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
 
     for (var i = 0; i < roopNum; i++) {
       //===============================================
-      if (creditDetailState.creditDetailPrices[i] != 0) {
+      if (creditDetailState.creditDetailInputPrices[i] != 0) {
         list.add(CreditDetail()
           ..yearmonth = widget.creditDate.yyyymm
           ..creditDate = widget.creditDate.yyyymmdd
           ..creditPrice = widget.creditPrice.toString()
-          ..creditDetailDate = creditDetailState.creditDetailDates[i]
-          ..creditDetailItem = creditDetailState.creditDetailItems[i]
-          ..creditDetailPrice = creditDetailState.creditDetailPrices[i]
-          ..creditDetailDescription = creditDetailState.creditDetailDescriptions[i]);
+          ..creditDetailDate = creditDetailState.creditDetailInputDates[i]
+          ..creditDetailItem = creditDetailState.creditDetailInputItems[i]
+          ..creditDetailPrice = creditDetailState.creditDetailInputPrices[i]
+          ..creditDetailDescription = creditDetailState.creditDetailInputDescriptions[i]);
       }
       //===============================================
     }

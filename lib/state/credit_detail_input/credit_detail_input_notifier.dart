@@ -2,9 +2,9 @@ import 'package:credit_note/collections/credit_detail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
-import 'credit_detail_response_state.dart';
+import 'credit_detail_input_response_state.dart';
 
-final creditDetailProvider = StateNotifierProvider.autoDispose<CreditDetailNotifier, CreditDetailResponseState>((ref) {
+final creditDetailProvider = StateNotifierProvider.autoDispose<CreditDetailNotifier, CreditDetailInputResponseState>((ref) {
   const roopNum = 60;
 
   final dates = List.generate(roopNum, (index) => '');
@@ -13,17 +13,13 @@ final creditDetailProvider = StateNotifierProvider.autoDispose<CreditDetailNotif
   final descriptions = List.generate(roopNum, (index) => '');
 
   return CreditDetailNotifier(
-    CreditDetailResponseState(
-      creditDetailDates: dates,
-      creditDetailItems: items,
-      creditDetailPrices: prices,
-      creditDetailDescriptions: descriptions,
-    ),
+    CreditDetailInputResponseState(
+        creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions),
     roopNum: roopNum,
   );
 });
 
-class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
+class CreditDetailNotifier extends StateNotifier<CreditDetailInputResponseState> {
   CreditDetailNotifier(super.state, {required this.roopNum});
 
   final int roopNum;
@@ -36,28 +32,28 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
 
   ///
   Future<void> setCreditDetailDate({required int pos, required String date}) async {
-    final dates = <String>[...state.creditDetailDates];
+    final dates = <String>[...state.creditDetailInputDates];
     dates[pos] = date;
-    state = state.copyWith(creditDetailDates: dates);
+    state = state.copyWith(creditDetailInputDates: dates);
   }
 
   ///
   Future<void> setCreditDetailItem({required int pos, required String item}) async {
-    final items = <String>[...state.creditDetailItems];
+    final items = <String>[...state.creditDetailInputItems];
     items[pos] = item;
-    state = state.copyWith(creditDetailItems: items);
+    state = state.copyWith(creditDetailInputItems: items);
   }
 
   ///
   Future<void> setCreditDetailDescription({required int pos, required String description}) async {
-    final descriptions = <String>[...state.creditDetailDescriptions];
+    final descriptions = <String>[...state.creditDetailInputDescriptions];
     descriptions[pos] = description;
-    state = state.copyWith(creditDetailDescriptions: descriptions);
+    state = state.copyWith(creditDetailInputDescriptions: descriptions);
   }
 
   ///
   Future<void> setCreditDetailPrice({required int pos, required int price}) async {
-    final prices = <int>[...state.creditDetailPrices];
+    final prices = <int>[...state.creditDetailInputPrices];
     prices[pos] = price;
 
     var sum = 0;
@@ -68,7 +64,7 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
     final baseDiff = state.baseDiff.toInt();
     final diff = baseDiff - sum;
 
-    state = state.copyWith(creditDetailPrices: prices, diff: diff);
+    state = state.copyWith(creditDetailInputPrices: prices, diff: diff);
   }
 
   ///
@@ -79,10 +75,10 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
     final descriptions = List.generate(roopNum, (index) => '');
 
     state = state.copyWith(
-      creditDetailDates: dates,
-      creditDetailItems: items,
-      creditDetailPrices: prices,
-      creditDetailDescriptions: descriptions,
+      creditDetailInputDates: dates,
+      creditDetailInputItems: items,
+      creditDetailInputPrices: prices,
+      creditDetailInputDescriptions: descriptions,
     );
   }
 
@@ -102,10 +98,10 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
       }
 
       state = state.copyWith(
-        creditDetailDates: dates,
-        creditDetailItems: items,
-        creditDetailPrices: prices,
-        creditDetailDescriptions: descriptions,
+        creditDetailInputDates: dates,
+        creditDetailInputItems: items,
+        creditDetailInputPrices: prices,
+        creditDetailInputDescriptions: descriptions,
       );
 
       // ignore: avoid_catches_without_on_clauses, empty_catches
@@ -114,16 +110,21 @@ class CreditDetailNotifier extends StateNotifier<CreditDetailResponseState> {
 
   ///
   Future<void> clearOneBox({required int pos}) async {
-    final dates = <String>[...state.creditDetailDates];
-    final items = <String>[...state.creditDetailItems];
-    final prices = <int>[...state.creditDetailPrices];
-    final descriptions = <String>[...state.creditDetailDescriptions];
+    final dates = <String>[...state.creditDetailInputDates];
+    final items = <String>[...state.creditDetailInputItems];
+    final prices = <int>[...state.creditDetailInputPrices];
+    final descriptions = <String>[...state.creditDetailInputDescriptions];
 
     dates[pos] = '';
     items[pos] = '';
     prices[pos] = 0;
     descriptions[pos] = '';
 
-    state = state.copyWith(creditDetailDates: dates, creditDetailItems: items, creditDetailPrices: prices, creditDetailDescriptions: descriptions);
+    state = state.copyWith(
+      creditDetailInputDates: dates,
+      creditDetailInputItems: items,
+      creditDetailInputPrices: prices,
+      creditDetailInputDescriptions: descriptions,
+    );
   }
 }

@@ -57,7 +57,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     }
 
     if (widget.creditDetailList!.isNotEmpty) {
-      await Future(() => ref.read(creditDetailInputProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetailList!));
+      await Future(() => ref.read(creditDetailInputProvider.notifier).setUpdateCreditDetail(updateCreditDetailList: widget.creditDetailList!));
 
       for (var i = 0; i < widget.creditDetailList!.length; i++) {
         _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString();
@@ -136,16 +136,16 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
   Widget _displayInputParts() {
     final list = <Widget>[];
 
-    final creditDetailState = ref.watch(creditDetailInputProvider);
+    final creditDetailInputState = ref.watch(creditDetailInputProvider);
 
     final itemList = <CreditItem>[CreditItem()..name = ''];
     widget.creditItemList.forEach(itemList.add);
 
     for (var i = 0; i < roopNum; i++) {
-      final date = creditDetailState.creditDetailInputDates[i];
-      final item = creditDetailState.creditDetailInputItems[i];
-      final price = creditDetailState.creditDetailInputPrices[i];
-      final description = creditDetailState.creditDetailInputDescriptions[i];
+      final date = creditDetailInputState.creditDetailInputDates[i];
+      final item = creditDetailInputState.creditDetailInputItems[i];
+      final price = creditDetailInputState.creditDetailInputPrices[i];
+      final description = creditDetailInputState.creditDetailInputDescriptions[i];
 
       var blankAlert = false;
       if (price != 0) {
@@ -187,14 +187,6 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
               ),
               Column(
                 children: [
-
-
-
-
-
-
-
-
                   Row(
                     children: [
                       Row(
@@ -206,14 +198,12 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                           const SizedBox(width: 10),
                           SizedBox(
                             width: context.screenSize.width / 6,
-                            child: Text(creditDetailState.creditDetailInputDates[i], style: const TextStyle(fontSize: 10)),
+                            child: Text(creditDetailInputState.creditDetailInputDates[i], style: const TextStyle(fontSize: 10)),
                           ),
                         ],
                       ),
                       GestureDetector(
-                        onTap: () {
-                          _clearOneBox(pos: i);
-                        },
+                        onTap: () => _clearOneBox(pos: i),
                         child: const Icon(Icons.close, color: Colors.redAccent),
                       ),
                     ],
@@ -228,7 +218,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                         child: Text(e.name, style: const TextStyle(fontSize: 12)),
                       );
                     }).toList(),
-                    value: creditDetailState.creditDetailInputItems[i],
+                    value: creditDetailInputState.creditDetailInputItems[i],
                     onChanged: (value) => ref.read(creditDetailInputProvider.notifier).setCreditDetailItem(pos: i, item: value!),
                   ),
                   const SizedBox(height: 10),
@@ -248,7 +238,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                       if (value != '') {
                         ref.read(creditDetailInputProvider.notifier).setCreditDetailPrice(pos: i, price: value.toInt());
                       } else {
-                        ref.read(creditDetailInputProvider.notifier).setCreditDetailPrice(pos: i, price: creditDetailState.baseDiff.toInt());
+                        ref.read(creditDetailInputProvider.notifier).setCreditDetailPrice(pos: i, price: creditDetailInputState.baseDiff.toInt());
                       }
                     },
                     onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),

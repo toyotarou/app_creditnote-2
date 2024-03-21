@@ -1,8 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../collections/credit_detail.dart';
 import 'credit_detail_edit_response_state.dart';
 
-final creditDetailInputProvider = StateNotifierProvider.autoDispose<CreditDetailEditNotifier, CreditDetailEditResponseState>((ref) {
+final creditDetailEditProvider = StateNotifierProvider.autoDispose<CreditDetailEditNotifier, CreditDetailEditResponseState>((ref) {
   return CreditDetailEditNotifier(const CreditDetailEditResponseState());
 });
 
@@ -20,4 +21,16 @@ class CreditDetailEditNotifier extends StateNotifier<CreditDetailEditResponseSta
 
   ///
   Future<void> setCreditDetailDescription({required String description}) async => state = state.copyWith(creditDetailEditDescription: description);
+
+  ///
+  Future<void> setUpdateCreditDetail({required CreditDetail updateCreditDetail}) async => state = state.copyWith(
+      creditDetailEditDate: updateCreditDetail.creditDetailDate,
+      creditDetailEditItem: updateCreditDetail.creditDetailItem,
+      creditDetailEditPrice: updateCreditDetail.creditDetailPrice,
+      creditDetailEditDescription: updateCreditDetail.creditDetailDescription);
+
+  ///
+  Future<void> clearOneBox() async {
+    state = state.copyWith(creditDetailEditDate: '', creditDetailEditItem: '', creditDetailEditPrice: 0, creditDetailEditDescription: '');
+  }
 }

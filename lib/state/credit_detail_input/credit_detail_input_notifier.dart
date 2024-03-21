@@ -79,18 +79,18 @@ class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseS
   }
 
   ///
-  Future<void> setUpdateCreditDetail({required List<CreditDetail> updateCreditDetail}) async {
+  Future<void> setUpdateCreditDetail({required List<CreditDetail> updateCreditDetailList}) async {
     try {
       final dates = List.generate(roopNum, (index) => '');
       final items = List.generate(roopNum, (index) => '');
       final prices = List.generate(roopNum, (index) => 0);
       final descriptions = List.generate(roopNum, (index) => '');
 
-      for (var i = 0; i < updateCreditDetail.length; i++) {
-        dates[i] = updateCreditDetail[i].creditDetailDate;
-        items[i] = updateCreditDetail[i].creditDetailItem;
-        prices[i] = updateCreditDetail[i].creditDetailPrice;
-        descriptions[i] = updateCreditDetail[i].creditDetailDescription;
+      for (var i = 0; i < updateCreditDetailList.length; i++) {
+        dates[i] = updateCreditDetailList[i].creditDetailDate;
+        items[i] = updateCreditDetailList[i].creditDetailItem;
+        prices[i] = updateCreditDetailList[i].creditDetailPrice;
+        descriptions[i] = updateCreditDetailList[i].creditDetailDescription;
       }
 
       state = state.copyWith(

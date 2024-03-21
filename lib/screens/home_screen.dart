@@ -1,4 +1,6 @@
+import 'package:credit_note/screens/components/same_item_list_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
@@ -231,47 +233,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           list.add(Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(element.creditDetailDescription),
-                          Container(
-                            width: context.screenSize.width / 6,
-                            margin: const EdgeInsets.symmetric(vertical: 3),
-                            padding: const EdgeInsets.symmetric(vertical: 3),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                            child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
-                          ),
-                        ],
-                      ),
-                    ],
+            child: Slidable(
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (_) {
+                      CreditDialog(
+                        context: context,
+                        widget: SameItemListAlert(
+                          isar: widget.isar,
+                          creditDetail: element,
+                          creditDetailList: creditDetailList,
+                          creditItemList: creditItemList ?? [],
+                        ),
+                      );
+                    },
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.greenAccent.withOpacity(0.4),
+                    icon: Icons.list,
+                    padding: EdgeInsets.zero,
                   ),
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    CreditDialog(
-                      context: context,
-                      widget: CreditDetailEditAlert(
-                        isar: widget.isar,
-                        creditDetail: element,
-                        creditItemList: creditItemList ?? [],
-                      ),
-                    );
-                  },
-                  child: Icon(Icons.edit, size: 16, color: Colors.greenAccent.withOpacity(0.4)),
-                ),
-              ],
+                  SlidableAction(
+                    onPressed: (_) {
+                      CreditDialog(
+                        context: context,
+                        widget: CreditDetailEditAlert(isar: widget.isar, creditDetail: element, creditItemList: creditItemList ?? []),
+                      );
+                    },
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.greenAccent.withOpacity(0.4),
+                    icon: Icons.edit,
+                    padding: EdgeInsets.zero,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(element.creditDetailDescription),
+                            Container(
+                              width: context.screenSize.width / 6,
+                              margin: const EdgeInsets.symmetric(vertical: 3),
+                              padding: const EdgeInsets.symmetric(vertical: 3),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                              child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ));
         });

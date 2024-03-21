@@ -64,7 +64,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('Credit Detail Edit'), Container()],
+                children: [const Text('Credit Detail Edit'), Container()],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayInputParts(),

@@ -6,6 +6,8 @@ import 'package:isar/isar.dart';
 import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
+import 'credit_detail_edit_alert.dart';
+import 'parts/credit_dialog.dart';
 
 class SameItemListAlert extends ConsumerStatefulWidget {
   const SameItemListAlert({super.key, required this.isar, required this.creditDetail, required this.creditDetailList, required this.creditItemList});
@@ -62,7 +64,13 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
     });
 
     widget.creditDetailList!.where((element) => element.creditDetailDescription == widget.creditDetail.creditDetailDescription).toList()
-      ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
+      ..sort((a, b) {
+        final result = a.creditDetailDate.compareTo(b.creditDetailDate);
+        if (result != 0) {
+          return result;
+        }
+        return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
+      })
       ..forEach((element) {
         final lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
             ? spendItemColorMap[element.creditDetailItem]
@@ -83,6 +91,21 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                 child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  CreditDialog(
+                    context: context,
+                    widget: CreditDetailEditAlert(
+                      isar: widget.isar,
+                      creditDetail: element,
+                      creditItemList: widget.creditItemList,
+                      from: 'SameItemListAlert',
+                    ),
+                  );
+                },
+                child: Icon(Icons.edit, color: Colors.greenAccent.withOpacity(0.4), size: 16),
               ),
             ],
           ),

@@ -1,4 +1,3 @@
-import 'package:credit_note/screens/components/same_item_list_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -21,6 +20,7 @@ import 'components/credit_item_input_alert.dart';
 import 'components/parts/back_ground_image.dart';
 import 'components/parts/credit_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
+import 'components/same_item_list_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -258,7 +258,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onPressed: (_) {
                       CreditDialog(
                         context: context,
-                        widget: CreditDetailEditAlert(isar: widget.isar, creditDetail: element, creditItemList: creditItemList ?? []),
+                        widget: CreditDetailEditAlert(
+                          isar: widget.isar,
+                          creditDetail: element,
+                          creditItemList: creditItemList ?? [],
+                          from: 'HomeScreen',
+                        ),
                       );
                     },
                     backgroundColor: Colors.transparent,
@@ -294,6 +299,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  Icon(Icons.arrow_back_ios_sharp, color: Colors.white.withOpacity(0.3)),
                 ],
               ),
             ),

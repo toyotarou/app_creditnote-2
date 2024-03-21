@@ -13,11 +13,12 @@ import '../../state/credit_detail_edit/credit_detail_edit_notifier.dart';
 import 'parts/error_dialog.dart';
 
 class CreditDetailEditAlert extends ConsumerStatefulWidget {
-  const CreditDetailEditAlert({super.key, required this.isar, required this.creditDetail, required this.creditItemList});
+  const CreditDetailEditAlert({super.key, required this.isar, required this.creditDetail, required this.creditItemList, required this.from});
 
   final Isar isar;
   final CreditDetail creditDetail;
   final List<CreditItem> creditItemList;
+  final String from;
 
   @override
   ConsumerState<CreditDetailEditAlert> createState() => _CreditDetailEditAlertState();
@@ -272,6 +273,10 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
         CreditDetailsRepository().updateCreditDetail(isar: widget.isar, creditDetail: value).then((value) {
           Navigator.pop(context);
+
+          if (widget.from == 'SameItemListAlert') {
+            Navigator.pop(context);
+          }
         });
       });
     });

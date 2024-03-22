@@ -9,6 +9,7 @@ import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
 import '../../state/credit_detail_input/credit_detail_input_notifier.dart';
+import '../../utility/function.dart';
 import 'parts/error_dialog.dart';
 
 class CreditDetailInputAlert extends ConsumerStatefulWidget {
@@ -322,9 +323,22 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
       errFlg = true;
     }
 
-    final diff = creditDetailState.diff;
+    if (creditDetailState.diff == 0) {
+      errFlg = true;
+    }
 
-    if (diff != 0 || errFlg) {
+    list.forEach((element) {
+      [
+        [element.creditDetailPrice, 10],
+        [element.creditDetailDescription, 30]
+      ].forEach((element2) {
+        if (checkInputValueLengthCheck(value: element2[0] as String, length: element2[1] as int) == false) {
+          errFlg = true;
+        }
+      });
+    });
+
+    if (errFlg) {
       Future.delayed(
         Duration.zero,
         () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),

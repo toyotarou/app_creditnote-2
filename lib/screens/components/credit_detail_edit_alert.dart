@@ -10,6 +10,7 @@ import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../state/credit_detail_edit/credit_detail_edit_notifier.dart';
+import '../../utility/function.dart';
 import 'parts/error_dialog.dart';
 
 class CreditDetailEditAlert extends ConsumerStatefulWidget {
@@ -164,7 +165,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                    hintText: '金額',
+                    hintText: '金額(10桁以内)',
                     filled: true,
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
@@ -183,7 +184,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                    hintText: '詳細',
+                    hintText: '詳細(30文字以内)',
                     filled: true,
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
@@ -252,6 +253,17 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
     if (price == 0) {
       errFlg = true;
+    }
+
+    if (errFlg == false) {
+      [
+        [price, 10],
+        [description, 30]
+      ].forEach((element) {
+        if (checkInputValueLengthCheck(value: element[0] as String, length: element[1] as int) == false) {
+          errFlg = true;
+        }
+      });
     }
 
     if (errFlg) {

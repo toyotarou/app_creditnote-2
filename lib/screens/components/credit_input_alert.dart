@@ -12,6 +12,7 @@ import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
 import '../../state/credit/credit_notifier.dart';
+import '../../utility/function.dart';
 import 'credit_blank_re_input_alert.dart';
 import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
@@ -324,6 +325,17 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
       errFlg = true;
     }
     ////////////////////////// 同数チェック
+
+    list.forEach((element) {
+      [
+        [element.name, 15],
+        [element.price, 10]
+      ].forEach((element2) {
+        if (checkInputValueLengthCheck(value: element2[0] as String, length: element2[1] as int) == false) {
+          errFlg = true;
+        }
+      });
+    });
 
     if (errFlg) {
       Future.delayed(

@@ -11,6 +11,7 @@ import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/credit_items_repository.dart';
+import '../../utility/function.dart';
 import 'parts/credit_item_card.dart';
 import 'parts/error_dialog.dart';
 
@@ -188,7 +189,23 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _inputCreditItem() async {
+    var errFlg = false;
+
     if (_creditItemEditingController.text == '') {
+      errFlg = true;
+    }
+
+    if (errFlg == false) {
+      [
+        [_creditItemEditingController.text, 20]
+      ].forEach((element) {
+        if (checkInputValueLengthCheck(value: element[0] as String, length: element[1] as int) == false) {
+          errFlg = true;
+        }
+      });
+    }
+
+    if (errFlg) {
       Future.delayed(
         Duration.zero,
         () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),

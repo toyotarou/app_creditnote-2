@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/config.dart';
@@ -14,9 +16,15 @@ class TabInfo {
   Widget widget;
 }
 
-class CategoriesPriceListAlert extends StatefulWidget {
-  const CategoriesPriceListAlert(
-      {super.key, required this.isar, required this.date, required this.creditItemList, required this.creditDetailList, required this.configList});
+class CategoriesPriceListAlert extends HookConsumerWidget {
+  CategoriesPriceListAlert(
+      {super.key,
+      required this.isar,
+      required this.date,
+      required this.creditItemList,
+      required this.creditDetailList,
+      required this.configList,
+      required this.index});
 
   final Isar isar;
   final DateTime date;
@@ -24,20 +32,24 @@ class CategoriesPriceListAlert extends StatefulWidget {
   final List<CreditDetail>? creditDetailList;
   final List<Config>? configList;
 
-  @override
-  State<CategoriesPriceListAlert> createState() => _CategoriesPriceListAlertState();
-}
+  final int index;
 
-class _CategoriesPriceListAlertState extends State<CategoriesPriceListAlert> {
-  final List<TabInfo> _tabs = [];
+  final List<TabInfo> tabs = [];
 
   ///
   @override
-  Widget build(BuildContext context) {
-    _makeTab();
+  Widget build(BuildContext context, WidgetRef ref) {
+    makeTab();
+
+    // 最初に開くタブを指定する
+    final tabController = useTabController(initialLength: tabs.length);
+    if (index > 0) {
+      tabController.index = index;
+    }
+    // 最初に開くタブを指定する
 
     return DefaultTabController(
-      length: _tabs.length,
+      length: tabs.length,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: PreferredSize(
@@ -49,21 +61,31 @@ class _CategoriesPriceListAlertState extends State<CategoriesPriceListAlert> {
             //-------------------------//これを消すと「←」が出てくる（消さない）
 
             bottom: TabBar(
+              //================================//
+              controller: tabController,
+              //================================//
+
               isScrollable: true,
               indicatorColor: Colors.blueAccent,
-              tabs: _tabs.map((TabInfo tab) => Tab(text: tab.label)).toList(),
+              tabs: tabs.map((TabInfo tab) => Tab(text: tab.label)).toList(),
             ),
           ),
         ),
-        body: TabBarView(children: _tabs.map((tab) => tab.widget).toList()),
+        body: TabBarView(
+          //================================//
+          controller: tabController,
+          //================================//
+
+          children: tabs.map((tab) => tab.widget).toList(),
+        ),
       ),
     );
   }
 
   ///
-  void _makeTab() {
+  void makeTab() {
     final settingConfigMap = <String, String>{};
-    widget.configList?.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
+    configList?.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
 
     final ymList = <String>[];
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
@@ -88,14 +110,14 @@ class _CategoriesPriceListAlertState extends State<CategoriesPriceListAlert> {
       ..sort((a, b) => -1 * a.compareTo(b))
       ..forEach(
         (element) {
-          _tabs.add(
+          tabs.add(
             TabInfo(
               element,
               CategoriesPriceListPage(
-                isar: widget.isar,
+                isar: isar,
                 date: DateTime.parse('$element-01 00:00:00'),
-                creditItemList: widget.creditItemList,
-                creditDetailList: widget.creditDetailList,
+                creditItemList: creditItemList,
+                creditDetailList: creditDetailList,
               ),
             ),
           );

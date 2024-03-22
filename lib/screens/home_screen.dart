@@ -47,6 +47,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<ScrollController> _scrollControllers = [];
 
+  List<String> selectedYearmonthList = [];
+
   ///
   void _init() {
     _makeSettingConfigMap();
@@ -356,6 +358,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     configList: configList,
                     creditItemList: creditItemList,
                     creditDetailList: creditDetailList,
+                    index: (selectedYearmonthList..sort((a, b) => -1 * a.compareTo(b))).indexWhere((element) => element == homeListSelectedYearmonth),
                   ),
                 );
               },
@@ -384,6 +387,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget _displayYearmonthList() {
+    selectedYearmonthList = [];
+
     final list = <Widget>[];
 
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
@@ -596,6 +601,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
               ));
+
+              selectedYearmonthList.add(yearmonth);
             }
 
             yearmonthList.add(yearmonth);

@@ -12,6 +12,7 @@ import '../repository/credit_details_repository.dart';
 import '../repository/credit_items_repository.dart';
 import '../repository/credits_repository.dart';
 import '../state/app_params/app_params_notifier.dart';
+import 'components/categories_price_list_alert.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_detail_edit_alert.dart';
 import 'components/credit_detail_input_alert.dart';
@@ -340,7 +341,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       });
 
       list
-        ..add(const SizedBox(height: 50))
+        ..add(const SizedBox(height: 30))
+        ..add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
+            IconButton(
+              onPressed: () {
+                CreditDialog(
+                  context: context,
+                  widget: CategoriesPriceListAlert(
+                    isar: widget.isar,
+                    date: DateTime.parse('$homeListSelectedYearmonth-01 00:00:00'),
+                    configList: configList,
+                    creditItemList: creditItemList,
+                    creditDetailList: creditDetailList,
+                  ),
+                );
+              },
+              icon: Icon(Icons.pages_rounded, color: Colors.greenAccent.withOpacity(0.4)),
+            ),
+          ],
+        ))
         ..add(Column(children: list2));
     }
 

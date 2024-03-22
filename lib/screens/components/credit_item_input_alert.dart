@@ -306,6 +306,32 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   void _showColorPickerDialog({required int id}) {
+    final colorCodeList = [
+      '0xffffffff',
+      '0xffff4081',
+      '0xffff5252',
+      '0xffff6e40',
+      '0xffffab40',
+      '0xffffd740',
+      '0xffffff00',
+      '0xffb2ff59',
+      '0xff69f0ae',
+      '0xff64ffda',
+      '0xff18ffff',
+      '0xff40c4ff',
+      '0xffe040fb',
+      '0xfffbb6ce',
+      '0xff9e9e9e'
+    ];
+
+    final usingColorCode = <String>[];
+    creditItemColorMap.forEach((key, value) => usingColorCode.add(value));
+
+    final availableColorsList = <Color>[];
+    colorCodeList.forEach((element) {
+      availableColorsList.add(Color(element.toInt()));
+    });
+
     if (creditItemColorMap[id] != null && creditItemColorMap[id] != '') {
       mycolor = Color(creditItemColorMap[id]!.toInt());
     }
@@ -316,42 +342,52 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
         return AlertDialog(
           backgroundColor: Colors.blueGrey.withOpacity(0.3),
           title: const Text('Pick a color!', style: TextStyle(fontSize: 12)),
-          content: BlockPicker(
-            availableColors: const [
-              Colors.white,
-              Colors.pinkAccent,
-              Colors.redAccent,
-              Colors.deepOrangeAccent,
-              Colors.orangeAccent,
-              Colors.amberAccent,
-              Colors.yellowAccent,
-              Colors.lightGreenAccent,
-              Colors.greenAccent,
-              Colors.tealAccent,
-              Colors.cyanAccent,
-              Colors.lightBlueAccent,
-              Colors.purpleAccent,
-              Color(0xFFFBB6CE),
-              Colors.grey,
+          content: Column(
+            children: [
+              BlockPicker(
+                availableColors: availableColorsList,
+                pickerColor: mycolor,
+                onColorChanged: (Color color) async {
+                  mycolor = color;
+                  final colorCode = color.toString().replaceAll('Color(', '').replaceAll(')', '');
+                  await _updateColorCode(id: id, color: colorCode).then((value) {
+                    /// ここは2回閉じる
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const SizedBox(width: 80),
+                  Expanded(
+                    child: Wrap(
+                      children: colorCodeList.map(
+                        (e) {
+                          return Stack(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                child: CircleAvatar(radius: 20, backgroundColor: Color(e.toInt()).withOpacity(0.3)),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Text(
+                                  (usingColorCode.contains(e)) ? 'USING' : '',
+                                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6)),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ).toList(),
+                    ),
+                  ),
+                ],
+              ),
             ],
-            pickerColor: mycolor,
-            onColorChanged: (Color color) async {
-              mycolor = color;
-
-              final exColor = color.toString().split(' ');
-              var colorCode = '';
-              if (exColor.length == 3) {
-                colorCode = exColor[2].replaceAll('Color(', '').replaceAll(')', '');
-              } else {
-                colorCode = exColor[0].replaceAll('Color(', '').replaceAll(')', '');
-              }
-
-              await _updateColorCode(id: id, color: colorCode).then((value) {
-                /// ここは2回閉じる
-                Navigator.pop(context);
-                Navigator.pop(context);
-              });
-            },
           ),
         );
       },

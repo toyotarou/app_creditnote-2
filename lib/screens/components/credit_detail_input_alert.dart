@@ -203,10 +203,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () => _clearOneBox(pos: i),
-                        child: const Icon(Icons.close, color: Colors.redAccent),
-                      ),
+                      GestureDetector(onTap: () => _clearOneBox(pos: i), child: const Icon(Icons.close, color: Colors.redAccent)),
                     ],
                   ),
                   DropdownButton(
@@ -229,7 +226,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     decoration: const InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                      hintText: '金額',
+                      hintText: '金額(10桁以内)',
                       filled: true,
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
@@ -250,7 +247,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     decoration: const InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                      hintText: '詳細',
+                      hintText: '詳細(30文字以内)',
                       filled: true,
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
@@ -263,10 +260,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        const Icon(Icons.ac_unit, size: 16, color: Colors.yellowAccent),
-                      ],
+                      children: [Container(), const Icon(Icons.ac_unit, size: 16, color: Colors.yellowAccent)],
                     ),
                   ],
                 ],
@@ -332,7 +326,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
         [element.creditDetailPrice, 10],
         [element.creditDetailDescription, 30]
       ].forEach((element2) {
-        if (checkInputValueLengthCheck(value: element2[0] as String, length: element2[1] as int) == false) {
+        if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
           errFlg = true;
         }
       });

@@ -262,12 +262,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onPressed: (_) {
                       CreditDialog(
                         context: context,
-                        widget: CreditDetailEditAlert(
-                          isar: widget.isar,
-                          creditDetail: element,
-                          creditItemList: creditItemList ?? [],
-                          from: 'HomeScreen',
-                        ),
+                        widget:
+                            CreditDetailEditAlert(isar: widget.isar, creditDetail: element, creditItemList: creditItemList ?? [], from: 'HomeScreen'),
                       );
                     },
                     backgroundColor: Colors.transparent,
@@ -278,30 +274,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text(element.creditDetailDate), Text(element.creditDetailPrice.toString().toCurrency())],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(element.creditDetailDescription),
-                            Container(
-                              width: context.screenSize.width / 6,
-                              margin: const EdgeInsets.symmetric(vertical: 3),
-                              padding: const EdgeInsets.symmetric(vertical: 3),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                              child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(element.creditDetailDate),
+                      Text(element.creditDetailDescription, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    ],
+                  )),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(element.creditDetailPrice.toString().toCurrency()),
+                      Container(
+                        width: context.screenSize.width / 6,
+                        margin: const EdgeInsets.symmetric(vertical: 3),
+                        padding: const EdgeInsets.symmetric(vertical: 3),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                        child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+                      ),
+                    ],
                   ),
                   const SizedBox(width: 10),
                   Icon(Icons.arrow_back_ios_sharp, color: Colors.white.withOpacity(0.3)),
@@ -334,7 +330,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                  child: Text(element.name, style: const TextStyle(fontSize: 10)),
+                  child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis),
                 ),
                 Text(sum.toString().toCurrency()),
               ],

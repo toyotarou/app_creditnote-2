@@ -34,12 +34,6 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
   Widget build(BuildContext context) {
     final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
 
-    Future(() {
-      for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
-        ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: '');
-      }
-    });
-
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -134,17 +128,13 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                             onTap: () {
                               ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: e.name);
 
-                              creditBlankInputValueMap[i] = CreditBlankInputValue(
-                                widget.creditBlankCreditDetailList[i].id,
-                                e.name,
-                                e.date,
-                                e.price.toString(),
-                              );
+                              creditBlankInputValueMap[i] =
+                                  CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name, e.date, e.price.toString());
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 5),
                               child: CircleAvatar(
-                                backgroundColor: (creditBlankSettingMap[i] == e.name) ? Colors.yellowAccent.withOpacity(0.3) : Colors.black,
+                                backgroundColor: (creditBlankSettingMap[i] == e.name) ? Colors.orangeAccent.withOpacity(0.4) : Colors.black,
                                 child: Text(e.name, style: const TextStyle(fontSize: 8, color: Colors.white)),
                               ),
                             ),
@@ -166,13 +156,8 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                         children: [
                           Container(),
                           GestureDetector(
-                            onTap: () {
-                              deleteCreditBlankData(id: widget.creditBlankCreditDetailList[i].id);
-                            },
-                            child: Text(
-                              'delete',
-                              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
-                            ),
+                            onTap: () => deleteCreditBlankData(id: widget.creditBlankCreditDetailList[i].id),
+                            child: Text('delete', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary)),
                           )
                         ],
                       ),
@@ -193,15 +178,12 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
   Future<void> _inputCreditBlankReInput() async {
     final updateCreditDetailList = <CreditDetail>[];
 
-    await widget.isar.writeTxn(() async {
-      creditBlankInputValueMap.forEach((key, value) {
-        CreditDetailsRepository().getCreditDetail(isar: widget.isar, id: value.creditDetailId).then((value2) {
-          updateCreditDetailList.add(value2!
-            ..creditDate = value.creditDate
-            ..creditPrice = value.creditPrice);
-        });
-      });
-    });
+    await widget.isar.writeTxn(() async => creditBlankInputValueMap
+        .forEach((key, value) => CreditDetailsRepository().getCreditDetail(isar: widget.isar, id: value.creditDetailId).then((value2) {
+              updateCreditDetailList.add(value2!
+                ..creditDate = value.creditDate
+                ..creditPrice = value.creditPrice);
+            })));
 
     if (updateCreditDetailList.isEmpty) {
       Future.delayed(
@@ -214,19 +196,16 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
       return;
     }
 
-    await widget.isar.writeTxn(() async {
-      await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: updateCreditDetailList).then((value) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      });
-    });
+    await widget.isar.writeTxn(
+        () async => CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: updateCreditDetailList).then((value) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }));
   }
 
   ///
-  Future<void> deleteCreditBlankData({required Id id}) async {
-    await CreditDetailsRepository().deleteCreditDetail(isar: widget.isar, id: id).then((value) {
-      Navigator.pop(context);
-      Navigator.pop(context);
-    });
-  }
+  Future<void> deleteCreditBlankData({required Id id}) async => CreditDetailsRepository().deleteCreditDetail(isar: widget.isar, id: id).then((value) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
 }

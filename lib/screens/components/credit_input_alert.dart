@@ -117,6 +117,8 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                       onTap: () {
                         ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
+                        ref.read(appParamProvider.notifier).setCreditBlankDefaultMap();
+
                         CreditDialog(
                           context: context,
                           widget: CreditBlankReInputAlert(
@@ -214,7 +216,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                           Expanded(
                             child: TextField(
                               controller: _creditNameTecs[i],
-                              decoration: const InputDecoration(labelText: 'クレジット名'),
+                              decoration: const InputDecoration(labelText: 'クレジット名(15文字以内)'),
                               style: const TextStyle(fontSize: 13, color: Colors.white),
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
@@ -232,7 +234,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                             child: TextField(
                               keyboardType: TextInputType.number,
                               controller: _creditPriceTecs[i],
-                              decoration: const InputDecoration(labelText: '金額'),
+                              decoration: const InputDecoration(labelText: '金額(10桁以内)'),
                               style: const TextStyle(fontSize: 13, color: Colors.white),
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
@@ -331,7 +333,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
         [element.name, 15],
         [element.price, 10]
       ].forEach((element2) {
-        if (checkInputValueLengthCheck(value: element2[0] as String, length: element2[1] as int) == false) {
+        if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
           errFlg = true;
         }
       });
@@ -385,9 +387,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   }
 
   ///
-  void _addingDeleteCreditList({required String date, required int price}) {
-    setState(() => deleteCreditList.add(Credit()
-      ..date = date
-      ..price = price));
-  }
+  void _addingDeleteCreditList({required String date, required int price}) => setState(() => deleteCreditList.add(Credit()
+    ..date = date
+    ..price = price));
 }

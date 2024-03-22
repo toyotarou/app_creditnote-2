@@ -177,7 +177,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
             ),
             child: TextField(
               controller: _creditItemEditingController,
-              decoration: const InputDecoration(labelText: '分類アイテム'),
+              decoration: const InputDecoration(labelText: '分類アイテム(20文字以内)'),
               style: const TextStyle(fontSize: 13, color: Colors.white),
               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
@@ -199,7 +199,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       [
         [_creditItemEditingController.text, 20]
       ].forEach((element) {
-        if (checkInputValueLengthCheck(value: element[0] as String, length: element[1] as int) == false) {
+        if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
           errFlg = true;
         }
       });
@@ -248,11 +248,8 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
         },
         child: const Text('はい'));
 
-    final alert = AlertDialog(
-      backgroundColor: Colors.blueGrey.withOpacity(0.3),
-      content: const Text('このデータを消去しますか？'),
-      actions: [cancelButton, continueButton],
-    );
+    final alert =
+        AlertDialog(backgroundColor: Colors.blueGrey.withOpacity(0.3), content: const Text('このデータを消去しますか？'), actions: [cancelButton, continueButton]);
 
     showDialog(context: context, builder: (BuildContext context) => alert);
   }

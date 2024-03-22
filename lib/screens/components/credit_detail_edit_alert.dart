@@ -260,7 +260,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
         [price, 10],
         [description, 30]
       ].forEach((element) {
-        if (checkInputValueLengthCheck(value: element[0] as String, length: element[1] as int) == false) {
+        if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
           errFlg = true;
         }
       });

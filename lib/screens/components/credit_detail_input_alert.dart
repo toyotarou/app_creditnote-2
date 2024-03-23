@@ -126,8 +126,8 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               Container(
-                padding: EdgeInsets.all(5),
-                child: Text(
+                padding: const EdgeInsets.all(5),
+                child: const Text(
                   '金額だけで一時保存可能です。',
                   style: TextStyle(fontSize: 12, color: Colors.yellowAccent),
                 ),

@@ -102,6 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       drawer: _dispDrawer(),
       endDrawer: _dispEndDrawer(),
+      endDrawerEnableOpenDragGesture: false,
     );
   }
 
@@ -187,20 +188,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
     //===============================
 
-    return Drawer(
-      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+    return GestureDetector(
+      onHorizontalDragUpdate: (_) => null,
       child: Container(
-        padding: const EdgeInsets.only(left: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        width: context.screenSize.width,
+        decoration: BoxDecoration(color: Colors.transparent),
+        child: Row(
           children: [
-            const SizedBox(height: 60),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text(homeListSelectedYearmonth), Text(sum.toString().toCurrency())],
+            SizedBox(width: context.screenSize.width * 0.25),
+            Drawer(
+              backgroundColor: Colors.blueGrey.withOpacity(0.2),
+              child: Container(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 60),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text(homeListSelectedYearmonth), Text(sum.toString().toCurrency())],
+                    ),
+                    Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+                    Expanded(child: _displayCreditDetailList()),
+                  ],
+                ),
+              ),
             ),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            Expanded(child: _displayCreditDetailList()),
           ],
         ),
       ),

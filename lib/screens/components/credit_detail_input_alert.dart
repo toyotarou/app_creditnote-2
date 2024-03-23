@@ -115,11 +115,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     onPressed: inputButtonClicked
                         ? null
                         : () {
-                            // ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
-                            //
-                            //
-                            //
-                            //
+                            ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
 
                             _inputCreditDetail();
                           },
@@ -129,6 +125,13 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                 ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+              Container(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  '金額だけで一時保存可能です。',
+                  style: TextStyle(fontSize: 12, color: Colors.yellowAccent),
+                ),
+              ),
               Expanded(child: SingleChildScrollView(child: _displayInputParts())),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -189,17 +190,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     //===============================
 
     return GestureDetector(
-      onHorizontalDragUpdate: (_) => null,
+      onHorizontalDragUpdate: (_) {},
       child: Container(
         width: context.screenSize.width,
-        decoration: BoxDecoration(color: Colors.transparent),
-        child: Row(
-          children: [
-            SizedBox(width: context.screenSize.width * 0.25),
-            Drawer(
-              backgroundColor: Colors.blueGrey.withOpacity(0.2),
-              child: Container(
-                padding: const EdgeInsets.only(left: 10),
+        decoration: const BoxDecoration(color: Colors.transparent),
+        padding: EdgeInsets.only(left: context.screenSize.width * 0.2),
+        child: Drawer(
+          backgroundColor: Colors.blueGrey.withOpacity(0.2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 10),
+              Column(
+                children: [
+                  const SizedBox(height: 60),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: '');
+
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(Icons.close, color: Colors.redAccent),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(child: DecoratedBox(decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)), child: const SizedBox(width: 5))),
+                ],
+              ),
+              const SizedBox(width: 10),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -213,8 +231,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -404,6 +422,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final list = <Widget>[];
 
+    final homeListSelectedYearmonth = ref.watch(appParamProvider.select((value) => value.homeListSelectedYearmonth));
+
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
       final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
 
@@ -456,7 +476,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(yearmonth),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+                                    decoration: BoxDecoration(
+                                        color: (yearmonth == homeListSelectedYearmonth) ? Colors.yellowAccent.withOpacity(0.3) : Colors.transparent),
+                                    child: Text(yearmonth),
+                                  ),
                                   const SizedBox(height: 5),
                                   Container(
                                     alignment: Alignment.topRight,

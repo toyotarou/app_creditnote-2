@@ -328,16 +328,18 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
     ////////////////////////// 同数チェック
 
-    list.forEach((element) {
-      [
-        [element.name, 15],
-        [element.price, 10]
-      ].forEach((element2) {
-        if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
-          errFlg = true;
-        }
+    if (errFlg == false) {
+      list.forEach((element) {
+        [
+          [element.name, 15],
+          [element.price, 10]
+        ].forEach((element2) {
+          if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
+            errFlg = true;
+          }
+        });
       });
-    });
+    }
 
     if (errFlg) {
       Future.delayed(

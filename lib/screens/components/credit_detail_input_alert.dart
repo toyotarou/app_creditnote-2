@@ -115,7 +115,11 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     onPressed: inputButtonClicked
                         ? null
                         : () {
-                            ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
+                            // ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
+                            //
+                            //
+                            //
+                            //
 
                             _inputCreditDetail();
                           },
@@ -317,20 +321,22 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
       errFlg = true;
     }
 
-    if (creditDetailState.diff == 0) {
+    if (creditDetailState.diff != 0) {
       errFlg = true;
     }
 
-    list.forEach((element) {
-      [
-        [element.creditDetailPrice, 10],
-        [element.creditDetailDescription, 30]
-      ].forEach((element2) {
-        if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
-          errFlg = true;
-        }
+    if (errFlg == false) {
+      list.forEach((element) {
+        [
+          [element.creditDetailPrice, 10],
+          [element.creditDetailDescription, 30]
+        ].forEach((element2) {
+          if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
+            errFlg = true;
+          }
+        });
       });
-    });
+    }
 
     if (errFlg) {
       Future.delayed(

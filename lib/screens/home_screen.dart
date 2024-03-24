@@ -50,6 +50,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   List<String> selectedYearmonthList = [];
 
+  Map<int, List<CreditDetail>> yearlyCreditDetailMap = {};
+
   final _radius = 10.0;
 
   final _backRadius = 20.0;
@@ -111,7 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       const Text('Credit Note'),
                       IconButton(
                         onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-                        icon: Icon(Icons.settings, color: Colors.white.withOpacity(0.6), size: 20),
+                        icon: Icon(Icons.settings, color: Colors.greenAccent.withOpacity(0.4), size: 20),
                       )
                     ],
                   ),
@@ -280,6 +282,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
       categoriesPriceMap[element.name] = [];
     });
 
+    selectedYearmonthList.forEach((element) => yearlyCreditDetailMap[DateTime.parse('$element-01 00:00:00').year] = []);
+
     if (creditDetailList != null) {
       /// 複数条件でソートする
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
@@ -368,6 +372,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           ));
 
           categoriesPriceMap[element.creditDetailItem]?.add(element);
+
+          yearlyCreditDetailMap[DateTime.parse('${element.yearmonth}-01 00:00:00').year]?.add(element);
         });
 
       final list2 = <Widget>[];

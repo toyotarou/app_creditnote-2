@@ -49,6 +49,7 @@ class MyApp extends ConsumerWidget {
           titleTextStyle: GoogleFonts.kiwiMaru(textStyle: const TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
         ),
+        scrollbarTheme: const ScrollbarThemeData().copyWith(thumbColor: MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.4))),
         useMaterial3: false,
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark),
         fontFamily: 'KiwiMaru',

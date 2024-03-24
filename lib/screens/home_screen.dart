@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -20,6 +19,7 @@ import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/credit_item_input_alert.dart';
 import 'components/parts/back_ground_image.dart';
+import 'components/parts/circle_painter.dart';
 import 'components/parts/credit_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
 import 'components/same_item_list_alert.dart';
@@ -33,7 +33,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Config>? configList = [];
@@ -49,6 +49,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<ScrollController> _scrollControllers = [];
 
   List<String> selectedYearmonthList = [];
+
+  final _radius = 10.0;
+
+  final _backRadius = 20.0;
+
+  late AnimationController _animationController;
+
+  late Animation<double> _animationRadius;
+
+  ///
+  @override
+  void initState() {
+    _animationController = AnimationController(duration: const Duration(seconds: 3), vsync: this);
+
+    /// TODO エラー解決できない
+    _animationRadius = Tween(begin: 0.0, end: _backRadius).animate(_animationController)..addListener(() => setState(() {}));
+
+    _animationController.repeat();
+
+    super.initState();
+  }
 
   ///
   void _init() {
@@ -204,13 +225,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Column(
                 children: [
                   const SizedBox(height: 60),
-                  GestureDetector(
-                    onTap: () {
-                      ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: '');
-
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(Icons.close, color: Colors.redAccent),
+                  Stack(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.only(top: 12, left: 12),
+                          child: CustomPaint(painter: CirclePainter(_radius, _backRadius, _animationRadius.value))),
+                      GestureDetector(
+                        onTap: () {
+                          ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: '');
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.close, color: Colors.redAccent),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   Expanded(child: DecoratedBox(decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)), child: const SizedBox(width: 5))),

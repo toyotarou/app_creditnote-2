@@ -49,6 +49,21 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
 
   ///
   Widget _displayYearlyCreditCategoryList() {
+    final monthSumMap = <int, int>{};
+    widget.creditItemList?.forEach((element) {
+      for (var i = 1; i <= 12; i++) {
+        final filtered =
+            widget.creditDetailList?.where((element2) => element2.yearmonth == '${widget.date.year}-${i.toString().padLeft(2, '0')}').toList();
+
+        var sum = 0;
+        filtered?.forEach((element) {
+          sum += element.creditDetailPrice;
+        });
+
+        monthSumMap[i] = sum;
+      }
+    });
+
     final creditCategoryMap = <String, List<String>>{};
 
     widget.creditItemList?.forEach((element) {
@@ -75,9 +90,31 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
       }
     });
 
-    final list = <Widget>[];
-
     const valueDevide = 5;
+
+    final list = <Widget>[
+      Row(
+        children: [
+          Container(
+            width: context.screenSize.width / 6,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            alignment: Alignment.topRight,
+            child: const Text('', style: TextStyle(fontSize: 10)),
+          ),
+          const SizedBox(width: 10),
+          for (var i = 0; i < 12; i++) ...[
+            Container(
+              width: context.screenSize.width / valueDevide,
+              padding: const EdgeInsets.all(1),
+              margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
+              alignment: Alignment.center,
+              child: Text((i + 1).toString()),
+            ),
+          ],
+        ],
+      ),
+    ];
 
     final creditItemColorMap = <String, String>{};
     widget.creditItemList?.forEach((element) {
@@ -138,6 +175,30 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
 
       list.add(Row(children: list2));
     });
+
+    list.add(
+      Row(
+        children: [
+          Container(
+            width: context.screenSize.width / 6,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            alignment: Alignment.topRight,
+            child: const Text('', style: TextStyle(fontSize: 10)),
+          ),
+          const SizedBox(width: 10),
+          for (var i = 0; i < 12; i++) ...[
+            Container(
+              width: context.screenSize.width / valueDevide,
+              padding: const EdgeInsets.all(1),
+              margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
+              alignment: Alignment.topRight,
+              child: Text(monthSumMap[(i+1)].toString().toCurrency()),
+            ),
+          ],
+        ],
+      ),
+    );
 
     return SingleChildScrollView(scrollDirection: Axis.horizontal, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
   }

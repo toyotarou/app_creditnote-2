@@ -479,9 +479,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
           final diff = DateTime.now().difference(firstDate).inDays;
 
+          final addNum = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
+
           final yearmonthList = <String>[];
 
-          for (var i = 0; i <= diff; i++) {
+          for (var i = 0; i <= (diff + addNum); i++) {
             final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
 
             if (!yearmonthList.contains(yearmonth)) {

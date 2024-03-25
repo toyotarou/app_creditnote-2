@@ -23,6 +23,7 @@ import 'components/parts/circle_painter.dart';
 import 'components/parts/credit_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
 import 'components/same_item_list_alert.dart';
+import 'components/yearly_credit_category_list_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -49,8 +50,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   List<ScrollController> _scrollControllers = [];
 
   List<String> selectedYearmonthList = [];
-
-  Map<int, List<CreditDetail>> yearlyCreditDetailMap = {};
 
   final _radius = 10.0;
 
@@ -111,9 +110,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Credit Note'),
-                      IconButton(
-                        onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-                        icon: Icon(Icons.settings, color: Colors.greenAccent.withOpacity(0.4), size: 20),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              CreditDialog(
+                                context: context,
+                                widget: YearlyCreditCategoryListAlert(
+                                  isar: widget.isar,
+                                  creditItemList: creditItemList,
+                                  creditDetailList: creditDetailList,
+                                  selectedYearmonthList: selectedYearmonthList,
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4), size: 20),
+                          ),
+                          IconButton(
+                            onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+                            icon: Icon(Icons.settings, color: Colors.greenAccent.withOpacity(0.4), size: 20),
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -282,8 +299,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
       categoriesPriceMap[element.name] = [];
     });
 
-    selectedYearmonthList.forEach((element) => yearlyCreditDetailMap[DateTime.parse('$element-01 00:00:00').year] = []);
-
     if (creditDetailList != null) {
       /// 複数条件でソートする
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
@@ -372,8 +387,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           ));
 
           categoriesPriceMap[element.creditDetailItem]?.add(element);
-
-          yearlyCreditDetailMap[DateTime.parse('${element.yearmonth}-01 00:00:00').year]?.add(element);
         });
 
       final list2 = <Widget>[];

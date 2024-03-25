@@ -86,6 +86,8 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
 
   ///
   void makeTab() {
+    tabs.clear();
+
     final settingConfigMap = <String, String>{};
     configList?.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
 

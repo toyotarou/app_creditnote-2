@@ -10,6 +10,8 @@ import '../../repository/credit_details_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
 import '../../state/credit_detail_input/credit_detail_input_notifier.dart';
 import '../../utility/function.dart';
+import 'credit_price_edit_alert.dart';
+import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
 
 class CreditDetailInputAlert extends ConsumerStatefulWidget {
@@ -100,14 +102,32 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                     children: [
                       const Text('Credit Detail Input'),
                       Text(widget.creditDate.yyyymmdd),
-                      Text(widget.creditPrice.toString().toCurrency()),
-                      Text(
-                        (creditDetailState.diff != 0)
-                            ? creditDetailState.diff.toString().toCurrency()
-                            : (creditDetailState.baseDiff == '')
-                                ? ''
-                                : creditDetailState.baseDiff.toCurrency(),
-                        style: TextStyle(color: (creditDetailState.diff == 0) ? Colors.yellowAccent : Colors.white),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              CreditDialog(
+                                context: context,
+                                widget: CreditPriceEditAlert(date: widget.creditDate, isar: widget.isar, creditPrice: widget.creditPrice),
+                              );
+                            },
+                            child: const Icon(Icons.edit),
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            children: [
+                              Text(widget.creditPrice.toString().toCurrency()),
+                              Text(
+                                (creditDetailState.diff != 0)
+                                    ? creditDetailState.diff.toString().toCurrency()
+                                    : (creditDetailState.baseDiff == '')
+                                        ? ''
+                                        : creditDetailState.baseDiff.toCurrency(),
+                                style: TextStyle(color: (creditDetailState.diff == 0) ? Colors.yellowAccent : Colors.white),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),

@@ -13,6 +13,12 @@ class CreditsRepository {
   }
 
   ///
+  Future<Credit?> getCreditByDateAndPrice({required Isar isar, required Map<String, dynamic> param}) async {
+    final creditsCollection = getCollection(isar: isar);
+    return creditsCollection.filter().dateEqualTo(param['date']).priceEqualTo(param['price']).findFirst();
+  }
+
+  ///
   Future<void> inputCreditList({required Isar isar, required List<Credit> creditList}) async {
     creditList.forEach((element) => inputCredit(isar: isar, credit: element));
   }
@@ -21,6 +27,12 @@ class CreditsRepository {
   Future<void> inputCredit({required Isar isar, required Credit credit}) async {
     final creditsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => creditsCollection.put(credit));
+  }
+
+  ///
+  Future<void> updateCredit({required Isar isar, required Credit credit}) async {
+    final creditsCollection = getCollection(isar: isar);
+    await creditsCollection.put(credit);
   }
 
   ///

@@ -1,10 +1,15 @@
 import 'dart:ui';
 
+import 'package:credit_note/collections/credit_detail.dart';
+import 'package:credit_note/repository/credit_details_repository.dart';
+import 'package:credit_note/repository/credits_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 
+import '../../collections/credit.dart';
 import '../../extensions/extensions.dart';
+import '../../utility/function.dart';
 
 class CreditPriceEditAlert extends StatefulWidget {
   const CreditPriceEditAlert({
@@ -24,7 +29,7 @@ class CreditPriceEditAlert extends StatefulWidget {
 }
 
 class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
-  final TextEditingController _changePriceEditingController = TextEditingController();
+  final TextEditingController _creditPriceEditingController = TextEditingController();
 
   ///
   @override
@@ -56,16 +61,25 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
                       Text(widget.creditPrice.toString().toCurrency()),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
-                    child: const Text('input'),
-                  ),
+                  Container(),
                 ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayInputParts(),
               const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  GestureDetector(
+                    onTap: _editCreditPrice,
+                    child: Text(
+                      '金額を変更する',
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -93,7 +107,8 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
               border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
             ),
             child: TextField(
-              controller: _changePriceEditingController,
+              keyboardType: TextInputType.number,
+              controller: _creditPriceEditingController,
               decoration: const InputDecoration(labelText: '金額(10桁以内)'),
               style: const TextStyle(fontSize: 13, color: Colors.white),
               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
@@ -102,5 +117,47 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
         ),
       ),
     );
+  }
+
+  ///
+  Future<void> _editCreditPrice() async {
+    var errFlg = false;
+
+    if (_creditPriceEditingController.text == '') {
+      errFlg = true;
+    }
+
+    if (errFlg == false) {
+      [
+        [_creditPriceEditingController.text, 10]
+      ].forEach((element) {
+        if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
+          errFlg = true;
+        }
+      });
+    }
+
+    //======================
+    var credit = Credit();
+    await CreditsRepository().getCreditByDateAndPrice(
+        isar: widget.isar, param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice}).then((value) => credit = value!);
+    //======================
+
+    await widget.isar.writeTxn(() async {
+      await CreditDetailsRepository().getCreditDetailListByDateAndPrice(
+        isar: widget.isar,
+        param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice.toString()},
+      ).then((value) {
+        final creditDetailList = <CreditDetail>[];
+        value?.forEach((element) => creditDetailList.add(element..creditPrice = _creditPriceEditingController.text));
+
+        CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList).then((value2) {
+          CreditsRepository().updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.toInt()).then((value4) {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        });
+      });
+    });
   }
 }

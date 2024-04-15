@@ -85,24 +85,26 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
 
           total += sum;
 
-          list2.add(Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: context.screenSize.width / 6,
-                  margin: const EdgeInsets.symmetric(vertical: 3),
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                  child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis),
-                ),
-                Text(sum.toString().toCurrency()),
-              ],
-            ),
-          ));
+          if (sum > 0) {
+            list2.add(Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: context.screenSize.width / 6,
+                    margin: const EdgeInsets.symmetric(vertical: 3),
+                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                    child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
+                  ),
+                  Text(sum.toString().toCurrency()),
+                ],
+              ),
+            ));
+          }
         }
       });
 

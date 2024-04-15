@@ -125,55 +125,67 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
       final lineColor =
           (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '') ? creditItemColorMap[element.name] : '0xffffffff';
 
-      final list2 = <Widget>[
-        Container(
-          width: context.screenSize.width / 6,
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          padding: const EdgeInsets.symmetric(vertical: 3),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-          child: Text(element.name, style: const TextStyle(fontSize: 10)),
-        ),
-        const SizedBox(width: 10),
-      ];
+      var sum = 0;
 
       if (creditCategoryMap[element.name] != null) {
         for (var i = 0; i < 12; i++) {
           if (creditCategoryMap[element.name]![i].isNotEmpty) {
-            list2.add(
-              Container(
-                width: context.screenSize.width / valueDevide,
-                padding: const EdgeInsets.all(1),
-                margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.transparent, width: 2),
-                  color: Color(lineColor.toInt()).withOpacity(0.1),
-                ),
-                alignment: Alignment.topRight,
-                child: Text(creditCategoryMap[element.name]![i]),
-              ),
-            );
+            sum += creditCategoryMap[element.name]![i].replaceAll(',', '').toInt();
           }
         }
       }
 
-      list2.add(
-        Row(
-          children: [
-            const SizedBox(width: 10),
-            Container(
-              width: context.screenSize.width / 6,
-              margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: Color(lineColor.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-              child: Text(element.name, style: const TextStyle(fontSize: 10)),
-            ),
-          ],
-        ),
-      );
+      if (sum > 0) {
+        final list2 = <Widget>[
+          Container(
+            width: context.screenSize.width / 6,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+            child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10))),
+          ),
+          const SizedBox(width: 10),
+        ];
 
-      list.add(Row(children: list2));
+        if (creditCategoryMap[element.name] != null) {
+          for (var i = 0; i < 12; i++) {
+            if (creditCategoryMap[element.name]![i].isNotEmpty) {
+              list2.add(
+                Container(
+                  width: context.screenSize.width / valueDevide,
+                  padding: const EdgeInsets.all(1),
+                  margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.transparent, width: 2),
+                    color: Color(lineColor.toInt()).withOpacity(0.1),
+                  ),
+                  alignment: Alignment.topRight,
+                  child: Text(creditCategoryMap[element.name]![i]),
+                ),
+              );
+            }
+          }
+        }
+
+        list2.add(
+          Row(
+            children: [
+              const SizedBox(width: 10),
+              Container(
+                width: context.screenSize.width / 6,
+                margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: Color(lineColor.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                child: Text(element.name, style: const TextStyle(fontSize: 10)),
+              ),
+            ],
+          ),
+        );
+
+        list.add(Row(children: list2));
+      }
     });
 
     list.add(
@@ -193,7 +205,7 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
               padding: const EdgeInsets.all(1),
               margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
               alignment: Alignment.topRight,
-              child: Text(monthSumMap[(i+1)].toString().toCurrency()),
+              child: Text(monthSumMap[(i + 1)].toString().toCurrency()),
             ),
           ],
         ],

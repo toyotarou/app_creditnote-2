@@ -1,23 +1,18 @@
 import 'dart:ui';
 
-import 'package:credit_note/collections/credit_detail.dart';
-import 'package:credit_note/repository/credit_details_repository.dart';
-import 'package:credit_note/repository/credits_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
+import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/credit_details_repository.dart';
+import '../../repository/credits_repository.dart';
 import '../../utility/function.dart';
 
 class CreditPriceEditAlert extends StatefulWidget {
-  const CreditPriceEditAlert({
-    super.key,
-    required this.date,
-    required this.isar,
-    required this.creditPrice,
-  });
+  const CreditPriceEditAlert({super.key, required this.date, required this.isar, required this.creditPrice});
 
   final DateTime date;
   final Isar isar;
@@ -56,7 +51,6 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('CreditPriceEditAlert'),
                       Text(widget.date.yyyymmdd),
                       Text(widget.creditPrice.toString().toCurrency()),
                     ],
@@ -90,9 +84,7 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
   ///
   Widget _displayInputParts() {
     return DecoratedBox(
-      decoration: BoxDecoration(
-        boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
-      ),
+      decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))]),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(

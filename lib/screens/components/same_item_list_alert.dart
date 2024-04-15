@@ -59,9 +59,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
     final list = <Widget>[];
 
     final spendItemColorMap = <String, String>{};
-    widget.creditItemList.forEach((element) {
-      spendItemColorMap[element.name] = element.color;
-    });
+    widget.creditItemList.forEach((element) => spendItemColorMap[element.name] = element.color);
 
     widget.creditDetailList!.where((element) => element.creditDetailDescription == widget.creditDetail.creditDetailDescription).toList()
       ..sort((a, b) {
@@ -90,7 +88,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10)),
+                child: FittedBox(child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10))),
               ),
               const SizedBox(width: 10),
               GestureDetector(
@@ -98,11 +96,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                   CreditDialog(
                     context: context,
                     widget: CreditDetailEditAlert(
-                      isar: widget.isar,
-                      creditDetail: element,
-                      creditItemList: widget.creditItemList,
-                      from: 'SameItemListAlert',
-                    ),
+                        isar: widget.isar, creditDetail: element, creditItemList: widget.creditItemList, from: 'SameItemListAlert'),
                   );
                 },
                 child: Icon(Icons.edit, color: Colors.greenAccent.withOpacity(0.4), size: 16),

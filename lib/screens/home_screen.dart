@@ -18,6 +18,7 @@ import 'components/credit_detail_edit_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/credit_item_input_alert.dart';
+import 'components/monthly_credit_item_list_alert.dart';
 import 'components/parts/back_ground_image.dart';
 import 'components/parts/circle_painter.dart';
 import 'components/parts/credit_dialog.dart';
@@ -326,11 +327,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       CreditDialog(
                         context: context,
                         widget: SameItemListAlert(
-                          isar: widget.isar,
-                          creditDetail: element,
-                          creditDetailList: creditDetailList,
-                          creditItemList: creditItemList ?? [],
-                        ),
+                            isar: widget.isar, creditDetail: element, creditDetailList: creditDetailList, creditItemList: creditItemList ?? []),
                       );
                     },
                     backgroundColor: Colors.transparent,
@@ -398,24 +395,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           var sum = 0;
           categoriesPriceMap[element.name]?.forEach((element2) => sum += element2.creditDetailPrice);
 
-          list2.add(Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: context.screenSize.width / 6,
-                  margin: const EdgeInsets.symmetric(vertical: 3),
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                  child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
-                ),
-                Text(sum.toString().toCurrency()),
-              ],
-            ),
-          ));
+          if (sum > 0) {
+            list2.add(Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      CreditDialog(
+                        context: context,
+                        widget: MonthlyCreditItemListAlert(
+                          date: DateTime.parse('$homeListSelectedYearmonth-01 00:00:00'),
+                          isar: widget.isar,
+                          item: element.name,
+                          creditDetailList: creditDetailList ?? [],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: context.screenSize.width / 6,
+                      margin: const EdgeInsets.symmetric(vertical: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                      child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
+                    ),
+                  ),
+                  Text(sum.toString().toCurrency()),
+                ],
+              ),
+            ));
+          }
         }
       });
 

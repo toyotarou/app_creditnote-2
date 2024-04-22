@@ -1,3 +1,4 @@
+import 'package:credit_note/collections/subscription_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:isar/isar.dart';
 import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/subscription_items_repository.dart';
 import 'credit_detail_edit_alert.dart';
 import 'parts/credit_dialog.dart';
 
@@ -43,7 +45,13 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(widget.creditDetail.creditDetailDescription), Container()],
+                children: [
+                  Text(widget.creditDetail.creditDetailDescription),
+                  GestureDetector(
+                    onTap: subscriptionItemInputDeleteToggle,
+                    child: const Icon(Icons.settings_applications_sharp),
+                  ),
+                ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               Expanded(child: _displaySameItemCreditDetailList()),
@@ -107,5 +115,17 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
       });
 
     return SingleChildScrollView(child: Column(children: list));
+  }
+
+  ///
+  Future<void> subscriptionItemInputDeleteToggle() async {
+    await SubscriptionItemsRepository().getSubscriptionItemByName(isar: widget.isar, name: widget.creditDetail.creditDetailDescription).then((value) {
+      if (value == null) {
+        final subscriptionItem = SubscriptionItem()..name = widget.creditDetail.creditDetailDescription;
+        SubscriptionItemsRepository().inputSubscriptionItem(isar: widget.isar, subscriptionItem: subscriptionItem);
+      } else {
+        SubscriptionItemsRepository().deleteSubscriptionItem(isar: widget.isar, id: value.id);
+      }
+    });
   }
 }

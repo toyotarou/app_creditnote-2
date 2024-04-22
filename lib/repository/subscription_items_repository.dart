@@ -13,6 +13,12 @@ class SubscriptionItemsRepository {
   }
 
   ///
+  Future<List<SubscriptionItem>?> getSubscriptionItemList({required Isar isar}) async {
+    final subscriptionItemsCollection = getCollection(isar: isar);
+    return subscriptionItemsCollection.where().findAll();
+  }
+
+  ///
   Future<void> inputSubscriptionItem({required Isar isar, required SubscriptionItem subscriptionItem}) async {
     final subscriptionItemsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => subscriptionItemsCollection.put(subscriptionItem));

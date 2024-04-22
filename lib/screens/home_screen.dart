@@ -7,10 +7,12 @@ import '../collections/config.dart';
 import '../collections/credit.dart';
 import '../collections/credit_detail.dart';
 import '../collections/credit_item.dart';
+import '../collections/subscription_item.dart';
 import '../extensions/extensions.dart';
 import '../repository/credit_details_repository.dart';
 import '../repository/credit_items_repository.dart';
 import '../repository/credits_repository.dart';
+import '../repository/subscription_items_repository.dart';
 import '../state/app_params/app_params_notifier.dart';
 import 'components/categories_price_list_alert.dart';
 import 'components/config_setting_alert.dart';
@@ -60,6 +62,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   late Animation<double> _animationRadius;
 
+  List<SubscriptionItem>? subscriptionItemList = [];
+
   ///
   @override
   void initState() {
@@ -82,6 +86,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     _makeCreditItemList();
 
     _makeCreditDetailList();
+
+    _makeSubscriptionItemList();
   }
 
   ///
@@ -300,6 +306,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
       categoriesPriceMap[element.name] = [];
     });
 
+    final subscriptionItems = <String>[];
+    subscriptionItemList?.forEach((element) => subscriptionItems.add(element.name));
+
     if (creditDetailList != null) {
       /// 複数条件でソートする
       creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList()
@@ -315,6 +324,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               ? creditItemColorMap[element.creditDetailItem]
               : '0xffffffff';
 
+          final descriptionColor = (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+
           list.add(Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
@@ -327,7 +338,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       CreditDialog(
                         context: context,
                         widget: SameItemListAlert(
-                            isar: widget.isar, creditDetail: element, creditDetailList: creditDetailList, creditItemList: creditItemList ?? []),
+                          isar: widget.isar,
+                          creditDetail: element,
+                          creditDetailList: creditDetailList,
+                          creditItemList: creditItemList ?? [],
+                          subscriptionItemList: subscriptionItemList ?? [],
+                        ),
                       );
                     },
                     backgroundColor: Colors.transparent,
@@ -358,7 +374,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(element.creditDetailDate),
-                      Text(element.creditDetailDescription, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(
+                        element.creditDetailDescription,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: descriptionColor),
+                      ),
                     ],
                   )),
                   const SizedBox(width: 10),
@@ -722,4 +743,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   ///
   Future<void> _makeCreditDetailList() async =>
       CreditDetailsRepository().getCreditDetailList(isar: widget.isar).then((value) => setState(() => creditDetailList = value));
+
+  ///
+  Future<void> _makeSubscriptionItemList() async =>
+      SubscriptionItemsRepository().getSubscriptionItemList(isar: widget.isar).then((value) => setState(() => subscriptionItemList = value));
 }

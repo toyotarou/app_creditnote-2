@@ -12,12 +12,20 @@ import 'credit_detail_edit_alert.dart';
 import 'parts/credit_dialog.dart';
 
 class SameItemListAlert extends ConsumerStatefulWidget {
-  const SameItemListAlert({super.key, required this.isar, required this.creditDetail, required this.creditDetailList, required this.creditItemList});
+  const SameItemListAlert({
+    super.key,
+    required this.isar,
+    required this.creditDetail,
+    required this.creditDetailList,
+    required this.creditItemList,
+    required this.subscriptionItemList,
+  });
 
   final Isar isar;
   final CreditDetail creditDetail;
   final List<CreditDetail>? creditDetailList;
   final List<CreditItem> creditItemList;
+  final List<SubscriptionItem> subscriptionItemList;
 
   @override
   ConsumerState<SameItemListAlert> createState() => _SameItemListAlertState();
@@ -27,6 +35,11 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
   ///
   @override
   Widget build(BuildContext context) {
+    final subscriptionItems = <String>[];
+    widget.subscriptionItemList.forEach((element) => subscriptionItems.add(element.name));
+
+    final descriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -49,7 +62,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                   Text(widget.creditDetail.creditDetailDescription),
                   GestureDetector(
                     onTap: subscriptionItemInputDeleteToggle,
-                    child: const Icon(Icons.settings_applications_sharp),
+                    child: Icon(Icons.settings_applications_sharp, color: descriptionColor.withOpacity(0.6)),
                   ),
                 ],
               ),
@@ -127,5 +140,9 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
         SubscriptionItemsRepository().deleteSubscriptionItem(isar: widget.isar, id: value.id);
       }
     });
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 }

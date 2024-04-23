@@ -32,6 +32,7 @@ dependencies:
   drag_and_drop_lists: ^0.3.3
   flutter_colorpicker: ^1.0.3
   flutter_slidable: ^3.1.0
+  flutter_hooks: ^0.20.5
 
 dev_dependencies:
   flutter_test:

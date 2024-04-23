@@ -69,8 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   void initState() {
     _animationController = AnimationController(duration: const Duration(seconds: 3), vsync: this);
 
-    /// TODO エラー解決できない
-    _animationRadius = Tween(begin: 0.0, end: _backRadius).animate(_animationController)..addListener(() => setState(() {}));
+    _animationRadius = Tween(begin: 0.toDouble(), end: _backRadius).animate(_animationController)..addListener(() => setState(() {}));
 
     _animationController.repeat();
 
@@ -236,6 +235,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     });
     //===============================
 
+    final subscriptionItems = <String>[];
+    subscriptionItemList?.forEach((element) => subscriptionItems.add(element.name));
+
+    var subscriptionTotal = 0;
+    creditDetailList!.where((element) => element.yearmonth == homeListSelectedYearmonth).toList().forEach((element) {
+      if (subscriptionItems.contains(element.creditDetailDescription)) {
+        subscriptionTotal += element.creditDetailPrice;
+      }
+    });
+
     return GestureDetector(
       onHorizontalDragUpdate: (_) {},
       child: Container(
@@ -277,7 +286,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     const SizedBox(height: 60),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text(homeListSelectedYearmonth), Text(sum.toString().toCurrency())],
+                      children: [
+                        Text(homeListSelectedYearmonth),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(sum.toString().toCurrency()),
+                            Text(subscriptionTotal.toString().toCurrency(), style: const TextStyle(color: Colors.yellowAccent)),
+                          ],
+                        ),
+                      ],
                     ),
                     Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
                     Expanded(child: _displayCreditDetailList()),
@@ -324,7 +342,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               ? creditItemColorMap[element.creditDetailItem]
               : '0xffffffff';
 
-          final descriptionColor = (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+          final subscriptionColor = (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
 
           list.add(Container(
             padding: const EdgeInsets.all(10),
@@ -373,27 +391,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(element.creditDetailDate),
-                      Text(
-                        element.creditDetailDescription,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: descriptionColor),
-                      ),
+                      Text(element.creditDetailDate, style: TextStyle(color: subscriptionColor)),
+                      Text(element.creditDetailDescription, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: subscriptionColor)),
                     ],
                   )),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(element.creditDetailPrice.toString().toCurrency()),
+                      Text(element.creditDetailPrice.toString().toCurrency(), style: TextStyle(color: subscriptionColor)),
                       Container(
                         width: context.screenSize.width / 6,
                         margin: const EdgeInsets.symmetric(vertical: 3),
                         padding: const EdgeInsets.symmetric(vertical: 3),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                        child: FittedBox(child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10))),
+                        child: FittedBox(child: Text(element.creditDetailItem, style: TextStyle(fontSize: 10, color: subscriptionColor))),
                       ),
                     ],
                   ),

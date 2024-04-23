@@ -1,4 +1,3 @@
-import 'package:credit_note/collections/subscription_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,6 +5,7 @@ import 'package:isar/isar.dart';
 
 import '../../collections/credit_detail.dart';
 import '../../collections/credit_item.dart';
+import '../../collections/subscription_item.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/subscription_items_repository.dart';
 import 'credit_detail_edit_alert.dart';
@@ -38,7 +38,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
     final subscriptionItems = <String>[];
     widget.subscriptionItemList.forEach((element) => subscriptionItems.add(element.name));
 
-    final descriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+    final subscriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -56,13 +56,25 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
             children: [
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.creditDetail.creditDetailDescription),
-                  GestureDetector(
-                    onTap: subscriptionItemInputDeleteToggle,
-                    child: Icon(Icons.settings_applications_sharp, color: descriptionColor.withOpacity(0.6)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(),
+                      Row(
+                        children: [
+                          Text('月極登録', style: TextStyle(color: subscriptionColor.withOpacity(0.6))),
+                          const SizedBox(width: 10),
+                          GestureDetector(
+                            onTap: subscriptionItemInputDeleteToggle,
+                            child: Icon(Icons.settings_applications_sharp, color: subscriptionColor.withOpacity(0.6)),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),

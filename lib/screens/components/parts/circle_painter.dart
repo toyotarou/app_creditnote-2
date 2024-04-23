@@ -17,8 +17,7 @@ class CirclePainter extends CustomPainter {
   ///
   @override
   void paint(Canvas canvas, Size size) {
-    /// TODO エラー解決できない
-    const c = Offset(0, 0);
+    const c = Offset.zero;
 
     canvas.drawCircle(
       c,

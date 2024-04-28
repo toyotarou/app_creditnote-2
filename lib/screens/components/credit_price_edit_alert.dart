@@ -139,12 +139,14 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
       await CreditDetailsRepository().getCreditDetailListByDateAndPrice(
         isar: widget.isar,
         param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice.toString()},
-      ).then((value) {
+      ).then((value) async {
         final creditDetailList = <CreditDetail>[];
         value?.forEach((element) => creditDetailList.add(element..creditPrice = _creditPriceEditingController.text));
 
-        CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList).then((value2) {
-          CreditsRepository().updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.toInt()).then((value4) {
+        await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList).then((value2) async {
+          await CreditsRepository()
+              .updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.toInt())
+              .then((value4) async {
             Navigator.pop(context);
             Navigator.pop(context);
           });

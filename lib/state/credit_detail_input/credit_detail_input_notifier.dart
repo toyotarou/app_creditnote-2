@@ -31,6 +31,9 @@ class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseS
   Future<void> setBaseDiff({required String baseDiff}) async => state = state.copyWith(baseDiff: baseDiff);
 
   ///
+  Future<void> setDiff({required int diff}) async => state = state.copyWith(diff: diff);
+
+  ///
   Future<void> setCreditDetailDate({required int pos, required String date}) async {
     final dates = <String>[...state.creditDetailInputDates];
     dates[pos] = date;

@@ -62,9 +62,17 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
     if (widget.creditDetailList!.isNotEmpty) {
       await Future(() => ref.read(creditDetailInputProvider.notifier).setUpdateCreditDetail(updateCreditDetailList: widget.creditDetailList!));
 
+      var creditDetailPriceSum = 0;
+
       for (var i = 0; i < widget.creditDetailList!.length; i++) {
         _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString();
         _descriptionTecs[i].text = widget.creditDetailList![i].creditDetailDescription;
+
+        creditDetailPriceSum += widget.creditDetailList![i].creditDetailPrice;
+      }
+
+      if (creditDetailPriceSum != widget.creditPrice) {
+        await ref.read(creditDetailInputProvider.notifier).setDiff(diff: widget.creditPrice - creditDetailPriceSum);
       }
     }
   }
@@ -115,6 +123,7 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                           ),
                           const SizedBox(width: 20),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(widget.creditPrice.toString().toCurrency()),
                               Text(

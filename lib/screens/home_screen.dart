@@ -65,6 +65,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   List<SubscriptionItem>? subscriptionItemList = [];
 
+  bool allSameNumFlag = false;
+
   ///
   @override
   void initState() {
@@ -224,6 +226,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     selectedYearmonthList: selectedYearmonthList,
                     creditList: creditList ?? [],
                     creditDetailList: creditDetailList ?? [],
+                    allSameNumFlag: allSameNumFlag,
                   ),
                 );
               },
@@ -702,6 +705,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                               } else {
                                 sameNumFlag = true;
                               }
+
+                              if (sameNumFlag == false) {
+                                allSameNumFlag = sameNumFlag;
+                              }
+
                               ////////////////////////// 同数チェック
 
                               return Container(

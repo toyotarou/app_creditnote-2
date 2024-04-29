@@ -20,6 +20,7 @@ import 'components/credit_detail_edit_alert.dart';
 import 'components/credit_detail_input_alert.dart';
 import 'components/credit_input_alert.dart';
 import 'components/credit_item_input_alert.dart';
+import 'components/download_data_list_alert.dart';
 import 'components/monthly_credit_item_list_alert.dart';
 import 'components/parts/back_ground_image.dart';
 import 'components/parts/circle_painter.dart';
@@ -208,6 +209,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('分類アイテム管理'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                CreditDialog(
+                  context: context,
+                  clearBarrierColor: true,
+                  widget: DownloadDataListAlert(
+                    isar: widget.isar,
+                    selectedYearmonthList: selectedYearmonthList,
+                    creditList: creditList ?? [],
+                    creditDetailList: creditDetailList ?? [],
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  const MenuHeadIcon(),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                      margin: const EdgeInsets.all(5),
+                      child: const Text('データダウンロード'),
                     ),
                   ),
                 ],

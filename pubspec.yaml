@@ -62,7 +62,7 @@ flutter:
         - asset: assets/fonts/KiwiMaru-Regular.ttf
 
 flutter_native_splash:
-  image: "assets/images/credit_card.png"
+  image: "assets/images/credit_note_background.png"
   color: "212121"
 
 flutter_icons:

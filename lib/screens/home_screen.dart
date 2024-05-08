@@ -770,7 +770,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 ),
               ));
 
-              selectedYearmonthList.add(yearmonth);
+              if (creList.isNotEmpty) {
+                selectedYearmonthList.add(yearmonth);
+              }
             }
 
             yearmonthList.add(yearmonth);

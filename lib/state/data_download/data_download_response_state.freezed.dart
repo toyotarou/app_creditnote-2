@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$DataDownloadResponseState {
   String get startYearMonth => throw _privateConstructorUsedError;
   String get endYearMonth => throw _privateConstructorUsedError;
+  DateDownloadDataType? get dataType => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DataDownloadResponseStateCopyWith<DataDownloadResponseState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $DataDownloadResponseStateCopyWith<$Res> {
           $Res Function(DataDownloadResponseState) then) =
       _$DataDownloadResponseStateCopyWithImpl<$Res, DataDownloadResponseState>;
   @useResult
-  $Res call({String startYearMonth, String endYearMonth});
+  $Res call(
+      {String startYearMonth,
+      String endYearMonth,
+      DateDownloadDataType? dataType});
 }
 
 /// @nodoc
@@ -49,6 +53,7 @@ class _$DataDownloadResponseStateCopyWithImpl<$Res,
   $Res call({
     Object? startYearMonth = null,
     Object? endYearMonth = null,
+    Object? dataType = freezed,
   }) {
     return _then(_value.copyWith(
       startYearMonth: null == startYearMonth
@@ -59,6 +64,10 @@ class _$DataDownloadResponseStateCopyWithImpl<$Res,
           ? _value.endYearMonth
           : endYearMonth // ignore: cast_nullable_to_non_nullable
               as String,
+      dataType: freezed == dataType
+          ? _value.dataType
+          : dataType // ignore: cast_nullable_to_non_nullable
+              as DateDownloadDataType?,
     ) as $Val);
   }
 }
@@ -72,7 +81,10 @@ abstract class _$$DataDownloadResponseStateImplCopyWith<$Res>
       __$$DataDownloadResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String startYearMonth, String endYearMonth});
+  $Res call(
+      {String startYearMonth,
+      String endYearMonth,
+      DateDownloadDataType? dataType});
 }
 
 /// @nodoc
@@ -90,6 +102,7 @@ class __$$DataDownloadResponseStateImplCopyWithImpl<$Res>
   $Res call({
     Object? startYearMonth = null,
     Object? endYearMonth = null,
+    Object? dataType = freezed,
   }) {
     return _then(_$DataDownloadResponseStateImpl(
       startYearMonth: null == startYearMonth
@@ -100,6 +113,10 @@ class __$$DataDownloadResponseStateImplCopyWithImpl<$Res>
           ? _value.endYearMonth
           : endYearMonth // ignore: cast_nullable_to_non_nullable
               as String,
+      dataType: freezed == dataType
+          ? _value.dataType
+          : dataType // ignore: cast_nullable_to_non_nullable
+              as DateDownloadDataType?,
     ));
   }
 }
@@ -108,7 +125,7 @@ class __$$DataDownloadResponseStateImplCopyWithImpl<$Res>
 
 class _$DataDownloadResponseStateImpl implements _DataDownloadResponseState {
   const _$DataDownloadResponseStateImpl(
-      {this.startYearMonth = '', this.endYearMonth = ''});
+      {this.startYearMonth = '', this.endYearMonth = '', this.dataType});
 
   @override
   @JsonKey()
@@ -116,10 +133,12 @@ class _$DataDownloadResponseStateImpl implements _DataDownloadResponseState {
   @override
   @JsonKey()
   final String endYearMonth;
+  @override
+  final DateDownloadDataType? dataType;
 
   @override
   String toString() {
-    return 'DataDownloadResponseState(startYearMonth: $startYearMonth, endYearMonth: $endYearMonth)';
+    return 'DataDownloadResponseState(startYearMonth: $startYearMonth, endYearMonth: $endYearMonth, dataType: $dataType)';
   }
 
   @override
@@ -130,11 +149,14 @@ class _$DataDownloadResponseStateImpl implements _DataDownloadResponseState {
             (identical(other.startYearMonth, startYearMonth) ||
                 other.startYearMonth == startYearMonth) &&
             (identical(other.endYearMonth, endYearMonth) ||
-                other.endYearMonth == endYearMonth));
+                other.endYearMonth == endYearMonth) &&
+            (identical(other.dataType, dataType) ||
+                other.dataType == dataType));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, startYearMonth, endYearMonth);
+  int get hashCode =>
+      Object.hash(runtimeType, startYearMonth, endYearMonth, dataType);
 
   @JsonKey(ignore: true)
   @override
@@ -147,12 +169,15 @@ class _$DataDownloadResponseStateImpl implements _DataDownloadResponseState {
 abstract class _DataDownloadResponseState implements DataDownloadResponseState {
   const factory _DataDownloadResponseState(
       {final String startYearMonth,
-      final String endYearMonth}) = _$DataDownloadResponseStateImpl;
+      final String endYearMonth,
+      final DateDownloadDataType? dataType}) = _$DataDownloadResponseStateImpl;
 
   @override
   String get startYearMonth;
   @override
   String get endYearMonth;
+  @override
+  DateDownloadDataType? get dataType;
   @override
   @JsonKey(ignore: true)
   _$$DataDownloadResponseStateImplCopyWith<_$DataDownloadResponseStateImpl>

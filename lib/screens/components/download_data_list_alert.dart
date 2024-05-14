@@ -84,43 +84,53 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
                 children: [const Text('ダウンロードデータ選択'), Container()],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-              Row(
-                children: [
-                  SizedBox(
-                    width: context.screenSize.width * 0.3,
-                    child: Row(
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('credit item'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+              ),
+              Container(
+                margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.4))),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: context.screenSize.width * 0.3,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _showYearMonthSelectDialog(pos: 'start');
+                            },
+                            icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [const Text('Start'), Text(dataDownloadState.startYearMonth)],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    const Text('〜'),
+                    const SizedBox(width: 20),
+                    Row(
                       children: [
                         IconButton(
                           onPressed: () {
-                            _showYearMonthSelectDialog(pos: 'start');
+                            _showYearMonthSelectDialog(pos: 'end');
                           },
                           icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [const Text('Start'), Text(dataDownloadState.startYearMonth)],
+                          children: [const Text('End'), Text(dataDownloadState.endYearMonth)],
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  const Text('〜'),
-                  const SizedBox(width: 20),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          _showYearMonthSelectDialog(pos: 'end');
-                        },
-                        icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [const Text('End'), Text(dataDownloadState.endYearMonth)],
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,6 +176,18 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
       return Container();
     }
 
+    var startDateTime = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00');
+    var endDateTime = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00');
+
+    if (endDateTime.isBefore(startDateTime)) {
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(context: context, title: '検索できません。', content: '開始年月、終了年月を正しく入力してください。'),
+      );
+
+      return Container();
+    }
+
     if (widget.allSameNumFlag == false) {
       list.add(
         Container(
@@ -202,10 +224,14 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
             getDataCell(data: element3.yearmonth, width: 100, alignment: Alignment.topLeft),
             getDataCell(data: element3.creditDate, width: 100, alignment: Alignment.topLeft),
             getDataCell(data: element3.creditPrice, width: 100, alignment: Alignment.topRight),
-            getDataCell(data: getCreditName(date: element3.creditDate, price: element3.creditPrice), width: 100, alignment: Alignment.topLeft),
+            getDataCell(
+                data: getCreditName(date: element3.creditDate, price: element3.creditPrice),
+                width: 100,
+                alignment: Alignment.topLeft),
             getDataCell(data: element3.creditDetailDate, width: 100, alignment: Alignment.topLeft),
             getDataCell(data: element3.creditDetailItem, width: 120, alignment: Alignment.topLeft),
-            getDataCell(data: element3.creditDetailPrice.toString().toCurrency(), width: 100, alignment: Alignment.topRight),
+            getDataCell(
+                data: element3.creditDetailPrice.toString().toCurrency(), width: 100, alignment: Alignment.topRight),
             getDataCell(data: element3.creditDetailDescription, width: 300, alignment: Alignment.topLeft),
           ],
         ));

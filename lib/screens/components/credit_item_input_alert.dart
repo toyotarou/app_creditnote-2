@@ -16,7 +16,8 @@ import 'parts/credit_item_card.dart';
 import 'parts/error_dialog.dart';
 
 class CreditItemInputAlert extends ConsumerStatefulWidget {
-  const CreditItemInputAlert({super.key, required this.isar, required this.creditItemList, required this.creditItemCountMap});
+  const CreditItemInputAlert(
+      {super.key, required this.isar, required this.creditItemList, required this.creditItemCountMap});
 
   final Isar isar;
 
@@ -248,8 +249,10 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
         },
         child: const Text('はい'));
 
-    final alert =
-        AlertDialog(backgroundColor: Colors.blueGrey.withOpacity(0.3), content: const Text('このデータを消去しますか？'), actions: [cancelButton, continueButton]);
+    final alert = AlertDialog(
+        backgroundColor: Colors.blueGrey.withOpacity(0.3),
+        content: const Text('このデータを消去しますか？'),
+        actions: [cancelButton, continueButton]);
 
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
@@ -259,10 +262,11 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     //-----------------------------------
     final creditDetailsCollection = widget.isar.creditDetails;
 
-    final getCreditDetails = await creditDetailsCollection.filter().creditDetailItemEqualTo(creditItemNameMap[id]!).findAll();
+    final getCreditDetails =
+        await creditDetailsCollection.filter().creditDetailItemEqualTo(creditItemNameMap[id]!).findAll();
 
-    await widget.isar
-        .writeTxn(() async => getCreditDetails.forEach((element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
+    await widget.isar.writeTxn(() async =>
+        getCreditDetails.forEach((element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
     //-----------------------------------
 
     final creditItemsCollection = widget.isar.creditItems; //TODO
@@ -279,8 +283,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
     for (final value in ddList) {
       for (final child in value.children) {
-        orderedIdList.add(
-            child.child.key.toString().replaceAll('[', '').replaceAll('<', '').replaceAll("'", '').replaceAll('>', '').replaceAll(']', '').toInt());
+        orderedIdList.add(child.child.key
+            .toString()
+            .replaceAll('[', '')
+            .replaceAll('<', '')
+            .replaceAll("'", '')
+            .replaceAll('>', '')
+            .replaceAll(']', '')
+            .toInt());
       }
     }
 

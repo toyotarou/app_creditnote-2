@@ -25,6 +25,7 @@ import 'components/monthly_credit_item_list_alert.dart';
 import 'components/parts/back_ground_image.dart';
 import 'components/parts/circle_painter.dart';
 import 'components/parts/credit_dialog.dart';
+import 'components/parts/error_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
 import 'components/same_item_list_alert.dart';
 import 'components/yearly_credit_category_list_alert.dart';
@@ -72,7 +73,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   void initState() {
     _animationController = AnimationController(duration: const Duration(seconds: 3), vsync: this);
 
-    _animationRadius = Tween(begin: 0.toDouble(), end: _backRadius).animate(_animationController)..addListener(() => setState(() {}));
+    _animationRadius = Tween(begin: 0.toDouble(), end: _backRadius).animate(_animationController)
+      ..addListener(() => setState(() {}));
 
     _animationController.repeat();
 
@@ -123,15 +125,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                         children: [
                           IconButton(
                             onPressed: () {
-                              CreditDialog(
-                                context: context,
-                                widget: YearlyCreditCategoryListAlert(
-                                  isar: widget.isar,
-                                  creditItemList: creditItemList,
-                                  creditDetailList: creditDetailList,
-                                  selectedYearmonthList: selectedYearmonthList,
-                                ),
-                              );
+                              if (creditDetailList!.isNotEmpty) {
+                                CreditDialog(
+                                  context: context,
+                                  widget: YearlyCreditCategoryListAlert(
+                                    isar: widget.isar,
+                                    creditItemList: creditItemList,
+                                    creditDetailList: creditDetailList,
+                                    selectedYearmonthList: selectedYearmonthList,
+                                  ),
+                                );
+                              } else {
+                                Future.delayed(
+                                  Duration.zero,
+                                  () => error_dialog(context: context, title: '表示できません。', content: '表示するデータが存在しません。'),
+                                );
+                              }
                             },
                             icon: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4), size: 20),
                           ),
@@ -199,7 +208,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
                 CreditDialog(
                   context: context,
-                  widget: CreditItemInputAlert(isar: widget.isar, creditItemList: creditItemList ?? [], creditItemCountMap: creditItemCountMap),
+                  widget: CreditItemInputAlert(
+                      isar: widget.isar, creditItemList: creditItemList ?? [], creditItemCountMap: creditItemCountMap),
                 );
               },
               child: Row(
@@ -306,7 +316,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Expanded(child: DecoratedBox(decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)), child: const SizedBox(width: 5))),
+                  Expanded(
+                      child: DecoratedBox(
+                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                          child: const SizedBox(width: 5))),
                 ],
               ),
               const SizedBox(width: 10),
@@ -323,7 +336,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(sum.toString().toCurrency()),
-                            Text(subscriptionTotal.toString().toCurrency(), style: const TextStyle(color: Colors.yellowAccent)),
+                            Text(subscriptionTotal.toString().toCurrency(),
+                                style: const TextStyle(color: Colors.yellowAccent)),
                           ],
                         ),
                       ],
@@ -369,11 +383,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
         })
         ..forEach((element) {
-          final lineColor = (creditItemColorMap[element.creditDetailItem] != null && creditItemColorMap[element.creditDetailItem] != '')
+          final lineColor = (creditItemColorMap[element.creditDetailItem] != null &&
+                  creditItemColorMap[element.creditDetailItem] != '')
               ? creditItemColorMap[element.creditDetailItem]
               : '0xffffffff';
 
-          final subscriptionColor = (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+          final subscriptionColor =
+              (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
 
           list.add(Container(
             padding: const EdgeInsets.all(10),
@@ -404,8 +420,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     onPressed: (_) {
                       CreditDialog(
                         context: context,
-                        widget:
-                            CreditDetailEditAlert(isar: widget.isar, creditDetail: element, creditItemList: creditItemList ?? [], from: 'HomeScreen'),
+                        widget: CreditDetailEditAlert(
+                            isar: widget.isar,
+                            creditDetail: element,
+                            creditItemList: creditItemList ?? [],
+                            from: 'HomeScreen'),
                       );
                     },
                     backgroundColor: Colors.transparent,
@@ -423,21 +442,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(element.creditDetailDate, style: TextStyle(color: subscriptionColor)),
-                      Text(element.creditDetailDescription, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: subscriptionColor)),
+                      Text(element.creditDetailDescription,
+                          maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: subscriptionColor)),
                     ],
                   )),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(element.creditDetailPrice.toString().toCurrency(), style: TextStyle(color: subscriptionColor)),
+                      Text(element.creditDetailPrice.toString().toCurrency(),
+                          style: TextStyle(color: subscriptionColor)),
                       Container(
                         width: context.screenSize.width / 6,
                         margin: const EdgeInsets.symmetric(vertical: 3),
                         padding: const EdgeInsets.symmetric(vertical: 3),
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                        child: FittedBox(child: Text(element.creditDetailItem, style: TextStyle(fontSize: 10, color: subscriptionColor))),
+                        decoration: BoxDecoration(
+                            color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                        child: FittedBox(
+                            child: Text(element.creditDetailItem,
+                                style: TextStyle(fontSize: 10, color: subscriptionColor))),
                       ),
                     ],
                   ),
@@ -454,8 +478,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
       final list2 = <Widget>[];
       creditItemList?.forEach((element) {
         if (categoriesPriceMap[element.name] != null) {
-          final lineColor =
-              (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '') ? creditItemColorMap[element.name] : '0xffffffff';
+          final lineColor = (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '')
+              ? creditItemColorMap[element.name]
+              : '0xffffffff';
 
           var sum = 0;
           categoriesPriceMap[element.name]?.forEach((element2) => sum += element2.creditDetailPrice);
@@ -484,8 +509,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       margin: const EdgeInsets.symmetric(vertical: 3),
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                      child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
+                      decoration: BoxDecoration(
+                          color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                      child: FittedBox(
+                          child: Text(element.name,
+                              style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
                     ),
                   ),
                   Text(sum.toString().toCurrency()),
@@ -512,7 +540,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     configList: configList,
                     creditItemList: creditItemList,
                     creditDetailList: creditDetailList,
-                    index: (selectedYearmonthList..sort((a, b) => -1 * a.compareTo(b))).indexWhere((element) => element == homeListSelectedYearmonth),
+                    index: (selectedYearmonthList..sort((a, b) => -1 * a.compareTo(b)))
+                        .indexWhere((element) => element == homeListSelectedYearmonth),
                   ),
                 );
               },
@@ -523,7 +552,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         ..add(Column(children: list2));
     }
 
-    return SingleChildScrollView(child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
+    return SingleChildScrollView(
+        child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
   }
 
   ///
@@ -604,7 +634,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                   Container(
                                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
                                     decoration: BoxDecoration(
-                                        color: (yearmonth == homeListSelectedYearmonth) ? Colors.yellowAccent.withOpacity(0.3) : Colors.transparent),
+                                        color: (yearmonth == homeListSelectedYearmonth)
+                                            ? Colors.yellowAccent.withOpacity(0.3)
+                                            : Colors.transparent),
                                     child: Text(yearmonth),
                                   ),
                                   const SizedBox(height: 5),
@@ -632,7 +664,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () {
-                                        ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: yearmonth);
+                                        ref
+                                            .read(appParamProvider.notifier)
+                                            .setHomeListSelectedYearmonth(yearmonth: yearmonth);
 
                                         _scaffoldKey.currentState!.openEndDrawer();
                                       },
@@ -658,7 +692,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                               //-----------------------------
                               final creDetList = <CreditDetail>[];
                               creditDetailList?.forEach((element) {
-                                if (element.creditDate == creList[index].date && element.creditPrice == creList[index].price.toString()) {
+                                if (element.creditDate == creList[index].date &&
+                                    element.creditPrice == creList[index].price.toString()) {
                                   creDetList.add(element);
                                 }
                               });
@@ -714,16 +749,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
                               return Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
                                 child: Row(
                                   children: [
                                     SizedBox(
-                                        width: 30, child: Text(DateTime.parse('${creList[index].date} 00:00:00').day.toString().padLeft(2, '0'))),
+                                        width: 30,
+                                        child: Text(DateTime.parse('${creList[index].date} 00:00:00')
+                                            .day
+                                            .toString()
+                                            .padLeft(2, '0'))),
                                     Expanded(
                                       child: Text(creList[index].name,
-                                          style: const TextStyle(color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis),
+                                          style: const TextStyle(color: Colors.grey),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis),
                                     ),
-                                    Container(width: 60, alignment: Alignment.topRight, child: Text(creList[index].price.toString().toCurrency())),
+                                    Container(
+                                        width: 60,
+                                        alignment: Alignment.topRight,
+                                        child: Text(creList[index].price.toString().toCurrency())),
                                     const SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: () {
@@ -781,21 +826,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
       }
     }
 
-    return SingleChildScrollView(child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
+    return SingleChildScrollView(
+        child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)));
   }
 
   ///
-  Future<void> _makeCreditList() async => CreditsRepository().getCreditList(isar: widget.isar).then((value) => setState(() => creditList = value));
+  Future<void> _makeCreditList() async =>
+      CreditsRepository().getCreditList(isar: widget.isar).then((value) => setState(() => creditList = value));
 
   ///
-  Future<void> _makeCreditItemList() async =>
-      CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) => setState(() => creditItemList = value));
+  Future<void> _makeCreditItemList() async => CreditItemsRepository()
+      .getCreditItemList(isar: widget.isar)
+      .then((value) => setState(() => creditItemList = value));
 
   ///
-  Future<void> _makeCreditDetailList() async =>
-      CreditDetailsRepository().getCreditDetailList(isar: widget.isar).then((value) => setState(() => creditDetailList = value));
+  Future<void> _makeCreditDetailList() async => CreditDetailsRepository()
+      .getCreditDetailList(isar: widget.isar)
+      .then((value) => setState(() => creditDetailList = value));
 
   ///
-  Future<void> _makeSubscriptionItemList() async =>
-      SubscriptionItemsRepository().getSubscriptionItemList(isar: widget.isar).then((value) => setState(() => subscriptionItemList = value));
+  Future<void> _makeSubscriptionItemList() async => SubscriptionItemsRepository()
+      .getSubscriptionItemList(isar: widget.isar)
+      .then((value) => setState(() => subscriptionItemList = value));
 }

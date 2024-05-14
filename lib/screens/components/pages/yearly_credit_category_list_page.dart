@@ -9,7 +9,11 @@ import '../../../extensions/extensions.dart';
 
 class YearlyCreditCategoryListPage extends StatefulWidget {
   const YearlyCreditCategoryListPage(
-      {super.key, required this.isar, required this.date, required this.creditItemList, required this.creditDetailList});
+      {super.key,
+      required this.isar,
+      required this.date,
+      required this.creditItemList,
+      required this.creditDetailList});
 
   final Isar isar;
   final DateTime date;
@@ -52,8 +56,9 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
     final monthSumMap = <int, int>{};
     widget.creditItemList?.forEach((element) {
       for (var i = 1; i <= 12; i++) {
-        final filtered =
-            widget.creditDetailList?.where((element2) => element2.yearmonth == '${widget.date.year}-${i.toString().padLeft(2, '0')}').toList();
+        final filtered = widget.creditDetailList
+            ?.where((element2) => element2.yearmonth == '${widget.date.year}-${i.toString().padLeft(2, '0')}')
+            .toList();
 
         var sum = 0;
         filtered?.forEach((element) {
@@ -72,8 +77,9 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
 
     widget.creditItemList?.forEach((element) {
       for (var i = 1; i <= 12; i++) {
-        final filtered =
-            widget.creditDetailList?.where((element2) => element2.yearmonth == '${widget.date.year}-${i.toString().padLeft(2, '0')}').toList();
+        final filtered = widget.creditDetailList
+            ?.where((element2) => element2.yearmonth == '${widget.date.year}-${i.toString().padLeft(2, '0')}')
+            .toList();
 
         //=====================================
         var sum = 0;
@@ -122,8 +128,9 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
     });
 
     widget.creditItemList?.forEach((element) {
-      final lineColor =
-          (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '') ? creditItemColorMap[element.name] : '0xffffffff';
+      final lineColor = (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '')
+          ? creditItemColorMap[element.name]
+          : '0xffffffff';
 
       var sum = 0;
 
@@ -142,7 +149,8 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
             margin: const EdgeInsets.symmetric(vertical: 5),
             padding: const EdgeInsets.symmetric(vertical: 3),
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
             child: FittedBox(child: Text(element.name, style: const TextStyle(fontSize: 10))),
           ),
           const SizedBox(width: 10),
@@ -177,7 +185,8 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
                 margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Color(lineColor.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(
+                    color: Color(lineColor.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                 child: Text(element.name, style: const TextStyle(fontSize: 10)),
               ),
             ],
@@ -205,13 +214,14 @@ class _YearlyCreditCategoryListPageState extends State<YearlyCreditCategoryListP
               padding: const EdgeInsets.all(1),
               margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 1),
               alignment: Alignment.topRight,
-              child: Text(monthSumMap[(i + 1)].toString().toCurrency()),
+              child: Text((monthSumMap[(i + 1)] != null) ? monthSumMap[(i + 1)].toString().toCurrency() : '0'),
             ),
           ],
         ],
       ),
     );
 
-    return SingleChildScrollView(scrollDirection: Axis.horizontal, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
   }
 }

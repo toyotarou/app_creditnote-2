@@ -237,6 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     creditList: creditList ?? [],
                     creditDetailList: creditDetailList ?? [],
                     allSameNumFlag: allSameNumFlag,
+                    creditItemList: creditItemList ?? [],
                   ),
                 );
               },

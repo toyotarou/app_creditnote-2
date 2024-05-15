@@ -10,6 +10,8 @@ import 'package:isar/isar.dart';
 
 import '../../collections/credit.dart';
 import '../../collections/credit_detail.dart';
+import '../../collections/credit_item.dart';
+import '../../enums/data_download_data_type.dart';
 import '../../extensions/extensions.dart';
 import '../../state/data_download/data_download_notifier.dart';
 import 'parts/credit_dialog.dart';
@@ -24,6 +26,7 @@ class DownloadDataListAlert extends ConsumerStatefulWidget {
     required this.creditList,
     required this.creditDetailList,
     required this.allSameNumFlag,
+    required this.creditItemList,
   });
 
   final Isar isar;
@@ -31,6 +34,7 @@ class DownloadDataListAlert extends ConsumerStatefulWidget {
   final List<Credit> creditList;
   final List<CreditDetail> creditDetailList;
   final bool allSameNumFlag;
+  final List<CreditItem> creditItemList;
 
   ///
   @override
@@ -85,49 +89,69 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('credit item'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                onPressed: () {
+                  ref.read(dataDownloadProvider.notifier).setDataType(dataType: DateDownloadDataType.creditItem);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: (dataDownloadState.dataType == DateDownloadDataType.creditItem)
+                        ? Colors.yellowAccent.withOpacity(0.3)
+                        : Colors.pinkAccent.withOpacity(0.2)),
+                child: const Text('credit item'),
               ),
               Container(
                 margin: const EdgeInsets.all(5),
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.4))),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: context.screenSize.width * 0.3,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _showYearMonthSelectDialog(pos: 'start');
-                            },
-                            icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [const Text('Start'), Text(dataDownloadState.startYearMonth)],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    const Text('〜'),
-                    const SizedBox(width: 20),
                     Row(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            _showYearMonthSelectDialog(pos: 'end');
-                          },
-                          icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                        SizedBox(
+                          width: context.screenSize.width * 0.3,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  _showYearMonthSelectDialog(pos: 'start');
+                                },
+                                icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [const Text('Start'), Text(dataDownloadState.startYearMonth)],
+                              ),
+                            ],
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [const Text('End'), Text(dataDownloadState.endYearMonth)],
+                        const SizedBox(width: 20),
+                        const Text('〜'),
+                        const SizedBox(width: 20),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                _showYearMonthSelectDialog(pos: 'end');
+                              },
+                              icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [const Text('End'), Text(dataDownloadState.endYearMonth)],
+                            ),
+                          ],
                         ),
                       ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(dataDownloadProvider.notifier).setDataType(dataType: DateDownloadDataType.credit);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: (dataDownloadState.dataType == DateDownloadDataType.credit)
+                              ? Colors.yellowAccent.withOpacity(0.3)
+                              : Colors.pinkAccent.withOpacity(0.2)),
+                      child: const Text('credit'),
                     ),
                   ],
                 ),
@@ -172,82 +196,111 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
 
     final dataDownloadState = ref.watch(dataDownloadProvider);
 
-    if (dataDownloadState.startYearMonth == '' || dataDownloadState.endYearMonth == '') {
-      return Container();
-    }
+    if (dataDownloadState.dataType != null) {
+      switch (dataDownloadState.dataType!) {
+        case DateDownloadDataType.none:
+          break;
 
-    var startDateTime = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00');
-    var endDateTime = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00');
+        case DateDownloadDataType.credit:
+          outputValuesList = [];
 
-    if (endDateTime.isBefore(startDateTime)) {
-      Future.delayed(
-        Duration.zero,
-        () => error_dialog(context: context, title: '検索できません。', content: '開始年月、終了年月を正しく入力してください。'),
-      );
+          //=====================//
+          final yearMonthList = <String>[];
 
-      return Container();
-    }
+          final dateDiff = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00')
+              .difference(DateTime.parse('${dataDownloadState.startYearMonth}-01 '
+                  '00:00:00'))
+              .inDays;
 
-    if (widget.allSameNumFlag == false) {
-      list.add(
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          child: const Text('クレジット詳細のレコードが存在しない年月はスキップしています。', style: TextStyle(color: Colors.yellowAccent)),
-        ),
-      );
-    }
+          for (var i = 0; i <= dateDiff; i++) {
+            final day = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00').add(Duration(days: i));
 
-    //=====================//
-    final yearMonthList = <String>[];
+            if (!yearMonthList.contains(day.yyyymm)) {
+              yearMonthList.add(day.yyyymm);
+            }
+          }
 
-    final dateDiff = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00')
-        .difference(DateTime.parse('${dataDownloadState.startYearMonth}-01 '
-            '00:00:00'))
-        .inDays;
+          //=====================//
 
-    for (var i = 0; i <= dateDiff; i++) {
-      final day = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00').add(Duration(days: i));
+          if (dataDownloadState.startYearMonth == '' || dataDownloadState.endYearMonth == '') {
+            return Container();
+          }
 
-      if (!yearMonthList.contains(day.yyyymm)) {
-        yearMonthList.add(day.yyyymm);
+          final startDateTime = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00');
+          final endDateTime = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00');
+
+          if (endDateTime.isBefore(startDateTime)) {
+            Future.delayed(
+              Duration.zero,
+              () => error_dialog(context: context, title: '検索できません。', content: '開始年月、終了年月を正しく入力してください。'),
+            );
+
+            return Container();
+          }
+
+          if (widget.allSameNumFlag == false) {
+            list.add(
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                child: const Text('クレジット詳細のレコードが存在しない年月はスキップしています。', style: TextStyle(color: Colors.yellowAccent)),
+              ),
+            );
+          }
+
+          yearMonthList.forEach((element) {
+            widget.creditDetailList.where((element2) => element2.yearmonth == element).forEach((element3) {
+              list.add(Row(
+                children: [
+                  getDataCell(data: element3.yearmonth, width: 100, alignment: Alignment.topLeft),
+                  getDataCell(data: element3.creditDate, width: 100, alignment: Alignment.topLeft),
+                  getDataCell(data: element3.creditPrice, width: 100, alignment: Alignment.topRight),
+                  getDataCell(
+                      data: getCreditName(date: element3.creditDate, price: element3.creditPrice),
+                      width: 100,
+                      alignment: Alignment.topLeft),
+                  getDataCell(data: element3.creditDetailDate, width: 100, alignment: Alignment.topLeft),
+                  getDataCell(data: element3.creditDetailItem, width: 120, alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditDetailPrice.toString().toCurrency(),
+                      width: 100,
+                      alignment: Alignment.topRight),
+                  getDataCell(data: element3.creditDetailDescription, width: 300, alignment: Alignment.topLeft),
+                ],
+              ));
+
+              outputValuesList.add([
+                element3.yearmonth,
+                element3.creditDate,
+                element3.creditPrice,
+                getCreditName(date: element3.creditDate, price: element3.creditPrice),
+                element3.creditDetailDate,
+                element3.creditDetailItem,
+                element3.creditDetailPrice.toString(),
+                element3.creditDetailDescription,
+              ].join(','));
+            });
+          });
+
+          break;
+
+        case DateDownloadDataType.creditItem:
+          outputValuesList = [];
+
+          widget.creditItemList.forEach((element) {
+            list.add(Row(
+              children: [
+                getDataCell(data: element.name, width: 100, alignment: Alignment.topLeft),
+                getDataCell(data: element.order.toString(), width: 100, alignment: Alignment.topLeft),
+                getDataCell(data: element.color, width: 100, alignment: Alignment.topLeft),
+              ],
+            ));
+
+            outputValuesList.add([element.name, element.order.toString(), '\'${element.color}'].join(','));
+          });
+
+          break;
       }
     }
-
-    //=====================//
-
-    outputValuesList = [];
-
-    yearMonthList.forEach((element) {
-      widget.creditDetailList.where((element2) => element2.yearmonth == element).forEach((element3) {
-        list.add(Row(
-          children: [
-            getDataCell(data: element3.yearmonth, width: 100, alignment: Alignment.topLeft),
-            getDataCell(data: element3.creditDate, width: 100, alignment: Alignment.topLeft),
-            getDataCell(data: element3.creditPrice, width: 100, alignment: Alignment.topRight),
-            getDataCell(
-                data: getCreditName(date: element3.creditDate, price: element3.creditPrice),
-                width: 100,
-                alignment: Alignment.topLeft),
-            getDataCell(data: element3.creditDetailDate, width: 100, alignment: Alignment.topLeft),
-            getDataCell(data: element3.creditDetailItem, width: 120, alignment: Alignment.topLeft),
-            getDataCell(
-                data: element3.creditDetailPrice.toString().toCurrency(), width: 100, alignment: Alignment.topRight),
-            getDataCell(data: element3.creditDetailDescription, width: 300, alignment: Alignment.topLeft),
-          ],
-        ));
-
-        outputValuesList.add([
-          element3.yearmonth,
-          element3.creditDate,
-          element3.creditPrice,
-          getCreditName(date: element3.creditDate, price: element3.creditPrice),
-          element3.creditDetailDate,
-          element3.creditDetailItem,
-          element3.creditDetailPrice.toString(),
-          element3.creditDetailDescription,
-        ].join(','));
-      });
-    });
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -299,7 +352,9 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
 
-    final dateStr = 'credit_$year$month$day$currentTime';
+    final dataDownloadState = ref.watch(dataDownloadProvider);
+
+    final dateStr = '${dataDownloadState.dataType!.japanName}_$year$month$day$currentTime';
     final sendFileName = '$dateStr.csv';
 
     final exFilePath = '$externalStoragePublicDirectoryPath/$sendFileName';

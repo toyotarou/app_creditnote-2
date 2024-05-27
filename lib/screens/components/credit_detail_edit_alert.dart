@@ -41,8 +41,8 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
   Future<void> _makeTecs() async {
     await Future(() => ref.read(creditDetailEditProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetail));
 
-    priceTextEditingController.text = widget.creditDetail.creditDetailPrice.toString();
-    descriptionTextEditingController.text = widget.creditDetail.creditDetailDescription;
+    priceTextEditingController.text = widget.creditDetail.creditDetailPrice.toString().trim();
+    descriptionTextEditingController.text = widget.creditDetail.creditDetailDescription.trim();
   }
 
   ///
@@ -173,7 +173,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   style: const TextStyle(fontSize: 12),
                   onChanged: (value) {
                     if (value != '') {
-                      ref.read(creditDetailEditProvider.notifier).setCreditDetailPrice(price: value.toInt());
+                      ref.read(creditDetailEditProvider.notifier).setCreditDetailPrice(price: value.trim().toInt());
                     }
                   },
                   onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),

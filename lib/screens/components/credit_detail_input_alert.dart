@@ -65,8 +65,8 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
       var creditDetailPriceSum = 0;
 
       for (var i = 0; i < widget.creditDetailList!.length; i++) {
-        _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString();
-        _descriptionTecs[i].text = widget.creditDetailList![i].creditDetailDescription;
+        _priceTecs[i].text = widget.creditDetailList![i].creditDetailPrice.toString().trim();
+        _descriptionTecs[i].text = widget.creditDetailList![i].creditDetailDescription.trim();
 
         creditDetailPriceSum += widget.creditDetailList![i].creditDetailPrice;
       }

@@ -115,13 +115,13 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
   Future<void> _editCreditPrice() async {
     var errFlg = false;
 
-    if (_creditPriceEditingController.text == '') {
+    if (_creditPriceEditingController.text.trim() == '') {
       errFlg = true;
     }
 
     if (errFlg == false) {
       [
-        [_creditPriceEditingController.text, 10]
+        [_creditPriceEditingController.text.trim(), 10]
       ].forEach((element) {
         if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
           errFlg = true;
@@ -141,11 +141,11 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
         param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice.toString()},
       ).then((value) async {
         final creditDetailList = <CreditDetail>[];
-        value?.forEach((element) => creditDetailList.add(element..creditPrice = _creditPriceEditingController.text));
+        value?.forEach((element) => creditDetailList.add(element..creditPrice = _creditPriceEditingController.text.trim()));
 
         await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList).then((value2) async {
           await CreditsRepository()
-              .updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.toInt())
+              .updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.trim().toInt())
               .then((value4) async {
             Navigator.pop(context);
             Navigator.pop(context);

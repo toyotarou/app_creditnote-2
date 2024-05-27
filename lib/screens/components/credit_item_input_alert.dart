@@ -192,13 +192,13 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   Future<void> _inputCreditItem() async {
     var errFlg = false;
 
-    if (_creditItemEditingController.text == '') {
+    if (_creditItemEditingController.text.trim() == '') {
       errFlg = true;
     }
 
     if (errFlg == false) {
       [
-        [_creditItemEditingController.text, 20]
+        [_creditItemEditingController.text.trim(), 20]
       ].forEach((element) {
         if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
           errFlg = true;
@@ -216,7 +216,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     }
 
     final creditItem = CreditItem()
-      ..name = _creditItemEditingController.text
+      ..name = _creditItemEditingController.text.trim()
       ..order = widget.creditItemList.length + 1
       ..color = '0xffffffff';
 

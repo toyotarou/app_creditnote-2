@@ -55,8 +55,8 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
       await Future(() => ref.read(creditProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
 
       for (var i = 0; i < widget.creditList!.length; i++) {
-        _creditNameTecs[i].text = widget.creditList![i].name;
-        _creditPriceTecs[i].text = widget.creditList![i].price.toString();
+        _creditNameTecs[i].text = widget.creditList![i].name.trim();
+        _creditPriceTecs[i].text = widget.creditList![i].price.toString().trim();
       }
     }
   }
@@ -221,7 +221,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
                                 if (value != '') {
-                                  ref.read(creditProvider.notifier).setCreditName(pos: i, name: value);
+                                  ref.read(creditProvider.notifier).setCreditName(pos: i, name: value.trim());
                                 }
                               },
                             ),
@@ -239,7 +239,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                               onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (value) {
                                 if (value != '') {
-                                  ref.read(creditProvider.notifier).setCreditPrice(pos: i, price: value.toInt());
+                                  ref.read(creditProvider.notifier).setCreditPrice(pos: i, price: value.trim().toInt());
                                 }
                               },
                             ),

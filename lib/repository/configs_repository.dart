@@ -20,6 +20,14 @@ class ConfigsRepository {
   }
 
   ///
+  Future<void> inputConfigList(
+      {required Isar isar, required List<Config> configList}) async {
+    for (final Config element in configList) {
+      inputConfig(isar: isar, config: element);
+    }
+  }
+
+  ///
   Future<void> inputConfig({required Isar isar, required Config config}) async {
     final IsarCollection<Config> configsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => configsCollection.put(config));

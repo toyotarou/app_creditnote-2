@@ -13,16 +13,16 @@ class BackGroundImage extends StatelessWidget {
       bottom: 20,
       right: 0,
       child: Row(
-        children: [
+        children: <Widget>[
           Column(
-            children: [
+            children: <Widget>[
               Container(
                 width: context.screenSize.width / 2.5,
                 height: 140,
                 decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/credit_note_background.png'))),
               ),
               Row(
-                children: [
+                children: <Widget>[
                   Container(
                     width: context.screenSize.width / 2.5,
                     height: 30,

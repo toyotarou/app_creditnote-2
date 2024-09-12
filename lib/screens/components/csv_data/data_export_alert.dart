@@ -1,13 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:credit_note/extensions/extensions.dart';
-import 'package:credit_note/repository/configs_repository.dart';
-import 'package:credit_note/repository/credit_details_repository.dart';
-import 'package:credit_note/repository/credit_items_repository.dart';
-import 'package:credit_note/repository/credits_repository.dart';
-import 'package:credit_note/repository/subscription_items_repository.dart';
-import 'package:credit_note/screens/components/parts/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,8 +11,20 @@ import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 
-part 'data_export_alert.freezed.dart';
+import '../../../collections/config.dart';
+import '../../../collections/credit.dart';
+import '../../../collections/credit_detail.dart';
+import '../../../collections/credit_item.dart';
+import '../../../collections/subscription_item.dart';
+import '../../../extensions/extensions.dart';
+import '../../../repository/configs_repository.dart';
+import '../../../repository/credit_details_repository.dart';
+import '../../../repository/credit_items_repository.dart';
+import '../../../repository/credits_repository.dart';
+import '../../../repository/subscription_items_repository.dart';
+import '../parts/error_dialog.dart';
 
+part 'data_export_alert.freezed.dart';
 part 'data_export_alert.g.dart';
 
 class DataExportAlert extends ConsumerStatefulWidget {
@@ -55,11 +60,11 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final csvName = ref.watch(
+    final String csvName = ref.watch(
         dataExportProvider.select((DataExportState value) => value.csvName));
 
-    final colorChangeFileNameList = <String>[];
-    for (final element in displayFileNameList) {
+    final List<String> colorChangeFileNameList = <String>[];
+    for (final String element in displayFileNameList) {
       colorChangeFileNameList.add(element.split('_')[0]);
     }
 
@@ -159,7 +164,7 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
   Future<void> csvOutput() async {
     outputValuesList.clear();
 
-    final csvName = ref.watch(
+    final String csvName = ref.watch(
         dataExportProvider.select((DataExportState value) => value.csvName));
 
     if (csvName == '') {
@@ -174,9 +179,9 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'config':
         await ConfigsRepository()
             .getConfigList(isar: widget.isar)
-            .then((value) {
-          value?.forEach((element) {
-            outputValuesList.add([
+            .then((List<Config>? value) {
+          value?.forEach((Config element) {
+            outputValuesList.add(<Object>[
               element.id,
               element.configKey,
               element.configValue,
@@ -186,9 +191,9 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'credit':
         await CreditsRepository()
             .getCreditList(isar: widget.isar)
-            .then((value) {
-          value?.forEach((element) {
-            outputValuesList.add([
+            .then((List<Credit>? value) {
+          value?.forEach((Credit element) {
+            outputValuesList.add(<Object>[
               element.id,
               element.date,
               element.name,
@@ -199,9 +204,9 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'creditDetail':
         await CreditDetailsRepository()
             .getCreditDetailList(isar: widget.isar)
-            .then((value) {
-          value?.forEach((element) {
-            outputValuesList.add([
+            .then((List<CreditDetail>? value) {
+          value?.forEach((CreditDetail element) {
+            outputValuesList.add(<Object>[
               element.id,
               element.yearmonth,
               element.creditDate,
@@ -216,9 +221,9 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'creditItem':
         await CreditItemsRepository()
             .getCreditItemList(isar: widget.isar)
-            .then((value) {
-          value?.forEach((element) {
-            outputValuesList.add([
+            .then((List<CreditItem>? value) {
+          value?.forEach((CreditItem element) {
+            outputValuesList.add(<Object>[
               element.id,
               element.name,
               element.order,
@@ -229,29 +234,29 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'subscriptionItem':
         await SubscriptionItemsRepository()
             .getSubscriptionItemList(isar: widget.isar)
-            .then((value) {
-          value?.forEach((element) {
-            outputValuesList.add([element.id, element.name].join(','));
+            .then((List<SubscriptionItem>? value) {
+          value?.forEach((SubscriptionItem element) {
+            outputValuesList.add(<Object>[element.id, element.name].join(','));
           });
         });
     }
 
-    final now = DateTime.now();
-    final timeFormat = DateFormat('HHmmss');
-    final currentTime = timeFormat.format(now);
+    final DateTime now = DateTime.now();
+    final DateFormat timeFormat = DateFormat('HHmmss');
+    final String currentTime = timeFormat.format(now);
 
-    final year = now.year.toString();
-    final month = now.month.toString().padLeft(2, '0');
-    final day = now.day.toString().padLeft(2, '0');
+    final String year = now.year.toString();
+    final String month = now.month.toString().padLeft(2, '0');
+    final String day = now.day.toString().padLeft(2, '0');
 
-    final dateStr = '${csvName}_$year$month$day$currentTime';
-    final sendFileName = '$dateStr.csv';
+    final String dateStr = '${csvName}_$year$month$day$currentTime';
+    final String sendFileName = '$dateStr.csv';
 
-    final contents = outputValuesList.join('\n');
+    final String contents = outputValuesList.join('\n');
 
     final List<int> byteList = utf8.encode(contents);
 
-    final encoded = Uint8List.fromList(byteList);
+    final Uint8List encoded = Uint8List.fromList(byteList);
 
     sendFileNameList.add(sendFileName);
     sendFileList.add(XFile.fromData(encoded, mimeType: 'text/plain'));
@@ -269,7 +274,7 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       return;
     }
 
-    final box = context.findRenderObject() as RenderBox?;
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
 
     await Share.shareXFiles(
       sendFileList,

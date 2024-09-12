@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'app_params_response_state.dart';
 
-final appParamProvider = StateNotifierProvider.autoDispose<AppParamNotifier, AppParamsResponseState>((ref) {
+final AutoDisposeStateNotifierProvider<AppParamNotifier, AppParamsResponseState> appParamProvider = StateNotifierProvider.autoDispose<AppParamNotifier, AppParamsResponseState>((AutoDisposeStateNotifierProviderRef<AppParamNotifier, AppParamsResponseState> ref) {
   return AppParamNotifier(const AppParamsResponseState());
 });
 
@@ -12,11 +12,11 @@ class AppParamNotifier extends StateNotifier<AppParamsResponseState> {
   Future<void> setInputButtonClicked({required bool flag}) async => state = state.copyWith(inputButtonClicked: flag);
 
   ///
-  Future<void> setCreditBlankDefaultMap() async => state = state.copyWith(creditBlankSettingMap: {});
+  Future<void> setCreditBlankDefaultMap() async => state = state.copyWith(creditBlankSettingMap: <int, String>{});
 
   ///
   Future<void> setCreditBlankSettingMap({required int pos, required String creditName}) async {
-    final map = <int, String>{...state.creditBlankSettingMap};
+    final Map<int, String> map = <int, String>{...state.creditBlankSettingMap};
     map[pos] = creditName;
     state = state.copyWith(creditBlankSettingMap: map);
   }

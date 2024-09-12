@@ -22,14 +22,14 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
   ///
   @override
   Widget build(BuildContext context) {
-    var sum = 0;
+    int sum = 0;
 
     if (widget.creditDetailList.isNotEmpty) {
       widget.creditDetailList
-          .where((element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
+          .where((CreditDetail element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
           .toList()
-          .where((element2) => element2.creditDetailItem == widget.item)
-          .forEach((element3) {
+          .where((CreditDetail element2) => element2.creditDetailItem == widget.item)
+          .forEach((CreditDetail element3) {
         sum += element3.creditDetailPrice;
       });
     }
@@ -47,15 +47,15 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(widget.date.yyyymmdd), Text(widget.item)],
+                    children: <Widget>[Text(widget.date.yyyymmdd), Text(widget.item)],
                   ),
                   Text(sum.toString().toCurrency()),
                 ],
@@ -71,21 +71,21 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
 
   ///
   Widget _displayMonthlyCreditItemList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
     if (widget.creditDetailList.isNotEmpty) {
       widget.creditDetailList
-          .where((element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
+          .where((CreditDetail element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
           .toList()
-          .where((element2) => element2.creditDetailItem == widget.item)
+          .where((CreditDetail element2) => element2.creditDetailItem == widget.item)
           .toList()
-        ..sort((a, b) => a.creditDetailDate.compareTo(b.creditDetailDate))
-        ..forEach((element3) {
+        ..sort((CreditDetail a, CreditDetail b) => a.creditDetailDate.compareTo(b.creditDetailDate))
+        ..forEach((CreditDetail element3) {
           list.add(Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
             child: Row(
-              children: [
+              children: <Widget>[
                 SizedBox(width: 100, child: Text(element3.creditDetailDate)),
                 Expanded(child: (element3.creditDetailDescription == widget.item) ? Container() : Text(element3.creditDetailDescription)),
                 Container(

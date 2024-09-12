@@ -12,6 +12,7 @@ import '../../repository/credit_items_repository.dart';
 import '../../state/config_start_yearmonth/config_start_yearmonth_notifier.dart';
 
 
+import '../../state/config_start_yearmonth/config_start_yearmonth_response_state.dart';
 import 'parts/error_dialog.dart';
 
 class ConfigSettingAlert extends ConsumerStatefulWidget {
@@ -27,11 +28,11 @@ class ConfigSettingAlert extends ConsumerStatefulWidget {
 }
 
 class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
-  List<Config>? configList = [];
+  List<Config>? configList = <Config>[];
 
-  Map<String, String> settingConfigMap = {};
+  Map<String, String> settingConfigMap = <String, String>{};
 
-  List<CreditItem>? creditItemList = [];
+  List<CreditItem>? creditItemList = <CreditItem>[];
 
   ///
   void _init() {
@@ -43,6 +44,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   ///
   @override
   Widget build(BuildContext context) {
+    // ignore: always_specify_types
     Future(_init);
 
     return AlertDialog(
@@ -58,7 +60,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               const Text('設定'),
@@ -74,11 +76,11 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   ///
   Widget _displayStartYearmonthSettingWidget() {
     //==============================//
-    var configSelectedyear = -1;
-    var configSelectedmonth = -1;
+    int configSelectedyear = -1;
+    int configSelectedmonth = -1;
 
     if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
-      final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
+      final List<String> exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
 
       if (exYearmonth.length > 1) {
         if (exYearmonth[0] != '' && exYearmonth[1] != '') {
@@ -89,7 +91,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
     }
     //==============================//
 
-    final configStartYearmonthState = ref.watch(configStartYearmonthProvider);
+    final ConfigStartYearmonthResponseState configStartYearmonthState = ref.watch(configStartYearmonthProvider);
 
     return Container(
       padding: const EdgeInsets.all(5),
@@ -97,12 +99,12 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
       decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Container(width: context.screenSize.width),
           const Text('開始する年月'),
           const SizedBox(height: 10),
           Wrap(
-            children: configStartYearmonthState.startYears.map((e) {
+            children: configStartYearmonthState.startYears.map((int e) {
               return GestureDetector(
                 onTap: () {
                   (settingConfigMap['start_yearmonth'] != null)
@@ -129,7 +131,7 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
           ),
           const SizedBox(height: 10),
           Wrap(
-            children: configStartYearmonthState.startMonths.map((e) {
+            children: configStartYearmonthState.startMonths.map((int e) {
               return GestureDetector(
                 onTap: () {
                   (settingConfigMap['start_yearmonth'] != null)
@@ -159,16 +161,17 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Container(),
                 GestureDetector(
                   onTap: () {
-                    final year = configStartYearmonthState.selectedStartYear;
-                    final month = configStartYearmonthState.selectedStartMonth;
+                    final int year = configStartYearmonthState.selectedStartYear;
+                    final int month = configStartYearmonthState.selectedStartMonth;
 
-                    final val = '$year-${(month + 1).toString().padLeft(2, '0')}';
+                    final String val = '$year-${(month + 1).toString().padLeft(2, '0')}';
 
                     if (year == -1 || month == -1) {
+                      // ignore: always_specify_types
                       Future.delayed(
                         Duration.zero,
                         () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
@@ -197,12 +200,14 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
   ///
   Future<void> makeSettingConfigMap() async {
-    await ConfigsRepository().getConfigList(isar: widget.isar).then((value) {
+    await ConfigsRepository().getConfigList(isar: widget.isar).then((List<Config>? value) {
       setState(() {
         configList = value;
 
         if (value!.isNotEmpty) {
-          value.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
+          for (final Config element in value) {
+            settingConfigMap[element.configKey] = element.configValue;
+          }
         }
       });
     });
@@ -210,10 +215,11 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
   ///
   Future<void> inputConfig({required String key, required String value, required bool closeFlag}) async {
-    final config = Config()
+    final Config config = Config()
       ..configKey = key
       ..configValue = value;
 
+    // ignore: always_specify_types
     await ConfigsRepository().inputConfig(isar: widget.isar, config: config).then((value) {
       if (closeFlag) {
         Navigator.pop(context);
@@ -225,9 +231,10 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
   ///
   Future<void> updateConfig({required String key, required String value, required bool closeFlag}) async {
     await widget.isar.writeTxn(() async {
-      await ConfigsRepository().getConfigByKeyString(isar: widget.isar, key: key).then((value2) async {
+      await ConfigsRepository().getConfigByKeyString(isar: widget.isar, key: key).then((Config? value2) async {
         value2!.configValue = value;
 
+        // ignore: always_specify_types
         await ConfigsRepository().updateConfig(isar: widget.isar, config: value2).then((value) {
           if (closeFlag) {
             Navigator.pop(context);
@@ -240,5 +247,5 @@ class _ConfigSettingAlertState extends ConsumerState<ConfigSettingAlert> {
 
   ///
   Future<void> _makeCreditItemList() async =>
-      CreditItemsRepository().getCreditItemList(isar: widget.isar).then((value) => setState(() => creditItemList = value));
+      CreditItemsRepository().getCreditItemList(isar: widget.isar).then((List<CreditItem>? value) => setState(() => creditItemList = value));
 }

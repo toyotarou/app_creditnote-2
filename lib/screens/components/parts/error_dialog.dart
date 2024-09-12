@@ -6,7 +6,7 @@ import 'kiwi_text.dart';
 Future<void> error_dialog({required BuildContext context, required String title, required String content}) {
   return showDialog(
     context: context,
-    builder: (context) {
+    builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: Colors.blueGrey.withOpacity(0.3),
         title: KiwiText(text: title),

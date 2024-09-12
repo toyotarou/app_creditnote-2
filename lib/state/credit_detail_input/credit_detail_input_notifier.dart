@@ -4,13 +4,17 @@ import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 import 'credit_detail_input_response_state.dart';
 
-final creditDetailInputProvider = StateNotifierProvider.autoDispose<CreditDetailInputNotifier, CreditDetailInputResponseState>((ref) {
-  const roopNum = 60;
+final AutoDisposeStateNotifierProvider<CreditDetailInputNotifier, CreditDetailInputResponseState> creditDetailInputProvider = StateNotifierProvider.autoDispose<CreditDetailInputNotifier, CreditDetailInputResponseState>((AutoDisposeStateNotifierProviderRef<CreditDetailInputNotifier, CreditDetailInputResponseState> ref) {
+  const int roopNum = 60;
 
-  final dates = List.generate(roopNum, (index) => '');
-  final items = List.generate(roopNum, (index) => '');
-  final prices = List.generate(roopNum, (index) => 0);
-  final descriptions = List.generate(roopNum, (index) => '');
+  // ignore: always_specify_types
+  final List<String> dates = List.generate(roopNum, (int index) => '');
+  // ignore: always_specify_types
+  final List<String> items = List.generate(roopNum, (int index) => '');
+  // ignore: always_specify_types
+  final List<int> prices = List.generate(roopNum, (int index) => 0);
+  // ignore: always_specify_types
+  final List<String> descriptions = List.generate(roopNum, (int index) => '');
 
   return CreditDetailInputNotifier(
     CreditDetailInputResponseState(
@@ -35,47 +39,51 @@ class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseS
 
   ///
   Future<void> setCreditDetailDate({required int pos, required String date}) async {
-    final dates = <String>[...state.creditDetailInputDates];
+    final List<String> dates = <String>[...state.creditDetailInputDates];
     dates[pos] = date;
     state = state.copyWith(creditDetailInputDates: dates);
   }
 
   ///
   Future<void> setCreditDetailItem({required int pos, required String item}) async {
-    final items = <String>[...state.creditDetailInputItems];
+    final List<String> items = <String>[...state.creditDetailInputItems];
     items[pos] = item;
     state = state.copyWith(creditDetailInputItems: items);
   }
 
   ///
   Future<void> setCreditDetailDescription({required int pos, required String description}) async {
-    final descriptions = <String>[...state.creditDetailInputDescriptions];
+    final List<String> descriptions = <String>[...state.creditDetailInputDescriptions];
     descriptions[pos] = description;
     state = state.copyWith(creditDetailInputDescriptions: descriptions);
   }
 
   ///
   Future<void> setCreditDetailPrice({required int pos, required int price}) async {
-    final prices = <int>[...state.creditDetailInputPrices];
+    final List<int> prices = <int>[...state.creditDetailInputPrices];
     prices[pos] = price;
 
-    var sum = 0;
-    for (var i = 0; i < prices.length; i++) {
+    int sum = 0;
+    for (int i = 0; i < prices.length; i++) {
       sum += prices[i];
     }
 
-    final baseDiff = state.baseDiff.toInt();
-    final diff = baseDiff - sum;
+    final int baseDiff = state.baseDiff.toInt();
+    final int diff = baseDiff - sum;
 
     state = state.copyWith(creditDetailInputPrices: prices, diff: diff);
   }
 
   ///
   Future<void> clearInputValue() async {
-    final dates = List.generate(roopNum, (index) => '');
-    final items = List.generate(roopNum, (index) => '');
-    final prices = List.generate(roopNum, (index) => 0);
-    final descriptions = List.generate(roopNum, (index) => '');
+    // ignore: always_specify_types
+    final List<String> dates = List.generate(roopNum, (int index) => '');
+    // ignore: always_specify_types
+    final List<String> items = List.generate(roopNum, (int index) => '');
+    // ignore: always_specify_types
+    final List<int> prices = List.generate(roopNum, (int index) => 0);
+    // ignore: always_specify_types
+    final List<String> descriptions = List.generate(roopNum, (int index) => '');
 
     state = state.copyWith(
         creditDetailInputDates: dates, creditDetailInputItems: items, creditDetailInputPrices: prices, creditDetailInputDescriptions: descriptions);
@@ -84,12 +92,16 @@ class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseS
   ///
   Future<void> setUpdateCreditDetail({required List<CreditDetail> updateCreditDetailList}) async {
     try {
-      final dates = List.generate(roopNum, (index) => '');
-      final items = List.generate(roopNum, (index) => '');
-      final prices = List.generate(roopNum, (index) => 0);
-      final descriptions = List.generate(roopNum, (index) => '');
+      // ignore: always_specify_types
+      final List<String> dates = List.generate(roopNum, (int index) => '');
+      // ignore: always_specify_types
+      final List<String> items = List.generate(roopNum, (int index) => '');
+      // ignore: always_specify_types
+      final List<int> prices = List.generate(roopNum, (int index) => 0);
+      // ignore: always_specify_types
+      final List<String> descriptions = List.generate(roopNum, (int index) => '');
 
-      for (var i = 0; i < updateCreditDetailList.length; i++) {
+      for (int i = 0; i < updateCreditDetailList.length; i++) {
         dates[i] = updateCreditDetailList[i].creditDetailDate;
         items[i] = updateCreditDetailList[i].creditDetailItem;
         prices[i] = updateCreditDetailList[i].creditDetailPrice;
@@ -105,10 +117,10 @@ class CreditDetailInputNotifier extends StateNotifier<CreditDetailInputResponseS
 
   ///
   Future<void> clearOneBox({required int pos}) async {
-    final dates = <String>[...state.creditDetailInputDates];
-    final items = <String>[...state.creditDetailInputItems];
-    final prices = <int>[...state.creditDetailInputPrices];
-    final descriptions = <String>[...state.creditDetailInputDescriptions];
+    final List<String> dates = <String>[...state.creditDetailInputDates];
+    final List<String> items = <String>[...state.creditDetailInputItems];
+    final List<int> prices = <int>[...state.creditDetailInputPrices];
+    final List<String> descriptions = <String>[...state.creditDetailInputDescriptions];
 
     dates[pos] = '';
     items[pos] = '';

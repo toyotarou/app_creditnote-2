@@ -11,7 +11,9 @@ import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
+import '../../state/app_params/app_params_response_state.dart';
 import '../../state/credit/credit_notifier.dart';
+import '../../state/credit/credit_response_state.dart';
 import '../../utility/function.dart';
 import 'credit_blank_re_input_alert.dart';
 import 'parts/credit_dialog.dart';
@@ -31,10 +33,10 @@ class CreditInputAlert extends ConsumerStatefulWidget {
 }
 
 class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
-  final List<TextEditingController> _creditNameTecs = [];
-  final List<TextEditingController> _creditPriceTecs = [];
+  final List<TextEditingController> _creditNameTecs = <TextEditingController>[];
+  final List<TextEditingController> _creditPriceTecs = <TextEditingController>[];
 
-  List<Credit> deleteCreditList = [];
+  List<Credit> deleteCreditList = <Credit>[];
 
   ///
   @override
@@ -46,15 +48,16 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
   ///
   Future<void> _makeTecs() async {
-    for (var i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       _creditNameTecs.add(TextEditingController(text: ''));
       _creditPriceTecs.add(TextEditingController(text: ''));
     }
 
     if (widget.creditList!.isNotEmpty) {
+      // ignore: always_specify_types
       await Future(() => ref.read(creditProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
 
-      for (var i = 0; i < widget.creditList!.length; i++) {
+      for (int i = 0; i < widget.creditList!.length; i++) {
         _creditNameTecs[i].text = widget.creditList![i].name.trim();
         _creditPriceTecs[i].text = widget.creditList![i].price.toString().trim();
       }
@@ -64,7 +67,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
+    final bool inputButtonClicked = ref.watch(appParamProvider.select((AppParamsResponseState value) => value.inputButtonClicked));
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -79,15 +82,15 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [const Text('Credit Input'), Text(widget.date.yyyymm)],
+                    children: <Widget>[const Text('Credit Input'), Text(widget.date.yyyymm)],
                   ),
                   ElevatedButton(
                     onPressed: inputButtonClicked
@@ -103,9 +106,9 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-              if (widget.creditBlankCreditDetailList.isNotEmpty) ...[
+              if (widget.creditBlankCreditDetailList.isNotEmpty) ...<Widget>[
                 Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: Text(
                         'クレジットカードに紐づいていない当月の詳細情報が存在します。',
@@ -145,25 +148,25 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
   ///
   Widget _displayInputParts() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final creditInputState = ref.watch(creditProvider);
+    final CreditResponseState creditInputState = ref.watch(creditProvider);
 
-    for (var i = 0; i < 10; i++) {
-      final date = creditInputState.creditDates[i];
-      final name = creditInputState.creditNames[i];
-      final price = creditInputState.creditPrices[i];
+    for (int i = 0; i < 10; i++) {
+      final String date = creditInputState.creditDates[i];
+      final String name = creditInputState.creditNames[i];
+      final int price = creditInputState.creditPrices[i];
 
       list.add(DecoratedBox(
         decoration: BoxDecoration(
-          boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
+          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
             child: Stack(
-              children: [
+              children: <Widget>[
                 Positioned(
                   bottom: 5,
                   right: 15,
@@ -187,12 +190,12 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                         width: 2),
                   ),
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Row(
-                            children: [
+                            children: <Widget>[
                               GestureDetector(
                                 onTap: () => _showDP(pos: i),
                                 child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
@@ -212,14 +215,14 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: <Widget>[
                           Expanded(
                             child: TextField(
                               controller: _creditNameTecs[i],
                               decoration: const InputDecoration(labelText: 'クレジット名(15文字以内)'),
                               style: const TextStyle(fontSize: 13, color: Colors.white),
-                              onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                              onChanged: (value) {
+                              onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                              onChanged: (String value) {
                                 if (value != '') {
                                   ref.read(creditProvider.notifier).setCreditName(pos: i, name: value.trim());
                                 }
@@ -229,15 +232,15 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: <Widget>[
                           Expanded(
                             child: TextField(
                               keyboardType: TextInputType.number,
                               controller: _creditPriceTecs[i],
                               decoration: const InputDecoration(labelText: '金額(10桁以内)'),
                               style: const TextStyle(fontSize: 13, color: Colors.white),
-                              onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                              onChanged: (value) {
+                              onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                              onChanged: (String value) {
                                 if (value != '') {
                                   ref.read(creditProvider.notifier).setCreditPrice(pos: i, price: value.trim().toInt());
                                 }
@@ -261,7 +264,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
   ///
   Future<void> _showDP({required int pos}) async {
-    final selectedDate = await showDatePicker(
+    final DateTime? selectedDate = await showDatePicker(
       barrierColor: Colors.transparent,
       locale: const Locale('ja'),
       context: context,
@@ -277,19 +280,19 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
   ///
   Future<void> _inputCredit() async {
-    final creditInputState = ref.watch(creditProvider);
+    final CreditResponseState creditInputState = ref.watch(creditProvider);
 
-    final list = <Credit>[];
+    final List<Credit> list = <Credit>[];
 
-    var errFlg = false;
+    bool errFlg = false;
 
     ////////////////////////// 同数チェック
-    var creditDateCount = 0;
-    var creditNameCount = 0;
-    var creditPriceCount = 0;
+    int creditDateCount = 0;
+    int creditNameCount = 0;
+    int creditPriceCount = 0;
     ////////////////////////// 同数チェック
 
-    for (var i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       if (creditInputState.creditDates[i] != '' && creditInputState.creditNames[i] != '' && creditInputState.creditPrices[i] > -1) {
         list.add(
           Credit()
@@ -317,7 +320,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
 
     ////////////////////////// 同数チェック
-    final countCheck = <int, String>{};
+    final Map<int, String> countCheck = <int, String>{};
     countCheck[creditDateCount] = '';
     countCheck[creditNameCount] = '';
     countCheck[creditPriceCount] = '';
@@ -328,20 +331,21 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
     ////////////////////////// 同数チェック
 
-    if (errFlg == false) {
-      list.forEach((element) {
-        [
-          [element.name, 15],
-          [element.price, 10]
-        ].forEach((element2) {
-          if (checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int) == false) {
+    if (!errFlg) {
+      for (final Credit element in list) {
+        for (final List<Object> element2 in <List<Object>>[
+          <Object>[element.name, 15],
+          <int>[element.price, 10]
+        ]) {
+          if (!checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int)) {
             errFlg = true;
           }
-        });
-      });
+        }
+      }
     }
 
     if (errFlg) {
+      // ignore: always_specify_types
       Future.delayed(
         Duration.zero,
         () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
@@ -353,30 +357,31 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     }
 
     //---------------------------//
-    final creditsCollection = CreditsRepository().getCollection(isar: widget.isar);
-    final getCredits = await creditsCollection.filter().dateStartsWith(widget.date.yyyymm).findAll();
+    final IsarCollection<Credit> creditsCollection = CreditsRepository().getCollection(isar: widget.isar);
+    final List<Credit> getCredits = await creditsCollection.filter().dateStartsWith(widget.date.yyyymm).findAll();
     if (getCredits.isNotEmpty) {
       await CreditsRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
     }
     //---------------------------//
 
     //---------------------------//
-    deleteCreditList.forEach((element) {
-      final param = <String, dynamic>{};
+    for (final Credit element in deleteCreditList) {
+      final Map<String, dynamic> param = <String, dynamic>{};
       param['date'] = element.date;
       param['price'] = element.price.toString();
       CreditDetailsRepository()
           .getCreditDetailListByDateAndPrice(isar: widget.isar, param: param)
-          .then((value) async => widget.isar.writeTxn(() async => value?.forEach((element2) => CreditDetailsRepository().updateCreditDetail(
+          .then((List<CreditDetail>? value) async => widget.isar.writeTxn(() async => value?.forEach((CreditDetail element2) => CreditDetailsRepository().updateCreditDetail(
               isar: widget.isar,
               creditDetail: element2
                 ..creditDate = ''
                 ..creditPrice = ''))));
-    });
+    }
     //---------------------------//
 
     await CreditsRepository()
         .inputCreditList(isar: widget.isar, creditList: list)
+        // ignore: always_specify_types
         .then((value) async => ref.read(creditProvider.notifier).clearInputValue().then((value) => Navigator.pop(context)));
   }
 

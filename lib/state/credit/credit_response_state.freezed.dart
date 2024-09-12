@@ -135,9 +135,9 @@ class __$$CreditResponseStateImplCopyWithImpl<$Res>
 class _$CreditResponseStateImpl implements _CreditResponseState {
   const _$CreditResponseStateImpl(
       {this.itemPos = 0,
-      final List<String> creditDates = const [],
-      final List<String> creditNames = const [],
-      final List<int> creditPrices = const []})
+      final List<String> creditDates = const <String>[],
+      final List<String> creditNames = const <String>[],
+      final List<int> creditPrices = const <int>[]})
       : _creditDates = creditDates,
         _creditNames = creditNames,
         _creditPrices = creditPrices;

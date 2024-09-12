@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../enums/data_download_data_type.dart';
 import 'data_download_response_state.dart';
 
-final dataDownloadProvider = StateNotifierProvider.autoDispose<DataDownloadNotifier, DataDownloadResponseState>((ref) {
+final AutoDisposeStateNotifierProvider<DataDownloadNotifier, DataDownloadResponseState> dataDownloadProvider = StateNotifierProvider.autoDispose<DataDownloadNotifier, DataDownloadResponseState>((AutoDisposeStateNotifierProviderRef<DataDownloadNotifier, DataDownloadResponseState> ref) {
   return DataDownloadNotifier(const DataDownloadResponseState());
 });
 

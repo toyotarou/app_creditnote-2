@@ -13,9 +13,9 @@ class CreditDetailInputResponseState with _$CreditDetailInputResponseState {
 
     ///
 
-    @Default([]) List<String> creditDetailInputDates,
-    @Default([]) List<String> creditDetailInputItems,
-    @Default([]) List<int> creditDetailInputPrices,
-    @Default([]) List<String> creditDetailInputDescriptions,
+    @Default(<String>[]) List<String> creditDetailInputDates,
+    @Default(<String>[]) List<String> creditDetailInputItems,
+    @Default(<int>[]) List<int> creditDetailInputPrices,
+    @Default(<String>[]) List<String> creditDetailInputDescriptions,
   }) = _CreditDetailInputResponseState;
 }

@@ -2,16 +2,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'config_start_yearmonth_response_state.dart';
 
-final configStartYearmonthProvider =
-    StateNotifierProvider.autoDispose<ConfigStartYearmonthNotifier, ConfigStartYearmonthResponseState>((ref) {
-  final year = DateTime.now().year;
-  final years = <int>[];
+final AutoDisposeStateNotifierProvider<ConfigStartYearmonthNotifier, ConfigStartYearmonthResponseState> configStartYearmonthProvider =
+    StateNotifierProvider.autoDispose<ConfigStartYearmonthNotifier, ConfigStartYearmonthResponseState>((AutoDisposeStateNotifierProviderRef<ConfigStartYearmonthNotifier, ConfigStartYearmonthResponseState> ref) {
+  final int year = DateTime.now().year;
+  final List<int> years = <int>[];
 
-  for (var i = year - 3; i <= year; i++) {
+  for (int i = year - 3; i <= year; i++) {
     years.add(i);
   }
 
-  final months = List.generate(12, (index) => index);
+  // ignore: always_specify_types
+  final List<int> months = List.generate(12, (int index) => index);
 
   return ConfigStartYearmonthNotifier(ConfigStartYearmonthResponseState(startYears: years, startMonths: months));
 });

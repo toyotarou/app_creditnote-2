@@ -34,7 +34,7 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 10),
               Container(width: context.screenSize.width),
               Expanded(child: _displayCategoriesPriceList()),
@@ -47,41 +47,41 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
 
   ///
   Widget _displayCategoriesPriceList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final categoriesPriceMap = <String, List<CreditDetail>>{};
+    final Map<String, List<CreditDetail>> categoriesPriceMap = <String, List<CreditDetail>>{};
 
-    final creditItemColorMap = <String, String>{};
-    widget.creditItemList?.forEach((element) {
+    final Map<String, String> creditItemColorMap = <String, String>{};
+    widget.creditItemList?.forEach((CreditItem element) {
       creditItemColorMap[element.name] = element.color;
 
-      categoriesPriceMap[element.name] = [];
+      categoriesPriceMap[element.name] = <CreditDetail>[];
     });
 
     if (widget.creditDetailList != null) {
-      var total = 0;
+      int total = 0;
 
       /// 複数条件でソートする
-      widget.creditDetailList!.where((element) => element.yearmonth == widget.date.yyyymm).toList()
-        ..sort((a, b) {
-          final result = a.creditDetailDate.compareTo(b.creditDetailDate);
+      widget.creditDetailList!.where((CreditDetail element) => element.yearmonth == widget.date.yyyymm).toList()
+        ..sort((CreditDetail a, CreditDetail b) {
+          final int result = a.creditDetailDate.compareTo(b.creditDetailDate);
           if (result != 0) {
             return result;
           }
           return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
         })
-        ..forEach((element) {
+        ..forEach((CreditDetail element) {
           categoriesPriceMap[element.creditDetailItem]?.add(element);
         });
 
-      final list2 = <Widget>[];
-      widget.creditItemList?.forEach((element) {
+      final List<Widget> list2 = <Widget>[];
+      widget.creditItemList?.forEach((CreditItem element) {
         if (categoriesPriceMap[element.name] != null) {
-          final lineColor =
+          final String? lineColor =
               (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '') ? creditItemColorMap[element.name] : '0xffffffff';
 
-          var sum = 0;
-          categoriesPriceMap[element.name]?.forEach((element2) => sum += element2.creditDetailPrice);
+          int sum = 0;
+          categoriesPriceMap[element.name]?.forEach((CreditDetail element2) => sum += element2.creditDetailPrice);
 
           total += sum;
 
@@ -91,7 +91,7 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
               decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Container(
                     width: context.screenSize.width / 6,
                     margin: const EdgeInsets.symmetric(vertical: 3),
@@ -114,7 +114,7 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
           padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: <Widget>[
               Container(),
               Text(
                 total.toString().toCurrency(),

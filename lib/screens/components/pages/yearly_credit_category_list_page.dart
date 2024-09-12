@@ -1,10 +1,10 @@
-import 'package:credit_note/collections/credit_detail.dart';
-import 'package:credit_note/collections/credit_item.dart';
-import 'package:credit_note/extensions/extensions.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
+
+import '../../../collections/credit_detail.dart';
+import '../../../collections/credit_item.dart';
+import '../../../extensions/extensions.dart';
 
 class YearlyCreditCategoryListPage extends StatefulWidget {
   const YearlyCreditCategoryListPage(
@@ -26,7 +26,7 @@ class YearlyCreditCategoryListPage extends StatefulWidget {
 
 class _YearlyCreditCategoryListPageState
     extends State<YearlyCreditCategoryListPage> {
-  List<CreditDetail> cdList = [];
+  List<CreditDetail> cdList = <CreditDetail>[];
 
   ///
   @override
@@ -35,7 +35,7 @@ class _YearlyCreditCategoryListPageState
 
     if (widget.creditDetailList != null) {
       cdList = widget.creditDetailList!
-          .where((element) =>
+          .where((CreditDetail element) =>
               element.yearmonth.split('-')[0].toInt() == widget.date.year)
           .toList();
     }
@@ -57,7 +57,7 @@ class _YearlyCreditCategoryListPageState
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 10),
               Container(width: context.screenSize.width),
               Expanded(child: _displayYearlyCreditCategoryList()),
@@ -70,50 +70,56 @@ class _YearlyCreditCategoryListPageState
 
   ///
   Widget _displayYearlyCreditCategoryList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    var underWidget = const Column();
+    Column underWidget = const Column();
 
     if (widget.creditItemList != null) {
-      final map = <int, Map<String, int>>{};
+      final Map<int, Map<String, int>> map = <int, Map<String, int>>{};
 
-      for (var i = 1; i <= 12; i++) {
-        final map2 = <String, List<int>>{};
+      for (int i = 1; i <= 12; i++) {
+        final Map<String, List<int>> map2 = <String, List<int>>{};
 
-        widget.creditItemList!.forEach((element2) => map2[element2.name] = []);
+        for (final CreditItem element2 in widget.creditItemList!) {
+          map2[element2.name] = <int>[];
+        }
 
-        cdList.forEach((element) {
-          final widgetYearmonth =
+        for (final CreditDetail element in cdList) {
+          final String widgetYearmonth =
               '${widget.date.year}-${i.toString().padLeft(2, '0')}';
 
           if (element.yearmonth == widgetYearmonth) {
-            widget.creditItemList!.forEach((element2) {
+            for (final CreditItem element2 in widget.creditItemList!) {
               if (element.creditDetailItem == element2.name) {
                 map2[element2.name]?.add(element.creditDetailPrice);
               }
-            });
+            }
           }
-        });
+        }
 
-        final map3 = <String, int>{};
+        final Map<String, int> map3 = <String, int>{};
 
-        widget.creditItemList!.forEach((element4) => map3[element4.name] = 0);
+        for (final CreditItem element4 in widget.creditItemList!) {
+          map3[element4.name] = 0;
+        }
 
-        map2.forEach((key, value) {
-          var sum = 0;
-          value.forEach((element3) => sum += element3);
+        map2.forEach((String key, List<int> value) {
+          int sum = 0;
+          for (final int element3 in value) {
+            sum += element3;
+          }
           map3[key] = sum;
         });
 
         map[i] = map3;
       }
 
-      final list2 = <Widget>[const SizedBox(width: 140)];
+      final List<Widget> list2 = <Widget>[const SizedBox(width: 140)];
 
-      for (var i = 1; i <= 12; i++) {
-        final list3 = <Widget>[];
+      for (int i = 1; i <= 12; i++) {
+        final List<Widget> list3 = <Widget>[];
 
-        var sum = 0;
+        int sum = 0;
 
         if (DateTime(widget.date.year, i).isBefore(DateTime.now())) {
           list3.add(
@@ -125,7 +131,7 @@ class _YearlyCreditCategoryListPageState
             ),
           );
 
-          widget.creditItemList!.forEach((element5) {
+          for (final CreditItem element5 in widget.creditItemList!) {
             list3.add(Container(
               width: 100,
               height: 24,
@@ -136,9 +142,9 @@ class _YearlyCreditCategoryListPageState
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Stack(
-                    children: [
+                    children: <Widget>[
                       Container(
                         alignment: Alignment.topRight,
                         padding: const EdgeInsets.only(right: 5),
@@ -161,7 +167,7 @@ class _YearlyCreditCategoryListPageState
             sum += (map[i] != null && map[i]![element5.name] != null)
                 ? map[i]![element5.name]!
                 : 0;
-          });
+          }
 
           list3.add(Container(
             width: 100,
@@ -170,7 +176,7 @@ class _YearlyCreditCategoryListPageState
             padding: const EdgeInsets.all(2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Container(
                   alignment: Alignment.topRight,
                   padding: const EdgeInsets.only(right: 5),
@@ -187,11 +193,11 @@ class _YearlyCreditCategoryListPageState
       list.add(Row(children: list2));
 
       underWidget = Column(
-        children: [
+        children: <Widget>[
           const SizedBox(width: 100, height: 30),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.creditItemList!.map((e) {
+            children: widget.creditItemList!.map((CreditItem e) {
               return Container(
                 width: 120,
                 height: 24,
@@ -210,7 +216,7 @@ class _YearlyCreditCategoryListPageState
 
     return SingleChildScrollView(
       child: Stack(
-        children: [
+        children: <Widget>[
           underWidget,
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,9 +18,10 @@ import 'screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final dir = await getApplicationSupportDirectory();
+  final Directory dir = await getApplicationSupportDirectory();
 
-  final isar = await Isar.open([
+  // ignore: always_specify_types
+  final Isar isar = await Isar.open([
     ConfigSchema,
     CreditSchema,
     CreditItemSchema,
@@ -26,8 +29,10 @@ void main() async {
     SubscriptionItemSchema,
   ], directory: dir.path);
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_) => runApp(ProviderScope(child: MyApp(isar: isar))));
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]).then((_) => runApp(ProviderScope(child: MyApp(isar: isar))));
 }
 
 class MyApp extends ConsumerWidget {
@@ -39,22 +44,25 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      localizationsDelegates: const [
+      // ignore: always_specify_types, prefer_const_literals_to_create_immutables
+      localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
+      supportedLocales: const <Locale>[
         Locale('en'),
         Locale('ja'),
       ],
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          titleTextStyle: GoogleFonts.kiwiMaru(textStyle: const TextStyle(fontWeight: FontWeight.bold)),
+          titleTextStyle: GoogleFonts.kiwiMaru(
+              textStyle: const TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
         ),
-        scrollbarTheme: const ScrollbarThemeData()
-            .copyWith(thumbColor: MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.4))),
+        scrollbarTheme: const ScrollbarThemeData().copyWith(
+            thumbColor:
+                MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.4))),
         useMaterial3: false,
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark),
         fontFamily: 'KiwiMaru',
@@ -63,7 +71,8 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.dark,
       title: 'credit note',
       debugShowCheckedModeBanner: false,
-      home: GestureDetector(onTap: () => primaryFocus?.unfocus(), child: HomeScreen(isar: isar)),
+      home: GestureDetector(
+          onTap: () => primaryFocus?.unfocus(), child: HomeScreen(isar: isar)),
     );
   }
 }

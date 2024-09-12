@@ -11,11 +11,16 @@ import '../../extensions/extensions.dart';
 import '../../model/credit_blank_input_value.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../state/app_params/app_params_notifier.dart';
+import '../../state/app_params/app_params_response_state.dart';
 import 'parts/error_dialog.dart';
 
 class CreditBlankReInputAlert extends ConsumerStatefulWidget {
   const CreditBlankReInputAlert(
-      {super.key, required this.isar, required this.date, required this.creditList, required this.creditBlankCreditDetailList});
+      {super.key,
+      required this.isar,
+      required this.date,
+      required this.creditList,
+      required this.creditBlankCreditDetailList});
 
   final Isar isar;
   final DateTime date;
@@ -23,16 +28,20 @@ class CreditBlankReInputAlert extends ConsumerStatefulWidget {
   final List<CreditDetail> creditBlankCreditDetailList;
 
   @override
-  ConsumerState<CreditBlankReInputAlert> createState() => _CreditBlankReInputAlertState();
+  ConsumerState<CreditBlankReInputAlert> createState() =>
+      _CreditBlankReInputAlertState();
 }
 
-class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAlert> {
-  Map<int, CreditBlankInputValue> creditBlankInputValueMap = {};
+class _CreditBlankReInputAlertState
+    extends ConsumerState<CreditBlankReInputAlert> {
+  Map<int, CreditBlankInputValue> creditBlankInputValueMap =
+      <int, CreditBlankInputValue>{};
 
   ///
   @override
   Widget build(BuildContext context) {
-    final inputButtonClicked = ref.watch(appParamProvider.select((value) => value.inputButtonClicked));
+    final bool inputButtonClicked = ref.watch(appParamProvider
+        .select((AppParamsResponseState value) => value.inputButtonClicked));
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -47,25 +56,31 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [const Text('Credit Blank ReInput'), Text(widget.date.yyyymm)],
+                    children: <Widget>[
+                      const Text('Credit Blank ReInput'),
+                      Text(widget.date.yyyymm)
+                    ],
                   ),
                   ElevatedButton(
                     onPressed: inputButtonClicked
                         ? null
                         : () {
-                            ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
+                            ref
+                                .read(appParamProvider.notifier)
+                                .setInputButtonClicked(flag: true);
 
                             _inputCreditBlankReInput();
                           },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
                     child: const Text('input'),
                   ),
                 ],
@@ -81,21 +96,27 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
 
   ///
   Widget _displayInputParts() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final creditBlankSettingMap = ref.watch(appParamProvider.select((value) => value.creditBlankSettingMap));
+    final Map<int, String> creditBlankSettingMap = ref.watch(appParamProvider
+        .select((AppParamsResponseState value) => value.creditBlankSettingMap));
 
-    for (var i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
+    for (int i = 0; i < widget.creditBlankCreditDetailList.length; i++) {
       list.add(DecoratedBox(
         decoration: BoxDecoration(
-          boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                blurRadius: 24,
+                spreadRadius: 16,
+                color: Colors.black.withOpacity(0.2))
+          ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
             child: Stack(
-              children: [
+              children: <Widget>[
                 Positioned(
                   bottom: 5,
                   right: 15,
@@ -103,7 +124,9 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                     (i + 1).toString().padLeft(2, '0'),
                     style: TextStyle(
                       fontSize: 60,
-                      color: (creditBlankInputValueMap[i] != null) ? Colors.orangeAccent.withOpacity(0.2) : Colors.white.withOpacity(0.2),
+                      color: (creditBlankInputValueMap[i] != null)
+                          ? Colors.orangeAccent.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                     ),
                   ),
                 ),
@@ -115,27 +138,41 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: (creditBlankInputValueMap[i] != null) ? Colors.orangeAccent.withOpacity(0.4) : Colors.white.withOpacity(0.2),
+                        color: (creditBlankInputValueMap[i] != null)
+                            ? Colors.orangeAccent.withOpacity(0.4)
+                            : Colors.white.withOpacity(0.2),
                         width: 2),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.creditList!.isNotEmpty) ...[
+                    children: <Widget>[
+                      if (widget.creditList!.isNotEmpty) ...<Widget>[
                         Wrap(
-                            children: widget.creditList!.map((e) {
+                            children: widget.creditList!.map((Credit e) {
                           return GestureDetector(
                             onTap: () {
-                              ref.read(appParamProvider.notifier).setCreditBlankSettingMap(pos: i, creditName: e.name);
+                              ref
+                                  .read(appParamProvider.notifier)
+                                  .setCreditBlankSettingMap(
+                                      pos: i, creditName: e.name);
 
                               creditBlankInputValueMap[i] =
-                                  CreditBlankInputValue(widget.creditBlankCreditDetailList[i].id, e.name, e.date, e.price.toString());
+                                  CreditBlankInputValue(
+                                      widget.creditBlankCreditDetailList[i].id,
+                                      e.name,
+                                      e.date,
+                                      e.price.toString());
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 5),
                               child: CircleAvatar(
-                                backgroundColor: (creditBlankSettingMap[i] == e.name) ? Colors.orangeAccent.withOpacity(0.4) : Colors.black,
-                                child: Text(e.name, style: const TextStyle(fontSize: 8, color: Colors.white)),
+                                backgroundColor:
+                                    (creditBlankSettingMap[i] == e.name)
+                                        ? Colors.orangeAccent.withOpacity(0.4)
+                                        : Colors.black,
+                                child: Text(e.name,
+                                    style: const TextStyle(
+                                        fontSize: 8, color: Colors.white)),
                               ),
                             ),
                           );
@@ -144,20 +181,31 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
                       ],
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(widget.creditBlankCreditDetailList[i].creditDetailDate),
-                          Text(widget.creditBlankCreditDetailList[i].creditDetailPrice.toString().toCurrency()),
+                        children: <Widget>[
+                          Text(widget
+                              .creditBlankCreditDetailList[i].creditDetailDate),
+                          Text(widget
+                              .creditBlankCreditDetailList[i].creditDetailPrice
+                              .toString()
+                              .toCurrency()),
                         ],
                       ),
-                      Text(widget.creditBlankCreditDetailList[i].creditDetailItem),
-                      Text(widget.creditBlankCreditDetailList[i].creditDetailDescription),
+                      Text(widget
+                          .creditBlankCreditDetailList[i].creditDetailItem),
+                      Text(widget.creditBlankCreditDetailList[i]
+                          .creditDetailDescription),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Container(),
                           GestureDetector(
-                            onTap: () => deleteCreditBlankData(id: widget.creditBlankCreditDetailList[i].id),
-                            child: Text('delete', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary)),
+                            onTap: () => deleteCreditBlankData(
+                                id: widget.creditBlankCreditDetailList[i].id),
+                            child: Text('delete',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                           )
                         ],
                       ),
@@ -176,35 +224,48 @@ class _CreditBlankReInputAlertState extends ConsumerState<CreditBlankReInputAler
 
   ///
   Future<void> _inputCreditBlankReInput() async {
-    final updateCreditDetailList = <CreditDetail>[];
+    final List<CreditDetail> updateCreditDetailList = <CreditDetail>[];
 
-    await widget.isar.writeTxn(() async => creditBlankInputValueMap
-        .forEach((key, value) => CreditDetailsRepository().getCreditDetail(isar: widget.isar, id: value.creditDetailId).then((value2) {
+    await widget.isar.writeTxn(() async => creditBlankInputValueMap.forEach(
+        (int key, CreditBlankInputValue value) => CreditDetailsRepository()
+                .getCreditDetail(isar: widget.isar, id: value.creditDetailId)
+                .then((CreditDetail? value2) {
               updateCreditDetailList.add(value2!
                 ..creditDate = value.creditDate
                 ..creditPrice = value.creditPrice);
             })));
 
     if (updateCreditDetailList.isEmpty) {
+      // ignore: always_specify_types
       Future.delayed(
         Duration.zero,
-        () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+        () => error_dialog(
+            context: context, title: '登録できません。', content: '値を正しく入力してください。'),
       );
 
-      await ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+      await ref
+          .read(appParamProvider.notifier)
+          .setInputButtonClicked(flag: false);
 
       return;
     }
 
-    await widget.isar.writeTxn(
-        () async => CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: updateCreditDetailList).then((value) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }));
+    await widget.isar.writeTxn(() async => CreditDetailsRepository()
+            .updateCreditDetailList(
+                isar: widget.isar, creditDetailList: updateCreditDetailList)
+            // ignore: always_specify_types
+            .then((value) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }));
   }
 
   ///
-  Future<void> deleteCreditBlankData({required Id id}) async => CreditDetailsRepository().deleteCreditDetail(isar: widget.isar, id: id).then((value) {
+  Future<void> deleteCreditBlankData({required Id id}) async =>
+      CreditDetailsRepository()
+          .deleteCreditDetail(isar: widget.isar, id: id)
+          // ignore: always_specify_types
+          .then((value) {
         Navigator.pop(context);
         Navigator.pop(context);
       });

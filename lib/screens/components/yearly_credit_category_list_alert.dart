@@ -31,7 +31,7 @@ class YearlyCreditCategoryListAlert extends StatefulWidget {
 }
 
 class _YearlyCreditCategoryListAlertState extends State<YearlyCreditCategoryListAlert> {
-  final List<TabInfo> tabs = [];
+  final List<TabInfo> tabs = <TabInfo>[];
 
   ///
   @override
@@ -57,7 +57,7 @@ class _YearlyCreditCategoryListAlertState extends State<YearlyCreditCategoryList
             ),
           ),
         ),
-        body: TabBarView(children: tabs.map((tab) => tab.widget).toList()),
+        body: TabBarView(children: tabs.map((TabInfo tab) => tab.widget).toList()),
       ),
     );
   }
@@ -66,29 +66,29 @@ class _YearlyCreditCategoryListAlertState extends State<YearlyCreditCategoryList
   void makeTab() {
     tabs.clear();
 
-    final years = <String>[];
+    final List<String> years = <String>[];
 
-    widget.selectedYearmonthList.forEach((element) {
-      final exElement = element.split('-');
+    for (final String element in widget.selectedYearmonthList) {
+      final List<String> exElement = element.split('-');
       if (!years.contains(exElement[0])) {
         years.add(exElement[0]);
       }
+    }
+
+    final Map<String, List<CreditDetail>> yearlyCreditDetailMap = <String, List<CreditDetail>>{};
+
+    widget.creditDetailList?.forEach((CreditDetail element) {
+      yearlyCreditDetailMap[element.creditDate.split('-')[0]] = <CreditDetail>[];
     });
 
-    final yearlyCreditDetailMap = <String, List<CreditDetail>>{};
-
-    widget.creditDetailList?.forEach((element) {
-      yearlyCreditDetailMap[element.creditDate.split('-')[0]] = [];
-    });
-
-    widget.creditDetailList?.forEach((element) {
+    widget.creditDetailList?.forEach((CreditDetail element) {
       yearlyCreditDetailMap[element.creditDate.split('-')[0]]?.add(element);
     });
 
     years
-      ..sort((a, b) => -1 * a.compareTo(b))
+      ..sort((String a, String b) => -1 * a.compareTo(b))
       ..forEach(
-        (element) {
+        (String element) {
           tabs.add(
             TabInfo(
               element,
@@ -96,7 +96,7 @@ class _YearlyCreditCategoryListAlertState extends State<YearlyCreditCategoryList
                 isar: widget.isar,
                 date: DateTime.parse('$element-01-01 00:00:00'),
                 creditItemList: widget.creditItemList,
-                creditDetailList: yearlyCreditDetailMap[element] ?? [],
+                creditDetailList: yearlyCreditDetailMap[element] ?? <CreditDetail>[],
               ),
             ),
           );

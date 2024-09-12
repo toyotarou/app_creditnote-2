@@ -3,10 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../collections/credit.dart';
 import 'credit_response_state.dart';
 
-final creditProvider = StateNotifierProvider.autoDispose<CreditNotifier, CreditResponseState>((ref) {
-  final dates = List.generate(10, (index) => '');
-  final names = List.generate(10, (index) => '');
-  final prices = List.generate(10, (index) => -1);
+final AutoDisposeStateNotifierProvider<CreditNotifier, CreditResponseState> creditProvider = StateNotifierProvider.autoDispose<CreditNotifier, CreditResponseState>((AutoDisposeStateNotifierProviderRef<CreditNotifier, CreditResponseState> ref) {
+  // ignore: always_specify_types
+  final List<String> dates = List.generate(10, (int index) => '');
+  // ignore: always_specify_types
+  final List<String> names = List.generate(10, (int index) => '');
+  // ignore: always_specify_types
+  final List<int> prices = List.generate(10, (int index) => -1);
 
   return CreditNotifier(CreditResponseState(creditDates: dates, creditNames: names, creditPrices: prices));
 });
@@ -19,30 +22,33 @@ class CreditNotifier extends StateNotifier<CreditResponseState> {
 
   ///
   Future<void> setCreditDate({required int pos, required String date}) async {
-    final dates = <String>[...state.creditDates];
+    final List<String> dates = <String>[...state.creditDates];
     dates[pos] = date;
     state = state.copyWith(creditDates: dates);
   }
 
   ///
   Future<void> setCreditName({required int pos, required String name}) async {
-    final names = <String>[...state.creditNames];
+    final List<String> names = <String>[...state.creditNames];
     names[pos] = name;
     state = state.copyWith(creditNames: names);
   }
 
   ///
   Future<void> setCreditPrice({required int pos, required int price}) async {
-    final prices = <int>[...state.creditPrices];
+    final List<int> prices = <int>[...state.creditPrices];
     prices[pos] = price;
     state = state.copyWith(creditPrices: prices);
   }
 
   ///
   Future<void> clearInputValue() async {
-    final dates = List.generate(10, (index) => '');
-    final names = List.generate(10, (index) => '');
-    final prices = List.generate(10, (index) => 0);
+    // ignore: always_specify_types
+    final List<String> dates = List.generate(10, (int index) => '');
+    // ignore: always_specify_types
+    final List<String> names = List.generate(10, (int index) => '');
+    // ignore: always_specify_types
+    final List<int> prices = List.generate(10, (int index) => 0);
 
     state = state.copyWith(creditDates: dates, creditNames: names, creditPrices: prices);
   }
@@ -50,11 +56,11 @@ class CreditNotifier extends StateNotifier<CreditResponseState> {
   ///
   Future<void> setUpdateCredit({required List<Credit> updateCredit}) async {
     try {
-      final dates = <String>[...state.creditDates];
-      final names = <String>[...state.creditNames];
-      final prices = <int>[...state.creditPrices];
+      final List<String> dates = <String>[...state.creditDates];
+      final List<String> names = <String>[...state.creditNames];
+      final List<int> prices = <int>[...state.creditPrices];
 
-      for (var i = 0; i < updateCredit.length; i++) {
+      for (int i = 0; i < updateCredit.length; i++) {
         dates[i] = updateCredit[i].date;
         names[i] = updateCredit[i].name;
         prices[i] = updateCredit[i].price;
@@ -68,9 +74,9 @@ class CreditNotifier extends StateNotifier<CreditResponseState> {
 
   ///
   Future<void> clearOneBox({required int pos}) async {
-    final dates = <String>[...state.creditDates];
-    final names = <String>[...state.creditNames];
-    final prices = <int>[...state.creditPrices];
+    final List<String> dates = <String>[...state.creditDates];
+    final List<String> names = <String>[...state.creditNames];
+    final List<int> prices = <int>[...state.creditPrices];
 
     dates[pos] = '';
     names[pos] = '';

@@ -33,12 +33,12 @@ class _YearMonthSelectDialogState extends ConsumerState<YearMonthSelectDialog> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('${(widget.pos == 'start') ? '開始' : '終了'}年月を選択'), Container()],
+                children: <Widget>[Text('${(widget.pos == 'start') ? '開始' : '終了'}年月を選択'), Container()],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               Expanded(child: _displayYearMonthList()),
@@ -51,19 +51,17 @@ class _YearMonthSelectDialogState extends ConsumerState<YearMonthSelectDialog> {
 
   ///
   Widget _displayYearMonthList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    widget.selectedYearmonthList.forEach((element) {
+    for (final String element in widget.selectedYearmonthList) {
       list.add(
         GestureDetector(
           onTap: () {
             switch (widget.pos) {
               case 'start':
                 ref.read(dataDownloadProvider.notifier).setStartYearMonth(yearmonth: element);
-                break;
               case 'end':
                 ref.read(dataDownloadProvider.notifier).setEndYearMonth(yearmonth: element);
-                break;
             }
 
             Navigator.pop(context);
@@ -77,7 +75,7 @@ class _YearMonthSelectDialogState extends ConsumerState<YearMonthSelectDialog> {
           ),
         ),
       );
-    });
+    }
 
     return SingleChildScrollView(child: Column(children: list));
   }

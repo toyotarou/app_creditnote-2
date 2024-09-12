@@ -6,8 +6,8 @@ part 'credit_response_state.freezed.dart';
 class CreditResponseState with _$CreditResponseState {
   const factory CreditResponseState({
     @Default(0) int itemPos,
-    @Default([]) List<String> creditDates,
-    @Default([]) List<String> creditNames,
-    @Default([]) List<int> creditPrices,
+    @Default(<String>[]) List<String> creditDates,
+    @Default(<String>[]) List<String> creditNames,
+    @Default(<int>[]) List<int> creditPrices,
   }) = _CreditResponseState;
 }

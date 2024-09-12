@@ -12,7 +12,11 @@ import '../../repository/credits_repository.dart';
 import '../../utility/function.dart';
 
 class CreditPriceEditAlert extends StatefulWidget {
-  const CreditPriceEditAlert({super.key, required this.date, required this.isar, required this.creditPrice});
+  const CreditPriceEditAlert(
+      {super.key,
+      required this.date,
+      required this.isar,
+      required this.creditPrice});
 
   final DateTime date;
   final Isar isar;
@@ -24,7 +28,8 @@ class CreditPriceEditAlert extends StatefulWidget {
 }
 
 class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
-  final TextEditingController _creditPriceEditingController = TextEditingController();
+  final TextEditingController _creditPriceEditingController =
+      TextEditingController();
 
   ///
   @override
@@ -42,15 +47,16 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            // ignore: always_specify_types
             children: [
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text(widget.date.yyyymmdd),
                       Text(widget.creditPrice.toString().toCurrency()),
                     ],
@@ -63,13 +69,15 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Container(),
                   GestureDetector(
                     onTap: _editCreditPrice,
                     child: Text(
                       '金額を変更する',
-                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
@@ -84,7 +92,12 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
   ///
   Widget _displayInputParts() {
     return DecoratedBox(
-      decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))]),
+      decoration: BoxDecoration(boxShadow: <BoxShadow>[
+        BoxShadow(
+            blurRadius: 24,
+            spreadRadius: 16,
+            color: Colors.black.withOpacity(0.2))
+      ]),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
@@ -96,14 +109,16 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+              border:
+                  Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
             ),
             child: TextField(
               keyboardType: TextInputType.number,
               controller: _creditPriceEditingController,
               decoration: const InputDecoration(labelText: '金額(10桁以内)'),
               style: const TextStyle(fontSize: 13, color: Colors.white),
-              onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+              onTapOutside: (PointerDownEvent event) =>
+                  FocusManager.instance.primaryFocus?.unfocus(),
             ),
           ),
         ),
@@ -113,39 +128,56 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
 
   ///
   Future<void> _editCreditPrice() async {
-    var errFlg = false;
+    bool errFlg = false;
 
     if (_creditPriceEditingController.text.trim() == '') {
       errFlg = true;
     }
 
-    if (errFlg == false) {
-      [
-        [_creditPriceEditingController.text.trim(), 10]
-      ].forEach((element) {
-        if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
+    if (!errFlg) {
+      for (final List<Object> element in <List<Object>>[
+        <Object>[_creditPriceEditingController.text.trim(), 10]
+      ]) {
+        if (!checkInputValueLengthCheck(
+                value: element[0].toString(), length: element[1] as int)) {
           errFlg = true;
         }
-      });
+      }
     }
 
     //======================
-    var credit = Credit();
+    Credit credit = Credit();
     await CreditsRepository().getCreditByDateAndPrice(
-        isar: widget.isar, param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice}).then((value) => credit = value!);
+        isar: widget.isar,
+        param: <String, dynamic>{
+          'date': widget.date.yyyymmdd,
+          'price': widget.creditPrice
+        }).then((Credit? value) => credit = value!);
     //======================
 
     await widget.isar.writeTxn(() async {
       await CreditDetailsRepository().getCreditDetailListByDateAndPrice(
         isar: widget.isar,
-        param: {'date': widget.date.yyyymmdd, 'price': widget.creditPrice.toString()},
-      ).then((value) async {
-        final creditDetailList = <CreditDetail>[];
-        value?.forEach((element) => creditDetailList.add(element..creditPrice = _creditPriceEditingController.text.trim()));
+        param: <String, dynamic>{
+          'date': widget.date.yyyymmdd,
+          'price': widget.creditPrice.toString()
+        },
+      ).then((List<CreditDetail>? value) async {
+        final List<CreditDetail> creditDetailList = <CreditDetail>[];
+        value?.forEach((CreditDetail element) => creditDetailList.add(
+            element..creditPrice = _creditPriceEditingController.text.trim()));
 
-        await CreditDetailsRepository().updateCreditDetailList(isar: widget.isar, creditDetailList: creditDetailList).then((value2) async {
+        await CreditDetailsRepository()
+            .updateCreditDetailList(
+                isar: widget.isar, creditDetailList: creditDetailList)
+            // ignore: always_specify_types
+            .then((value2) async {
           await CreditsRepository()
-              .updateCredit(isar: widget.isar, credit: credit..price = _creditPriceEditingController.text.trim().toInt())
+              .updateCredit(
+                  isar: widget.isar,
+                  credit: credit
+                    ..price = _creditPriceEditingController.text.trim().toInt())
+              // ignore: always_specify_types
               .then((value4) async {
             Navigator.pop(context);
             Navigator.pop(context);

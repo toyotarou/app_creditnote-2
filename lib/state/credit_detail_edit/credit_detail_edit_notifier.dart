@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../collections/credit_detail.dart';
 import 'credit_detail_edit_response_state.dart';
 
-final creditDetailEditProvider = StateNotifierProvider.autoDispose<CreditDetailEditNotifier, CreditDetailEditResponseState>((ref) {
+final AutoDisposeStateNotifierProvider<CreditDetailEditNotifier, CreditDetailEditResponseState> creditDetailEditProvider = StateNotifierProvider.autoDispose<CreditDetailEditNotifier, CreditDetailEditResponseState>((AutoDisposeStateNotifierProviderRef<CreditDetailEditNotifier, CreditDetailEditResponseState> ref) {
   return CreditDetailEditNotifier(const CreditDetailEditResponseState());
 });
 

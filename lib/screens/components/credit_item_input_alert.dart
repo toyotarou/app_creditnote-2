@@ -32,24 +32,24 @@ class CreditItemInputAlert extends ConsumerStatefulWidget {
 class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   final TextEditingController _creditItemEditingController = TextEditingController();
 
-  List<DragAndDropItem> creditItemDDItemList = [];
-  List<DragAndDropList> ddList = [];
+  List<DragAndDropItem> creditItemDDItemList = <DragAndDropItem>[];
+  List<DragAndDropList> ddList = <DragAndDropList>[];
 
-  List<int> orderedIdList = [];
+  List<int> orderedIdList = <int>[];
 
   Color mycolor = Colors.white;
 
-  Map<int, String> creditItemColorMap = {};
+  Map<int, String> creditItemColorMap = <int, String>{};
 
-  Map<int, String> creditItemNameMap = {};
+  Map<int, String> creditItemNameMap = <int, String>{};
 
   ///
   @override
   void initState() {
     super.initState();
 
-    widget.creditItemList.forEach((element) {
-      final colorCode = (element.color != '') ? element.color : '0xffffffff';
+    for (final CreditItem element in widget.creditItemList) {
+      final String colorCode = (element.color != '') ? element.color : '0xffffffff';
 
       creditItemDDItemList.add(
         DragAndDropItem(
@@ -68,7 +68,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       creditItemColorMap[element.id] = element.color;
 
       creditItemNameMap[element.id] = element.name;
-    });
+    }
 
     ddList.add(DragAndDropList(children: creditItemDDItemList));
   }
@@ -84,12 +84,12 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
           child: DefaultTextStyle(
             style: GoogleFonts.kiwiMaru(fontSize: 12),
             child: Column(
-              children: [
+              children: <Widget>[
                 const SizedBox(height: 20),
                 Container(width: context.screenSize.width),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [const Text('分類アイテム管理'), Container()],
+                  children: <Widget>[const Text('分類アイテム管理'), Container()],
                 ),
                 Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
                 _displayInputParts(),
@@ -97,10 +97,10 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Container(),
                           GestureDetector(
                             onTap: _inputCreditItem,
@@ -114,7 +114,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Container(),
                           GestureDetector(
                             onTap: _settingReorderIds,
@@ -141,7 +141,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                       ///
                       itemDecorationWhileDragging: const BoxDecoration(
                         color: Colors.black,
-                        boxShadow: [BoxShadow(color: Colors.white, blurRadius: 4)],
+                        boxShadow: <BoxShadow>[BoxShadow(color: Colors.white, blurRadius: 4)],
                       ),
 
                       ///
@@ -161,7 +161,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   Widget _displayInputParts() {
     return DecoratedBox(
       decoration: BoxDecoration(
-        boxShadow: [BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
+        boxShadow: <BoxShadow>[BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -180,7 +180,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
               controller: _creditItemEditingController,
               decoration: const InputDecoration(labelText: '分類アイテム(20文字以内)'),
               style: const TextStyle(fontSize: 13, color: Colors.white),
-              onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+              onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
           ),
         ),
@@ -190,23 +190,24 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _inputCreditItem() async {
-    var errFlg = false;
+    bool errFlg = false;
 
     if (_creditItemEditingController.text.trim() == '') {
       errFlg = true;
     }
 
-    if (errFlg == false) {
-      [
-        [_creditItemEditingController.text.trim(), 20]
-      ].forEach((element) {
-        if (checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int) == false) {
+    if (!errFlg) {
+      for (final List<Object> element in <List<Object>>[
+        <Object>[_creditItemEditingController.text.trim(), 20]
+      ]) {
+        if (!checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int)) {
           errFlg = true;
         }
-      });
+      }
     }
 
     if (errFlg) {
+      // ignore: always_specify_types
       Future.delayed(
         Duration.zero,
         () => error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。'),
@@ -215,11 +216,12 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       return;
     }
 
-    final creditItem = CreditItem()
+    final CreditItem creditItem = CreditItem()
       ..name = _creditItemEditingController.text.trim()
       ..order = widget.creditItemList.length + 1
       ..color = '0xffffffff';
 
+    // ignore: always_specify_types
     await CreditItemsRepository().inputCreditItem(isar: widget.isar, creditItem: creditItem).then((value) {
       _creditItemEditingController.clear();
       Navigator.pop(context);
@@ -229,7 +231,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   ///
   void _itemReorder(int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
-      final movedItem = ddList[oldListIndex].children.removeAt(oldItemIndex);
+      final DragAndDropItem movedItem = ddList[oldListIndex].children.removeAt(oldItemIndex);
 
       ddList[newListIndex].children.insert(newItemIndex, movedItem);
     });
@@ -249,27 +251,29 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
         },
         child: const Text('はい'));
 
-    final alert = AlertDialog(
+    final AlertDialog alert = AlertDialog(
         backgroundColor: Colors.blueGrey.withOpacity(0.3),
         content: const Text('このデータを消去しますか？'),
-        actions: [cancelButton, continueButton]);
+        actions: <Widget>[cancelButton, continueButton]);
 
+    // ignore: inference_failure_on_function_invocation
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
   ///
   Future<void> _deleteCreditItem({required int id}) async {
     //-----------------------------------
-    final creditDetailsCollection = widget.isar.creditDetails;
+    final IsarCollection<CreditDetail> creditDetailsCollection = widget.isar.creditDetails;
 
-    final getCreditDetails =
+    final List<CreditDetail> getCreditDetails =
         await creditDetailsCollection.filter().creditDetailItemEqualTo(creditItemNameMap[id]!).findAll();
 
     await widget.isar.writeTxn(() async =>
-        getCreditDetails.forEach((element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
+        // ignore: avoid_function_literals_in_foreach_calls
+        getCreditDetails.forEach((CreditDetail element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
     //-----------------------------------
 
-    final creditItemsCollection = widget.isar.creditItems; //TODO
+    final IsarCollection<CreditItem> creditItemsCollection = widget.isar.creditItems;
     await widget.isar.writeTxn(() async => creditItemsCollection.delete(id));
 
     if (mounted) {
@@ -279,10 +283,10 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _settingReorderIds() async {
-    orderedIdList = [];
+    orderedIdList = <int>[];
 
-    for (final value in ddList) {
-      for (final child in value.children) {
+    for (final DragAndDropList value in ddList) {
+      for (final DragAndDropItem child in value.children) {
         orderedIdList.add(child.child.key
             .toString()
             .replaceAll('[', '')
@@ -294,11 +298,11 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       }
     }
 
-    final creditItemsCollection = widget.isar.creditItems;
+    final IsarCollection<CreditItem> creditItemsCollection = widget.isar.creditItems;
 
     await widget.isar.writeTxn(() async {
-      for (var i = 0; i < orderedIdList.length; i++) {
-        final getCreditItem = await creditItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
+      for (int i = 0; i < orderedIdList.length; i++) {
+        final CreditItem? getCreditItem = await creditItemsCollection.filter().idEqualTo(orderedIdList[i]).findFirst();
         if (getCreditItem != null) {
           getCreditItem
             ..name = creditItemNameMap[orderedIdList[i]].toString()
@@ -316,7 +320,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   void _showColorPickerDialog({required int id}) {
-    final colorCodeList = [
+    final List<String> colorCodeList = <String>[
       '0xffffffff',
       '0xffff4081',
       '0xffff5252',
@@ -334,18 +338,19 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
       '0xff9e9e9e'
     ];
 
-    final usingColorCode = <String>[];
-    creditItemColorMap.forEach((key, value) => usingColorCode.add(value));
+    final List<String> usingColorCode = <String>[];
+    creditItemColorMap.forEach((int key, String value) => usingColorCode.add(value));
 
-    final availableColorsList = <Color>[];
-    colorCodeList.forEach((element) {
+    final List<Color> availableColorsList = <Color>[];
+    for (final String element in colorCodeList) {
       availableColorsList.add(Color(element.toInt()));
-    });
+    }
 
     if (creditItemColorMap[id] != null && creditItemColorMap[id] != '') {
       mycolor = Color(creditItemColorMap[id]!.toInt());
     }
 
+    // ignore: inference_failure_on_function_invocation
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -353,13 +358,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
           backgroundColor: Colors.blueGrey.withOpacity(0.3),
           title: const Text('Pick a color!', style: TextStyle(fontSize: 12)),
           content: Column(
-            children: [
+            children: <Widget>[
               BlockPicker(
                 availableColors: availableColorsList,
                 pickerColor: mycolor,
                 onColorChanged: (Color color) async {
                   mycolor = color;
-                  final colorCode = color.toString().replaceAll('Color(', '').replaceAll(')', '');
+                  final String colorCode = color.toString().replaceAll('Color(', '').replaceAll(')', '');
+                  // ignore: always_specify_types
                   await _updateColorCode(id: id, color: colorCode).then((value) {
                     /// ここは2回閉じる
                     Navigator.pop(context);
@@ -369,14 +375,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
               ),
               const SizedBox(height: 20),
               Row(
-                children: [
+                children: <Widget>[
                   const SizedBox(width: 80),
                   Expanded(
                     child: Wrap(
                       children: colorCodeList.map(
-                        (e) {
+                        (String e) {
                           return Stack(
-                            children: [
+                            children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(5),
                                 child: CircleAvatar(radius: 20, backgroundColor: Color(e.toInt()).withOpacity(0.3)),
@@ -407,7 +413,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
   ///
   Future<void> _updateColorCode({required int id, required String color}) async {
     await widget.isar.writeTxn(() async {
-      await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((value) async {
+      await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((CreditItem? value) async {
         value!.color = color;
 
         await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);

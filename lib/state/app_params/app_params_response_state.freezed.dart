@@ -127,7 +127,7 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
 class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
   const _$AppParamsResponseStateImpl(
       {this.inputButtonClicked = false,
-      final Map<int, String> creditBlankSettingMap = const {},
+      final Map<int, String> creditBlankSettingMap = const <int, String>{},
       this.homeListSelectedYearmonth = ''})
       : _creditBlankSettingMap = creditBlankSettingMap;
 

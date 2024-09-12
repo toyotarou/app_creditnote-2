@@ -141,8 +141,8 @@ class __$$ConfigStartYearmonthResponseStateImplCopyWithImpl<$Res>
 class _$ConfigStartYearmonthResponseStateImpl
     implements _ConfigStartYearmonthResponseState {
   const _$ConfigStartYearmonthResponseStateImpl(
-      {final List<int> startYears = const [],
-      final List<int> startMonths = const [],
+      {final List<int> startYears = const <int>[],
+      final List<int> startMonths = const <int>[],
       this.selectedStartYear = -1,
       this.selectedStartMonth = -1})
       : _startYears = startYears,

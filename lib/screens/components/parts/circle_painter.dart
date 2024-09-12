@@ -7,17 +7,17 @@ class CirclePainter extends CustomPainter {
   double maxBackRadius;
   double animationRadius;
 
-  final lightColor = Colors.redAccent;
+  final MaterialAccentColor lightColor = Colors.redAccent;
 
-  final Map<int, Map<String, double>> lightLayers = {
-    0: {'maxOpacity': 0.5},
-    1: {'maxOpacity': 0.3}
+  final Map<int, Map<String, double>> lightLayers = <int, Map<String, double>>{
+    0: <String, double>{'maxOpacity': 0.5},
+    1: <String, double>{'maxOpacity': 0.3}
   };
 
   ///
   @override
   void paint(Canvas canvas, Size size) {
-    const c = Offset.zero;
+    const Offset c = Offset.zero;
 
     canvas.drawCircle(
       c,
@@ -28,13 +28,13 @@ class CirclePainter extends CustomPainter {
         ..style = PaintingStyle.fill,
     );
 
-    var size = basicRadius;
+    double size = basicRadius;
 
-    for (var i = 0; i < lightLayers.length; i++) {
-      final row = lightLayers[i]!;
+    for (int i = 0; i < lightLayers.length; i++) {
+      final Map<String, double> row = lightLayers[i]!;
 
       //
-      var opacity = animationRadius * (row['maxOpacity']! / maxBackRadius * -1) + row['maxOpacity']!;
+      double opacity = animationRadius * (row['maxOpacity']! / maxBackRadius * -1) + row['maxOpacity']!;
 
       //
       opacity = (opacity < 0.0) ? 0.0 : opacity;

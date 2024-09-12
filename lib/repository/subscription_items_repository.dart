@@ -8,25 +8,25 @@ class SubscriptionItemsRepository {
 
   ///
   Future<SubscriptionItem?> getSubscriptionItemByName({required Isar isar, required String name}) async {
-    final subscriptionItemsCollection = getCollection(isar: isar);
+    final IsarCollection<SubscriptionItem> subscriptionItemsCollection = getCollection(isar: isar);
     return subscriptionItemsCollection.filter().nameEqualTo(name).findFirst();
   }
 
   ///
   Future<List<SubscriptionItem>?> getSubscriptionItemList({required Isar isar}) async {
-    final subscriptionItemsCollection = getCollection(isar: isar);
+    final IsarCollection<SubscriptionItem> subscriptionItemsCollection = getCollection(isar: isar);
     return subscriptionItemsCollection.where().findAll();
   }
 
   ///
   Future<void> inputSubscriptionItem({required Isar isar, required SubscriptionItem subscriptionItem}) async {
-    final subscriptionItemsCollection = getCollection(isar: isar);
+    final IsarCollection<SubscriptionItem> subscriptionItemsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => subscriptionItemsCollection.put(subscriptionItem));
   }
 
   ///
   Future<void> deleteSubscriptionItem({required Isar isar, required int id}) async {
-    final subscriptionItemsCollection = getCollection(isar: isar);
+    final IsarCollection<SubscriptionItem> subscriptionItemsCollection = getCollection(isar: isar);
     await isar.writeTxn(() async => subscriptionItemsCollection.delete(id));
   }
 }

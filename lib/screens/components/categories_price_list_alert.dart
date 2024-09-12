@@ -35,7 +35,7 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
 
   final int index;
 
-  final List<TabInfo> tabs = [];
+  final List<TabInfo> tabs = <TabInfo>[];
 
   ///
   @override
@@ -43,7 +43,7 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
     makeTab();
 
     // 最初に開くタブを指定する
-    final tabController = useTabController(initialLength: tabs.length);
+    final TabController tabController = useTabController(initialLength: tabs.length);
     if (index > 0) {
       tabController.index = index;
     }
@@ -58,7 +58,8 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             //-------------------------//これを消すと「←」が出てくる（消さない）
-            leading: const Icon(Icons.check_box_outline_blank, color: Colors.transparent),
+            leading: const Icon(Icons.check_box_outline_blank,
+                color: Colors.transparent),
             //-------------------------//これを消すと「←」が出てくる（消さない）
 
             bottom: TabBar(
@@ -77,7 +78,7 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
           controller: tabController,
           //================================//
 
-          children: tabs.map((tab) => tab.widget).toList(),
+          children: tabs.map((TabInfo tab) => tab.widget).toList(),
         ),
       ),
     );
@@ -87,19 +88,22 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
   void makeTab() {
     tabs.clear();
 
-    final settingConfigMap = <String, String>{};
-    configList?.forEach((element) => settingConfigMap[element.configKey] = element.configValue);
+    final Map<String, String> settingConfigMap = <String, String>{};
+    configList?.forEach(
+        (Config element) => settingConfigMap[element.configKey] = element.configValue);
 
-    final ymList = <String>[];
-    if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
-      final exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
+    final List<String> ymList = <String>[];
+    if (settingConfigMap['start_yearmonth'] != null &&
+        settingConfigMap['start_yearmonth'] != '') {
+      final List<String> exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
       if (exYearmonth.length > 1) {
         if (exYearmonth[0] != '' && exYearmonth[1] != '') {
-          final firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
-          final diff = DateTime.now().difference(firstDate).inDays;
-          final yearmonthList = <String>[];
-          for (var i = 0; i <= diff; i++) {
-            final yearmonth = firstDate.add(Duration(days: i)).yyyymm;
+          final DateTime firstDate =
+              DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
+          final int diff = DateTime.now().difference(firstDate).inDays;
+          final List<String> yearmonthList = <String>[];
+          for (int i = 0; i <= diff; i++) {
+            final String yearmonth = firstDate.add(Duration(days: i)).yyyymm;
             if (!yearmonthList.contains(yearmonth)) {
               ymList.add(yearmonth);
             }
@@ -110,9 +114,9 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
     }
 
     ymList
-      ..sort((a, b) => -1 * a.compareTo(b))
+      ..sort((String a, String b) => -1 * a.compareTo(b))
       ..forEach(
-        (element) {
+        (String element) {
           tabs.add(
             TabInfo(
               element,

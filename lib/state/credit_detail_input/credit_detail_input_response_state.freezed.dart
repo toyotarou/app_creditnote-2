@@ -186,10 +186,10 @@ class _$CreditDetailInputResponseStateImpl
       {this.itemPos = 0,
       this.diff = 0,
       this.baseDiff = '',
-      final List<String> creditDetailInputDates = const [],
-      final List<String> creditDetailInputItems = const [],
-      final List<int> creditDetailInputPrices = const [],
-      final List<String> creditDetailInputDescriptions = const []})
+      final List<String> creditDetailInputDates = const <String>[],
+      final List<String> creditDetailInputItems = const <String>[],
+      final List<int> creditDetailInputPrices = const <int>[],
+      final List<String> creditDetailInputDescriptions = const <String>[]})
       : _creditDetailInputDates = creditDetailInputDates,
         _creditDetailInputItems = creditDetailInputItems,
         _creditDetailInputPrices = creditDetailInputPrices,

@@ -6,7 +6,7 @@ part 'app_params_response_state.freezed.dart';
 class AppParamsResponseState with _$AppParamsResponseState {
   const factory AppParamsResponseState({
     @Default(false) bool inputButtonClicked,
-    @Default({}) Map<int, String> creditBlankSettingMap,
+    @Default(<int, String>{}) Map<int, String> creditBlankSettingMap,
     @Default('') String homeListSelectedYearmonth,
   }) = _AppParamsResponseState;
 }

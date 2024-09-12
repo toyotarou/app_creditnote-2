@@ -35,10 +35,12 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final subscriptionItems = <String>[];
-    widget.subscriptionItemList.forEach((element) => subscriptionItems.add(element.name));
+    final List<String> subscriptionItems = <String>[];
+    for (final SubscriptionItem element in widget.subscriptionItemList) {
+      subscriptionItems.add(element.name);
+    }
 
-    final subscriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+    final Color subscriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -53,19 +55,19 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Text(widget.creditDetail.creditDetailDescription),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Container(),
                       Row(
-                        children: [
+                        children: <Widget>[
                           Text('月極登録', style: TextStyle(color: subscriptionColor.withOpacity(0.6))),
                           const SizedBox(width: 10),
                           GestureDetector(
@@ -89,21 +91,23 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
 
   ///
   Widget _displaySameItemCreditDetailList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final spendItemColorMap = <String, String>{};
-    widget.creditItemList.forEach((element) => spendItemColorMap[element.name] = element.color);
+    final Map<String, String> spendItemColorMap = <String, String>{};
+    for (final CreditItem element in widget.creditItemList) {
+      spendItemColorMap[element.name] = element.color;
+    }
 
-    widget.creditDetailList!.where((element) => element.creditDetailDescription == widget.creditDetail.creditDetailDescription).toList()
-      ..sort((a, b) {
-        final result = a.creditDetailDate.compareTo(b.creditDetailDate);
+    widget.creditDetailList!.where((CreditDetail element) => element.creditDetailDescription == widget.creditDetail.creditDetailDescription).toList()
+      ..sort((CreditDetail a, CreditDetail b) {
+        final int result = a.creditDetailDate.compareTo(b.creditDetailDate);
         if (result != 0) {
           return result;
         }
         return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
       })
-      ..forEach((element) {
-        final lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
+      ..forEach((CreditDetail element) {
+        final String? lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
             ? spendItemColorMap[element.creditDetailItem]
             : '0xffffffff';
 
@@ -111,7 +115,7 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
           child: Row(
-            children: [
+            children: <Widget>[
               Expanded(child: Text(element.creditDetailDate)),
               Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.creditDetailPrice.toString().toCurrency()))),
               const SizedBox(width: 20),
@@ -144,9 +148,9 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
 
   ///
   Future<void> subscriptionItemInputDeleteToggle() async {
-    await SubscriptionItemsRepository().getSubscriptionItemByName(isar: widget.isar, name: widget.creditDetail.creditDetailDescription).then((value) {
+    await SubscriptionItemsRepository().getSubscriptionItemByName(isar: widget.isar, name: widget.creditDetail.creditDetailDescription).then((SubscriptionItem? value) {
       if (value == null) {
-        final subscriptionItem = SubscriptionItem()..name = widget.creditDetail.creditDetailDescription;
+        final SubscriptionItem subscriptionItem = SubscriptionItem()..name = widget.creditDetail.creditDetailDescription;
         SubscriptionItemsRepository().inputSubscriptionItem(isar: widget.isar, subscriptionItem: subscriptionItem);
       } else {
         SubscriptionItemsRepository().deleteSubscriptionItem(isar: widget.isar, id: value.id);

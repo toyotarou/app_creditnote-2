@@ -34,16 +34,16 @@ class CreditItemCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(child: Text(name, style: TextStyle(color: Color(colorCode.toInt())), maxLines: 1, overflow: TextOverflow.ellipsis)),
           const SizedBox(width: 10),
           Container(
             width: context.screenSize.width * 0.3,
             alignment: Alignment.topRight,
             child: Row(
-              children: [
+              children: <Widget>[
                 Row(
-                  children: [
+                  children: <Widget>[
                     Container(
                       width: 40,
                       alignment: Alignment.topRight,

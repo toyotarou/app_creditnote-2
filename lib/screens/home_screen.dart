@@ -262,6 +262,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ],
               ),
             ),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
             GestureDetector(
               onTap: () {
                 CreditDialog(
@@ -286,13 +287,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
-                      child: const Text('データダウンロード'),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('整形データダウンロード'),
+                          Text(
+                            '（このファイルはインポートできません。）',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 1),
             GestureDetector(
               onTap: () {
                 CreditDialog(

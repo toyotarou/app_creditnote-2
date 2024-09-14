@@ -139,7 +139,7 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
         <Object>[_creditPriceEditingController.text.trim(), 10]
       ]) {
         if (!checkInputValueLengthCheck(
-                value: element[0].toString(), length: element[1] as int)) {
+            value: element[0].toString(), length: element[1] as int)) {
           errFlg = true;
         }
       }
@@ -179,8 +179,10 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
                     ..price = _creditPriceEditingController.text.trim().toInt())
               // ignore: always_specify_types
               .then((value4) async {
-            Navigator.pop(context);
-            Navigator.pop(context);
+            if (mounted) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
           });
         });
       });

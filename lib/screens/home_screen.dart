@@ -150,10 +150,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 // ignore: always_specify_types
                                 Future.delayed(
                                   Duration.zero,
-                                  () => error_dialog(
-                                      context: context,
-                                      title: '表示できません。',
-                                      content: '表示するデータが存在しません。'),
+                                  () {
+                                    return error_dialog(
+                                        // ignore: use_build_context_synchronously
+                                        context: context,
+                                        title: '表示できません。',
+                                        content: '表示するデータが存在しません。');
+                                  },
                                 );
                               }
                             },
@@ -289,7 +292,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       margin: const EdgeInsets.all(5),
                       child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: <Widget>[
                           Text('整形データダウンロード'),
                           Text(
                             '（このファイルはインポートできません。）',

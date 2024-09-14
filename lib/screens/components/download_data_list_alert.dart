@@ -40,7 +40,8 @@ class DownloadDataListAlert extends ConsumerStatefulWidget {
 
   ///
   @override
-  ConsumerState<DownloadDataListAlert> createState() => _DownloadDataListAlertState();
+  ConsumerState<DownloadDataListAlert> createState() =>
+      _DownloadDataListAlertState();
 }
 
 class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
@@ -58,7 +59,8 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
 
   ///
   Future<void> getPublicDirectoryPath() async {
-    final String path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+    final String path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
     setState(() {
       externalStoragePublicDirectoryPath = path;
     });
@@ -67,7 +69,8 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final DataDownloadResponseState dataDownloadState = ref.watch(dataDownloadProvider);
+    final DataDownloadResponseState dataDownloadState =
+        ref.watch(dataDownloadProvider);
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -92,10 +95,13 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(dataDownloadProvider.notifier).setDataType(dataType: DateDownloadDataType.creditItem);
+                  ref
+                      .read(dataDownloadProvider.notifier)
+                      .setDataType(dataType: DateDownloadDataType.creditItem);
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: (dataDownloadState.dataType == DateDownloadDataType.creditItem)
+                    backgroundColor: (dataDownloadState.dataType ==
+                            DateDownloadDataType.creditItem)
                         ? Colors.yellowAccent.withOpacity(0.3)
                         : Colors.pinkAccent.withOpacity(0.2)),
                 child: const Text('credit item'),
@@ -103,7 +109,8 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
               Container(
                 margin: const EdgeInsets.all(5),
                 padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.4))),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white.withOpacity(0.4))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -117,11 +124,15 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
                                 onPressed: () {
                                   _showYearMonthSelectDialog(pos: 'start');
                                 },
-                                icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                                icon: Icon(Icons.calendar_month,
+                                    color: Colors.greenAccent.withOpacity(0.6)),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[const Text('Start'), Text(dataDownloadState.startYearMonth)],
+                                children: <Widget>[
+                                  const Text('Start'),
+                                  Text(dataDownloadState.startYearMonth)
+                                ],
                               ),
                             ],
                           ),
@@ -135,11 +146,15 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
                               onPressed: () {
                                 _showYearMonthSelectDialog(pos: 'end');
                               },
-                              icon: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
+                              icon: Icon(Icons.calendar_month,
+                                  color: Colors.greenAccent.withOpacity(0.6)),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[const Text('End'), Text(dataDownloadState.endYearMonth)],
+                              children: <Widget>[
+                                const Text('End'),
+                                Text(dataDownloadState.endYearMonth)
+                              ],
                             ),
                           ],
                         ),
@@ -147,10 +162,13 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        ref.read(dataDownloadProvider.notifier).setDataType(dataType: DateDownloadDataType.credit);
+                        ref
+                            .read(dataDownloadProvider.notifier)
+                            .setDataType(dataType: DateDownloadDataType.credit);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: (dataDownloadState.dataType == DateDownloadDataType.credit)
+                          backgroundColor: (dataDownloadState.dataType ==
+                                  DateDownloadDataType.credit)
                               ? Colors.yellowAccent.withOpacity(0.3)
                               : Colors.pinkAccent.withOpacity(0.2)),
                       child: const Text('credit'),
@@ -196,7 +214,8 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
   Widget _displayDownloadData() {
     final List<Widget> list = <Widget>[];
 
-    final DataDownloadResponseState dataDownloadState = ref.watch(dataDownloadProvider);
+    final DataDownloadResponseState dataDownloadState =
+        ref.watch(dataDownloadProvider);
 
     if (dataDownloadState.dataType != null) {
       switch (dataDownloadState.dataType!) {
@@ -209,13 +228,17 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
           //=====================//
           final List<String> yearMonthList = <String>[];
 
-          final int dateDiff = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00')
-              .difference(DateTime.parse('${dataDownloadState.startYearMonth}-01 '
-                  '00:00:00'))
-              .inDays;
+          final int dateDiff =
+              DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00')
+                  .difference(
+                      DateTime.parse('${dataDownloadState.startYearMonth}-01 '
+                          '00:00:00'))
+                  .inDays;
 
           for (int i = 0; i <= dateDiff; i++) {
-            final DateTime day = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00').add(Duration(days: i));
+            final DateTime day = DateTime.parse(
+                    '${dataDownloadState.startYearMonth}-01 00:00:00')
+                .add(Duration(days: i));
 
             if (!yearMonthList.contains(day.yyyymm)) {
               yearMonthList.add(day.yyyymm);
@@ -224,18 +247,28 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
 
           //=====================//
 
-          if (dataDownloadState.startYearMonth == '' || dataDownloadState.endYearMonth == '') {
+          if (dataDownloadState.startYearMonth == '' ||
+              dataDownloadState.endYearMonth == '') {
             return Container();
           }
 
-          final DateTime startDateTime = DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00');
-          final DateTime endDateTime = DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00');
+          final DateTime startDateTime =
+              DateTime.parse('${dataDownloadState.startYearMonth}-01 00:00:00');
+          final DateTime endDateTime =
+              DateTime.parse('${dataDownloadState.endYearMonth}-01 00:00:00');
 
           if (endDateTime.isBefore(startDateTime)) {
             // ignore: always_specify_types
             Future.delayed(
               Duration.zero,
-              () => error_dialog(context: context, title: '検索できません。', content: '開始年月、終了年月を正しく入力してください。'),
+              () {
+                if (mounted) {
+                  return error_dialog(
+                      context: context,
+                      title: '検索できません。',
+                      content: '開始年月、終了年月を正しく入力してください。');
+                }
+              },
             );
 
             return Container();
@@ -245,29 +278,52 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
             list.add(
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 5),
-                child: const Text('クレジット詳細のレコードが存在しない年月はスキップしています。', style: TextStyle(color: Colors.yellowAccent)),
+                child: const Text('クレジット詳細のレコードが存在しない年月はスキップしています。',
+                    style: TextStyle(color: Colors.yellowAccent)),
               ),
             );
           }
 
           for (final String element in yearMonthList) {
-            widget.creditDetailList.where((CreditDetail element2) => element2.yearmonth == element).forEach((CreditDetail element3) {
+            widget.creditDetailList
+                .where((CreditDetail element2) => element2.yearmonth == element)
+                .forEach((CreditDetail element3) {
               list.add(Row(
                 children: <Widget>[
-                  getDataCell(data: element3.yearmonth, width: 100, alignment: Alignment.topLeft),
-                  getDataCell(data: element3.creditDate, width: 100, alignment: Alignment.topLeft),
-                  getDataCell(data: element3.creditPrice, width: 100, alignment: Alignment.topRight),
                   getDataCell(
-                      data: getCreditName(date: element3.creditDate, price: element3.creditPrice),
+                      data: element3.yearmonth,
                       width: 100,
                       alignment: Alignment.topLeft),
-                  getDataCell(data: element3.creditDetailDate, width: 100, alignment: Alignment.topLeft),
-                  getDataCell(data: element3.creditDetailItem, width: 120, alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditDate,
+                      width: 100,
+                      alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditPrice,
+                      width: 100,
+                      alignment: Alignment.topRight),
+                  getDataCell(
+                      data: getCreditName(
+                          date: element3.creditDate,
+                          price: element3.creditPrice),
+                      width: 100,
+                      alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditDetailDate,
+                      width: 100,
+                      alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditDetailItem,
+                      width: 120,
+                      alignment: Alignment.topLeft),
                   getDataCell(
                       data: element3.creditDetailPrice.toString().toCurrency(),
                       width: 100,
                       alignment: Alignment.topRight),
-                  getDataCell(data: element3.creditDetailDescription, width: 300, alignment: Alignment.topLeft),
+                  getDataCell(
+                      data: element3.creditDetailDescription,
+                      width: 300,
+                      alignment: Alignment.topLeft),
                 ],
               ));
 
@@ -275,7 +331,8 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
                 element3.yearmonth,
                 element3.creditDate,
                 element3.creditPrice,
-                getCreditName(date: element3.creditDate, price: element3.creditPrice),
+                getCreditName(
+                    date: element3.creditDate, price: element3.creditPrice),
                 element3.creditDetailDate,
                 element3.creditDetailItem,
                 element3.creditDetailPrice.toString(),
@@ -284,22 +341,33 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
             });
           }
 
-
         case DateDownloadDataType.creditItem:
           outputValuesList = <String>[];
 
           for (final CreditItem element in widget.creditItemList) {
             list.add(Row(
               children: <Widget>[
-                getDataCell(data: element.name, width: 100, alignment: Alignment.topLeft),
-                getDataCell(data: element.order.toString(), width: 100, alignment: Alignment.topLeft),
-                getDataCell(data: element.color, width: 100, alignment: Alignment.topLeft),
+                getDataCell(
+                    data: element.name,
+                    width: 100,
+                    alignment: Alignment.topLeft),
+                getDataCell(
+                    data: element.order.toString(),
+                    width: 100,
+                    alignment: Alignment.topLeft),
+                getDataCell(
+                    data: element.color,
+                    width: 100,
+                    alignment: Alignment.topLeft),
               ],
             ));
 
-            outputValuesList.add(<String>[element.name, element.order.toString(), "'${element.color}"].join(','));
+            outputValuesList.add(<String>[
+              element.name,
+              element.order.toString(),
+              "'${element.color}"
+            ].join(','));
           }
-
       }
     }
 
@@ -317,12 +385,18 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
   }
 
   ///
-  Widget getDataCell({required String data, required double width, required Alignment alignment}) {
+  Widget getDataCell(
+      {required String data,
+      required double width,
+      required Alignment alignment}) {
     return Container(
       width: width,
       margin: const EdgeInsets.all(2),
       alignment: alignment,
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.2), width: 2))),
+      decoration: BoxDecoration(
+          border: Border(
+              bottom:
+                  BorderSide(color: Colors.white.withOpacity(0.2), width: 2))),
       child: Text(data),
     );
   }
@@ -353,17 +427,21 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
     final String month = now.month.toString().padLeft(2, '0');
     final String day = now.day.toString().padLeft(2, '0');
 
-    final DataDownloadResponseState dataDownloadState = ref.watch(dataDownloadProvider);
+    final DataDownloadResponseState dataDownloadState =
+        ref.watch(dataDownloadProvider);
 
-    final String dateStr = '${dataDownloadState.dataType!.japanName}_$year$month$day$currentTime';
+    final String dateStr =
+        '${dataDownloadState.dataType!.japanName}_$year$month$day$currentTime';
     final String sendFileName = '$dateStr.csv';
 
-    final String exFilePath = '$externalStoragePublicDirectoryPath/$sendFileName';
+    final String exFilePath =
+        '$externalStoragePublicDirectoryPath/$sendFileName';
     final File textFilePath = File(exFilePath);
 
     final String contents = outputValuesList.join('\n');
 
-    final Uint8List encoded = await CharsetConverter.encode('Shift_JIS', contents);
+    final Uint8List encoded =
+        await CharsetConverter.encode('Shift_JIS', contents);
     await textFilePath.writeAsBytes(encoded);
 
     getErrorDialog(title: '出力しました。', content: 'ダウンロードフォルダにCSVを作成しました。');
@@ -374,7 +452,11 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
     // ignore: always_specify_types
     Future.delayed(
       Duration.zero,
-      () => error_dialog(context: context, title: title, content: content),
+      () {
+        if (mounted) {
+          return error_dialog(context: context, title: title, content: content);
+        }
+      },
     );
   }
 }

@@ -438,7 +438,7 @@ class _CreditDetailInputAlertState
           <Object>[element.creditDetailDescription, 30]
         ]) {
           if (!checkInputValueLengthCheck(
-                  value: element2[0].toString(), length: element2[1] as int)) {
+              value: element2[0].toString(), length: element2[1] as int)) {
             errFlg = true;
           }
         }
@@ -449,8 +449,12 @@ class _CreditDetailInputAlertState
       // ignore: always_specify_types
       Future.delayed(
         Duration.zero,
-        () => error_dialog(
-            context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+        () {
+          if (mounted) {
+            return error_dialog(
+                context: context, title: '登録できません。', content: '値を正しく入力してください。');
+          }
+        },
       );
 
       return;
@@ -463,10 +467,14 @@ class _CreditDetailInputAlertState
         .inputCreditDetailList(isar: widget.isar, creditDetailList: list)
         // ignore: always_specify_types
         .then((value) async => ref
-            .read(creditDetailInputProvider.notifier)
-            .clearInputValue()
-            // ignore: always_specify_types
-            .then((value) => Navigator.pop(context)));
+                .read(creditDetailInputProvider.notifier)
+                .clearInputValue()
+                // ignore: always_specify_types
+                .then((value) {
+              if (mounted) {
+                Navigator.pop(context);
+              }
+            }));
   }
 
   ///

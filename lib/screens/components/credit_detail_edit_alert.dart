@@ -79,7 +79,10 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[const Text('Credit Detail Edit'), Container()],
+                children: <Widget>[
+                  const Text('Credit Detail Edit'),
+                  Container()
+                ],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayInputParts(),
@@ -108,12 +111,14 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
   ///
   Widget _displayInputParts() {
-    final CreditDetailEditResponseState creditDetailEditState = ref.watch(creditDetailEditProvider);
+    final CreditDetailEditResponseState creditDetailEditState =
+        ref.watch(creditDetailEditProvider);
 
     final String date = creditDetailEditState.creditDetailEditDate;
     final String item = creditDetailEditState.creditDetailEditItem;
     final int price = creditDetailEditState.creditDetailEditPrice;
-    final String description = creditDetailEditState.creditDetailEditDescription;
+    final String description =
+        creditDetailEditState.creditDetailEditDescription;
 
     bool blankAlert = false;
     if (price != 0) {
@@ -298,12 +303,14 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
   ///
   Future<void> _inputEditCreditDetail() async {
-    final CreditDetailEditResponseState creditDetailEditState = ref.watch(creditDetailEditProvider);
+    final CreditDetailEditResponseState creditDetailEditState =
+        ref.watch(creditDetailEditProvider);
 
     final String date = creditDetailEditState.creditDetailEditDate;
     final String item = creditDetailEditState.creditDetailEditItem;
     final int price = creditDetailEditState.creditDetailEditPrice;
-    final String description = creditDetailEditState.creditDetailEditDescription;
+    final String description =
+        creditDetailEditState.creditDetailEditDescription;
 
     bool errFlg = false;
 
@@ -323,7 +330,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
         <Object>[description, 30]
       ]) {
         if (!checkInputValueLengthCheck(
-                value: element[0].toString(), length: element[1] as int)) {
+            value: element[0].toString(), length: element[1] as int)) {
           errFlg = true;
         }
       }
@@ -333,8 +340,12 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
       // ignore: always_specify_types
       Future.delayed(
         Duration.zero,
-        () => error_dialog(
-            context: context, title: '登録できません。', content: '値を正しく入力してください。'),
+        () {
+          if (mounted) {
+            return error_dialog(
+                context: context, title: '登録できません。', content: '値を正しく入力してください。');
+          }
+        },
       );
 
       return;
@@ -354,10 +365,12 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
             .updateCreditDetail(isar: widget.isar, creditDetail: value)
             // ignore: always_specify_types
             .then((value) {
-          Navigator.pop(context);
-
-          if (widget.from == 'SameItemListAlert') {
+          if (mounted) {
             Navigator.pop(context);
+
+            if (widget.from == 'SameItemListAlert') {
+              Navigator.pop(context);
+            }
           }
         });
       });

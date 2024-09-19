@@ -26,7 +26,6 @@ import 'components/csv_data/data_import_alert.dart';
 import 'components/download_data_list_alert.dart';
 import 'components/monthly_credit_item_list_alert.dart';
 import 'components/parts/back_ground_image.dart';
-import 'components/parts/circle_painter.dart';
 import 'components/parts/credit_dialog.dart';
 import 'components/parts/error_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
@@ -60,17 +59,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   List<String> selectedYearmonthList = <String>[];
 
-  final double _radius = 10.0;
-
-  final double _backRadius = 20.0;
-
   late AnimationController _animationController;
-
-  late Animation<double> _animationRadius;
 
   List<SubscriptionItem>? subscriptionItemList = <SubscriptionItem>[];
 
   bool allSameNumFlag = false;
+
+  bool isEndDrawerOpen = false;
 
   ///
   @override
@@ -78,15 +73,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _animationController =
         AnimationController(duration: const Duration(seconds: 3), vsync: this);
 
-    // ignore: always_specify_types
-    _animationRadius = Tween(begin: 0.toDouble(), end: _backRadius)
-        .animate(_animationController)
-      ..addListener(() => setState(() {}));
-
     _animationController.repeat();
 
     super.initState();
   }
+
+  bool initDoing = false;
 
   ///
   void _init() {
@@ -99,13 +91,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _makeCreditDetailList();
 
     _makeSubscriptionItemList();
+
+    initDoing = true;
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    // ignore: always_specify_types
-    Future(_init);
+    if (!initDoing) {
+      // ignore: always_specify_types
+      Future(_init);
+    }
 
     // ignore: always_specify_types
     _scrollControllers = List.generate(1000, (int index) => ScrollController());
@@ -186,7 +182,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
       drawer: _dispDrawer(),
       endDrawer: _dispEndDrawer(),
-      endDrawerEnableOpenDragGesture: false,
+      onEndDrawerChanged: (bool isOpen) {
+        if (!isOpen) {
+          ref
+              .read(appParamProvider.notifier)
+              .setHomeListSelectedYearmonth(yearmonth: '');
+        }
+      },
     );
   }
 
@@ -387,75 +389,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
 
-    return GestureDetector(
-      onHorizontalDragUpdate: (_) {},
-      child: Container(
-        width: context.screenSize.width,
-        decoration: const BoxDecoration(color: Colors.transparent),
-        padding: EdgeInsets.only(left: context.screenSize.width * 0.2),
-        child: Drawer(
-          backgroundColor: Colors.blueGrey.withOpacity(0.2),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(width: 10),
-              Column(
-                children: <Widget>[
-                  const SizedBox(height: 60),
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                          padding: const EdgeInsets.only(top: 12, left: 12),
-                          child: CustomPaint(
-                              painter: CirclePainter(_radius, _backRadius,
-                                  _animationRadius.value))),
-                      GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(appParamProvider.notifier)
-                              .setHomeListSelectedYearmonth(yearmonth: '');
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(Icons.close, color: Colors.redAccent),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                      child: DecoratedBox(
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1)),
-                          child: const SizedBox(width: 5))),
-                ],
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Drawer(
+      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(homeListSelectedYearmonth),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    const SizedBox(height: 60),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(homeListSelectedYearmonth),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(sum.toString().toCurrency()),
-                            Text(subscriptionTotal.toString().toCurrency(),
-                                style: const TextStyle(
-                                    color: Colors.yellowAccent)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-                    Expanded(child: _displayCreditDetailList()),
+                    Text(sum.toString().toCurrency()),
+                    Text(subscriptionTotal.toString().toCurrency(),
+                        style: const TextStyle(color: Colors.yellowAccent)),
                   ],
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            Expanded(child: _displayCreditDetailList()),
+          ],
         ),
       ),
     );

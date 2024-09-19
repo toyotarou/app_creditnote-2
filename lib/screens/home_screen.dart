@@ -396,7 +396,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 30),
+            const SizedBox(height: 60),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

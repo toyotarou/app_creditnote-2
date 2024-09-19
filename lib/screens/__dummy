@@ -1,0 +1,54 @@
+                      Container(
+                          padding: const EdgeInsets.only(top: 12, left: 12),
+                          child: CustomPaint(
+                              painter: CirclePainter(_radius, _backRadius,
+                                  _animationRadius.value))),
+                      GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(appParamProvider.notifier)
+                              .setHomeListSelectedYearmonth(yearmonth: '');
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.close, color: Colors.redAccent),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+
+
+  final double _radius = 10.0;
+
+  final double _backRadius = 20.0;
+
+  late AnimationController _animationController;
+
+  late Animation<double> _animationRadius;
+
+
+
+
+
+
+  ///
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 3), vsync: this);
+
+    // ignore: always_specify_types
+    _animationRadius = Tween(begin: 0.toDouble(), end: _backRadius)
+        .animate(_animationController)
+      ..addListener(() => setState(() {}));
+
+    _animationController.repeat();
+
+    super.initState();
+  }
+
+
+
+
+
+

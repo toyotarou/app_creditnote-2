@@ -12,6 +12,7 @@ import '../../state/app_params/app_params_response_state.dart';
 import '../../state/credit_detail_input/credit_detail_input_notifier.dart';
 import '../../state/credit_detail_input/credit_detail_input_response_state.dart';
 import '../../utility/function.dart';
+import '../home_screen.dart';
 import 'credit_price_edit_alert.dart';
 import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
@@ -473,6 +474,15 @@ class _CreditDetailInputAlertState
                 .then((value) {
               if (mounted) {
                 Navigator.pop(context);
+
+                Navigator.pushReplacement(
+                  context,
+                  // ignore: inference_failure_on_instance_creation, always_specify_types
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        HomeScreen(isar: widget.isar),
+                  ),
+                );
               }
             }));
   }

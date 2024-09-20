@@ -131,6 +131,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         children: <Widget>[
                           IconButton(
                             onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                // ignore: inference_failure_on_instance_creation, always_specify_types
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      HomeScreen(isar: widget.isar),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.refresh,
+                              color: Colors.yellowAccent.withOpacity(0.6),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
                               if (creditDetailList!.isNotEmpty) {
                                 CreditDialog(
                                   context: context,

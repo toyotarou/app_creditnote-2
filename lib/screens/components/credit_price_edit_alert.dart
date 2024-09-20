@@ -10,6 +10,7 @@ import '../../extensions/extensions.dart';
 import '../../repository/credit_details_repository.dart';
 import '../../repository/credits_repository.dart';
 import '../../utility/function.dart';
+import '../home_screen.dart';
 
 class CreditPriceEditAlert extends StatefulWidget {
   const CreditPriceEditAlert(
@@ -182,6 +183,15 @@ class _CreditPriceEditAlertState extends State<CreditPriceEditAlert> {
             if (mounted) {
               Navigator.pop(context);
               Navigator.pop(context);
+
+              Navigator.pushReplacement(
+                context,
+                // ignore: inference_failure_on_instance_creation, always_specify_types
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      HomeScreen(isar: widget.isar),
+                ),
+              );
             }
           });
         });

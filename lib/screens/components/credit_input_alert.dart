@@ -15,6 +15,7 @@ import '../../state/app_params/app_params_response_state.dart';
 import '../../state/credit/credit_notifier.dart';
 import '../../state/credit/credit_response_state.dart';
 import '../../utility/function.dart';
+import '../home_screen.dart';
 import 'credit_blank_re_input_alert.dart';
 import 'parts/credit_dialog.dart';
 import 'parts/error_dialog.dart';
@@ -458,6 +459,15 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 .then((value) {
               if (mounted) {
                 Navigator.pop(context);
+
+                Navigator.pushReplacement(
+                  context,
+                  // ignore: inference_failure_on_instance_creation, always_specify_types
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        HomeScreen(isar: widget.isar),
+                  ),
+                );
               }
             }));
   }

@@ -7,7 +7,12 @@ import '../../collections/credit_detail.dart';
 import '../../extensions/extensions.dart';
 
 class MonthlyCreditItemListAlert extends ConsumerStatefulWidget {
-  const MonthlyCreditItemListAlert({super.key, required this.date, required this.isar, required this.item, required this.creditDetailList});
+  const MonthlyCreditItemListAlert(
+      {super.key,
+      required this.date,
+      required this.isar,
+      required this.item,
+      required this.creditDetailList});
 
   final DateTime date;
   final Isar isar;
@@ -15,10 +20,12 @@ class MonthlyCreditItemListAlert extends ConsumerStatefulWidget {
   final List<CreditDetail> creditDetailList;
 
   @override
-  ConsumerState<MonthlyCreditItemListAlert> createState() => _MonthlyCreditItemListAlertState();
+  ConsumerState<MonthlyCreditItemListAlert> createState() =>
+      _MonthlyCreditItemListAlertState();
 }
 
-class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemListAlert> {
+class _MonthlyCreditItemListAlertState
+    extends ConsumerState<MonthlyCreditItemListAlert> {
   ///
   @override
   Widget build(BuildContext context) {
@@ -26,27 +33,24 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
 
     if (widget.creditDetailList.isNotEmpty) {
       widget.creditDetailList
-          .where((CreditDetail element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
+          .where((CreditDetail element) =>
+              DateTime.parse('${element.creditDate} 00:00:00').yyyymm ==
+              widget.date.yyyymm)
           .toList()
-          .where((CreditDetail element2) => element2.creditDetailItem == widget.item)
+          .where((CreditDetail element2) =>
+              element2.creditDetailItem == widget.item)
           .forEach((CreditDetail element3) {
         sum += element3.creditDetailPrice;
       });
     }
 
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
         child: DefaultTextStyle(
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
@@ -55,7 +59,10 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
                 children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[Text(widget.date.yyyymmdd), Text(widget.item)],
+                    children: <Widget>[
+                      Text(widget.date.yyyymmdd),
+                      Text(widget.item)
+                    ],
                   ),
                   Text(sum.toString().toCurrency()),
                 ],
@@ -75,23 +82,33 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
 
     if (widget.creditDetailList.isNotEmpty) {
       widget.creditDetailList
-          .where((CreditDetail element) => DateTime.parse('${element.creditDate} 00:00:00').yyyymm == widget.date.yyyymm)
+          .where((CreditDetail element) =>
+              DateTime.parse('${element.creditDate} 00:00:00').yyyymm ==
+              widget.date.yyyymm)
           .toList()
-          .where((CreditDetail element2) => element2.creditDetailItem == widget.item)
+          .where((CreditDetail element2) =>
+              element2.creditDetailItem == widget.item)
           .toList()
-        ..sort((CreditDetail a, CreditDetail b) => a.creditDetailDate.compareTo(b.creditDetailDate))
+        ..sort((CreditDetail a, CreditDetail b) =>
+            a.creditDetailDate.compareTo(b.creditDetailDate))
         ..forEach((CreditDetail element3) {
           list.add(Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
             child: Row(
               children: <Widget>[
                 SizedBox(width: 100, child: Text(element3.creditDetailDate)),
-                Expanded(child: (element3.creditDetailDescription == widget.item) ? Container() : Text(element3.creditDetailDescription)),
+                Expanded(
+                    child: (element3.creditDetailDescription == widget.item)
+                        ? Container()
+                        : Text(element3.creditDetailDescription)),
                 Container(
                   width: 50,
                   alignment: Alignment.topRight,
-                  child: Text(element3.creditDetailPrice.toString().toCurrency()),
+                  child:
+                      Text(element3.creditDetailPrice.toString().toCurrency()),
                 ),
               ],
             ),
@@ -99,6 +116,15 @@ class _MonthlyCreditItemListAlertState extends ConsumerState<MonthlyCreditItemLi
         });
     }
 
-    return SingleChildScrollView(child: Column(children: list));
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -40,21 +40,18 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
       subscriptionItems.add(element.name);
     }
 
-    final Color subscriptionColor = (subscriptionItems.contains(widget.creditDetail.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
+    final Color subscriptionColor = (subscriptionItems
+            .contains(widget.creditDetail.creditDetailDescription))
+        ? Colors.yellowAccent
+        : Colors.white;
 
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
         child: DefaultTextStyle(
           style: GoogleFonts.kiwiMaru(fontSize: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
@@ -68,11 +65,14 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                       Container(),
                       Row(
                         children: <Widget>[
-                          Text('月極登録', style: TextStyle(color: subscriptionColor.withOpacity(0.6))),
+                          Text('月極登録',
+                              style: TextStyle(
+                                  color: subscriptionColor.withOpacity(0.6))),
                           const SizedBox(width: 10),
                           GestureDetector(
                             onTap: subscriptionItemInputDeleteToggle,
-                            child: Icon(Icons.settings_applications_sharp, color: subscriptionColor.withOpacity(0.6)),
+                            child: Icon(Icons.settings_applications_sharp,
+                                color: subscriptionColor.withOpacity(0.6)),
                           ),
                         ],
                       ),
@@ -98,7 +98,11 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
       spendItemColorMap[element.name] = element.color;
     }
 
-    widget.creditDetailList!.where((CreditDetail element) => element.creditDetailDescription == widget.creditDetail.creditDetailDescription).toList()
+    widget.creditDetailList!
+        .where((CreditDetail element) =>
+            element.creditDetailDescription ==
+            widget.creditDetail.creditDetailDescription)
+        .toList()
       ..sort((CreditDetail a, CreditDetail b) {
         final int result = a.creditDetailDate.compareTo(b.creditDetailDate);
         if (result != 0) {
@@ -107,25 +111,37 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
         return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
       })
       ..forEach((CreditDetail element) {
-        final String? lineColor = (spendItemColorMap[element.creditDetailItem] != null && spendItemColorMap[element.creditDetailItem] != '')
-            ? spendItemColorMap[element.creditDetailItem]
-            : '0xffffffff';
+        final String? lineColor =
+            (spendItemColorMap[element.creditDetailItem] != null &&
+                    spendItemColorMap[element.creditDetailItem] != '')
+                ? spendItemColorMap[element.creditDetailItem]
+                : '0xffffffff';
 
         list.add(Container(
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
           child: Row(
             children: <Widget>[
               Expanded(child: Text(element.creditDetailDate)),
-              Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.creditDetailPrice.toString().toCurrency()))),
+              Expanded(
+                  child: Container(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                          element.creditDetailPrice.toString().toCurrency()))),
               const SizedBox(width: 20),
               Container(
                 width: context.screenSize.width / 6,
                 margin: const EdgeInsets.symmetric(vertical: 3),
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                child: FittedBox(child: Text(element.creditDetailItem, style: const TextStyle(fontSize: 10))),
+                decoration: BoxDecoration(
+                    color: Color(lineColor!.toInt()).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10)),
+                child: FittedBox(
+                    child: Text(element.creditDetailItem,
+                        style: const TextStyle(fontSize: 10))),
               ),
               const SizedBox(width: 10),
               GestureDetector(
@@ -133,27 +149,47 @@ class _SameItemListAlertState extends ConsumerState<SameItemListAlert> {
                   CreditDialog(
                     context: context,
                     widget: CreditDetailEditAlert(
-                        isar: widget.isar, creditDetail: element, creditItemList: widget.creditItemList, from: 'SameItemListAlert'),
+                        isar: widget.isar,
+                        creditDetail: element,
+                        creditItemList: widget.creditItemList,
+                        from: 'SameItemListAlert'),
                   );
                 },
-                child: Icon(Icons.edit, color: Colors.greenAccent.withOpacity(0.4), size: 16),
+                child: Icon(Icons.edit,
+                    color: Colors.greenAccent.withOpacity(0.4), size: 16),
               ),
             ],
           ),
         ));
       });
 
-    return SingleChildScrollView(child: Column(children: list));
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
+    );
   }
 
   ///
   Future<void> subscriptionItemInputDeleteToggle() async {
-    await SubscriptionItemsRepository().getSubscriptionItemByName(isar: widget.isar, name: widget.creditDetail.creditDetailDescription).then((SubscriptionItem? value) {
+    await SubscriptionItemsRepository()
+        .getSubscriptionItemByName(
+            isar: widget.isar,
+            name: widget.creditDetail.creditDetailDescription)
+        .then((SubscriptionItem? value) {
       if (value == null) {
-        final SubscriptionItem subscriptionItem = SubscriptionItem()..name = widget.creditDetail.creditDetailDescription;
-        SubscriptionItemsRepository().inputSubscriptionItem(isar: widget.isar, subscriptionItem: subscriptionItem);
+        final SubscriptionItem subscriptionItem = SubscriptionItem()
+          ..name = widget.creditDetail.creditDetailDescription;
+        SubscriptionItemsRepository().inputSubscriptionItem(
+            isar: widget.isar, subscriptionItem: subscriptionItem);
       } else {
-        SubscriptionItemsRepository().deleteSubscriptionItem(isar: widget.isar, id: value.id);
+        SubscriptionItemsRepository()
+            .deleteSubscriptionItem(isar: widget.isar, id: value.id);
       }
     });
 

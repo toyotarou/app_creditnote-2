@@ -79,8 +79,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
   }
 
-  bool initDoing = false;
-
   ///
   void _init() {
     _makeSettingConfigMap();
@@ -92,17 +90,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _makeCreditDetailList();
 
     _makeSubscriptionItemList();
-
-    initDoing = true;
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    if (!initDoing) {
-      // ignore: always_specify_types
-      Future(_init);
-    }
+    // ignore: always_specify_types
+    Future(_init);
 
     // ignore: always_specify_types
     _scrollControllers = List.generate(1000, (int index) => ScrollController());
@@ -130,22 +124,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       const Text('Credit Note'),
                       Row(
                         children: <Widget>[
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                // ignore: inference_failure_on_instance_creation, always_specify_types
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      HomeScreen(isar: widget.isar),
-                                ),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.refresh,
-                              color: Colors.yellowAccent.withOpacity(0.6),
-                            ),
-                          ),
                           IconButton(
                             onPressed: () {
                               if (creditDetailList!.isNotEmpty) {

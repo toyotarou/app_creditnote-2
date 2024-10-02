@@ -102,12 +102,59 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: _showDeleteDialog,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(),
+                    Text('クレジット詳細レコードを削除する',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.primary)),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  ///
+  void _showDeleteDialog() {
+    final Widget cancelButton = TextButton(
+        onPressed: () => Navigator.pop(context), child: const Text('いいえ'));
+
+    final Widget continueButton = TextButton(
+        onPressed: () {
+          _deleteCreditDetail();
+
+          Navigator.pop(context);
+        },
+        child: const Text('はい'));
+
+    final AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.blueGrey.withOpacity(0.3),
+      content: const Text('このデータを消去しますか？'),
+      actions: <Widget>[cancelButton, continueButton],
+    );
+
+    // ignore: inference_failure_on_function_invocation
+    showDialog(context: context, builder: (BuildContext context) => alert);
+  }
+
+  ///
+  Future<void> _deleteCreditDetail() async => CreditDetailsRepository()
+          .deleteCreditDetail(isar: widget.isar, id: widget.creditDetail.id)
+          // ignore: always_specify_types
+          .then((value) {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
 
   ///
   Widget _displayInputParts() {

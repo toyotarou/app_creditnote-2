@@ -42,8 +42,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Config>? configList = <Config>[];
@@ -71,8 +70,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   ///
   @override
   void initState() {
-    _animationController =
-        AnimationController(duration: const Duration(seconds: 3), vsync: this);
+    _animationController = AnimationController(duration: const Duration(seconds: 3), vsync: this);
 
     _animationController.repeat();
 
@@ -115,8 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: Column(
               children: <Widget>[
                 Container(
-                  decoration:
-                      BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,8 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     isar: widget.isar,
                                     creditItemList: creditItemList,
                                     creditDetailList: creditDetailList,
-                                    selectedYearmonthList:
-                                        selectedYearmonthList,
+                                    selectedYearmonthList: selectedYearmonthList,
                                   ),
                                 );
                               } else {
@@ -151,25 +147,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 );
                               }
                             },
-                            icon: Icon(Icons.list,
-                                color: Colors.greenAccent.withOpacity(0.4),
-                                size: 20),
+                            icon: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4), size: 20),
                           ),
                           IconButton(
-                            onPressed: () =>
-                                _scaffoldKey.currentState!.openDrawer(),
-                            icon: Icon(Icons.settings,
-                                color: Colors.greenAccent.withOpacity(0.4),
-                                size: 20),
+                            onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+                            icon: Icon(Icons.settings, color: Colors.greenAccent.withOpacity(0.4), size: 20),
                           ),
                         ],
                       )
                     ],
                   ),
                 ),
-                if (settingConfigMap['start_yearmonth'] != null) ...<Widget>[
-                  Expanded(child: _displayYearmonthList())
-                ],
+                if (settingConfigMap['start_yearmonth'] != null) ...<Widget>[Expanded(child: _displayYearmonthList())],
               ],
             ),
           ),
@@ -179,9 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       endDrawer: _dispEndDrawer(),
       onEndDrawerChanged: (bool isOpen) {
         if (!isOpen) {
-          ref
-              .read(appParamProvider.notifier)
-              .setHomeListSelectedYearmonth(yearmonth: '');
+          ref.read(appParamProvider.notifier).setHomeListSelectedYearmonth(yearmonth: '');
         }
       },
     );
@@ -199,19 +186,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             const SizedBox(height: 60),
             GestureDetector(
               onTap: () {
-                final Map<String, List<CreditDetail>> creditItemCountMap =
-                    <String, List<CreditDetail>>{};
-                creditDetailList?.forEach((CreditDetail element) =>
-                    creditItemCountMap[element.creditDetailItem] =
-                        <CreditDetail>[]);
-                creditDetailList?.forEach((CreditDetail element) =>
-                    creditItemCountMap[element.creditDetailItem]?.add(element));
+                final Map<String, List<CreditDetail>> creditItemCountMap = <String, List<CreditDetail>>{};
+                creditDetailList?.forEach(
+                    (CreditDetail element) => creditItemCountMap[element.creditDetailItem] = <CreditDetail>[]);
+                creditDetailList
+                    ?.forEach((CreditDetail element) => creditItemCountMap[element.creditDetailItem]?.add(element));
 
                 CreditDialog(
                   context: context,
-                  widget: ConfigSettingAlert(
-                      isar: widget.isar,
-                      creditItemCountMap: creditItemCountMap),
+                  widget: ConfigSettingAlert(isar: widget.isar, creditItemCountMap: creditItemCountMap),
                 );
               },
               child: Row(
@@ -220,8 +203,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('設定'),
                     ),
@@ -231,13 +213,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             GestureDetector(
               onTap: () {
-                final Map<String, List<CreditDetail>> creditItemCountMap =
-                    <String, List<CreditDetail>>{};
-                creditDetailList?.forEach((CreditDetail element) =>
-                    creditItemCountMap[element.creditDetailItem] =
-                        <CreditDetail>[]);
-                creditDetailList?.forEach((CreditDetail element) =>
-                    creditItemCountMap[element.creditDetailItem]?.add(element));
+                final Map<String, List<CreditDetail>> creditItemCountMap = <String, List<CreditDetail>>{};
+                creditDetailList?.forEach(
+                    (CreditDetail element) => creditItemCountMap[element.creditDetailItem] = <CreditDetail>[]);
+                creditDetailList
+                    ?.forEach((CreditDetail element) => creditItemCountMap[element.creditDetailItem]?.add(element));
 
                 CreditDialog(
                   context: context,
@@ -253,8 +233,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('分類アイテム管理'),
                     ),
@@ -284,8 +263,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,9 +283,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Divider(color: Colors.white.withOpacity(0.4), thickness: 1),
             GestureDetector(
               onTap: () {
-                CreditDialog(
-                    context: context,
-                    widget: DataExportAlert(isar: widget.isar));
+                CreditDialog(context: context, widget: DataExportAlert(isar: widget.isar));
               },
               child: Row(
                 children: <Widget>[
@@ -315,8 +291,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('データエクスポート'),
                     ),
@@ -326,9 +301,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             GestureDetector(
               onTap: () {
-                CreditDialog(
-                    context: context,
-                    widget: DataImportAlert(isar: widget.isar));
+                CreditDialog(context: context, widget: DataImportAlert(isar: widget.isar));
               },
               child: Row(
                 children: <Widget>[
@@ -336,8 +309,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('データインポート'),
                     ),
@@ -354,8 +326,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   ///
   Widget _dispEndDrawer() {
-    final String homeListSelectedYearmonth = ref.watch(appParamProvider.select(
-        (AppParamsResponseState value) => value.homeListSelectedYearmonth));
+    final String homeListSelectedYearmonth =
+        ref.watch(appParamProvider.select((AppParamsResponseState value) => value.homeListSelectedYearmonth));
 
     //===============================
     int sum = 0;
@@ -370,13 +342,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     //===============================
 
     final List<String> subscriptionItems = <String>[];
-    subscriptionItemList?.forEach(
-        (SubscriptionItem element) => subscriptionItems.add(element.name));
+    subscriptionItemList?.forEach((SubscriptionItem element) => subscriptionItems.add(element.name));
 
     int subscriptionTotal = 0;
     creditDetailList!
-        .where((CreditDetail element) =>
-            element.yearmonth == homeListSelectedYearmonth)
+        .where((CreditDetail element) => element.yearmonth == homeListSelectedYearmonth)
         .toList()
         .forEach((CreditDetail element) {
       if (subscriptionItems.contains(element.creditDetailDescription)) {
@@ -400,8 +370,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(sum.toString().toCurrency()),
-                    Text(subscriptionTotal.toString().toCurrency(),
-                        style: const TextStyle(color: Colors.yellowAccent)),
+                    Text(subscriptionTotal.toString().toCurrency(), style: const TextStyle(color: Colors.yellowAccent)),
                   ],
                 ),
               ],
@@ -418,11 +387,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget _displayCreditDetailList() {
     final List<Widget> list = <Widget>[];
 
-    final String homeListSelectedYearmonth = ref.watch(appParamProvider.select(
-        (AppParamsResponseState value) => value.homeListSelectedYearmonth));
+    final String homeListSelectedYearmonth =
+        ref.watch(appParamProvider.select((AppParamsResponseState value) => value.homeListSelectedYearmonth));
 
-    final Map<String, List<CreditDetail>> categoriesPriceMap =
-        <String, List<CreditDetail>>{};
+    final Map<String, List<CreditDetail>> categoriesPriceMap = <String, List<CreditDetail>>{};
 
     final Map<String, String> creditItemColorMap = <String, String>{};
     creditItemList?.forEach((CreditItem element) {
@@ -432,15 +400,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     final List<String> subscriptionItems = <String>[];
-    subscriptionItemList?.forEach(
-        (SubscriptionItem element) => subscriptionItems.add(element.name));
+    subscriptionItemList?.forEach((SubscriptionItem element) => subscriptionItems.add(element.name));
 
     if (creditDetailList != null) {
       /// 複数条件でソートする
-      creditDetailList!
-          .where((CreditDetail element) =>
-              element.yearmonth == homeListSelectedYearmonth)
-          .toList()
+      creditDetailList!.where((CreditDetail element) => element.yearmonth == homeListSelectedYearmonth).toList()
         ..sort((CreditDetail a, CreditDetail b) {
           final int result = a.creditDetailDate.compareTo(b.creditDetailDate);
           if (result != 0) {
@@ -449,22 +413,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           return -1 * a.creditDetailPrice.compareTo(b.creditDetailPrice);
         })
         ..forEach((CreditDetail element) {
-          final String? lineColor =
-              (creditItemColorMap[element.creditDetailItem] != null &&
-                      creditItemColorMap[element.creditDetailItem] != '')
-                  ? creditItemColorMap[element.creditDetailItem]
-                  : '0xffffffff';
+          final String? lineColor = (creditItemColorMap[element.creditDetailItem] != null &&
+                  creditItemColorMap[element.creditDetailItem] != '')
+              ? creditItemColorMap[element.creditDetailItem]
+              : '0xffffffff';
 
           final Color subscriptionColor =
-              (subscriptionItems.contains(element.creditDetailDescription))
-                  ? Colors.yellowAccent
-                  : Colors.white;
+              (subscriptionItems.contains(element.creditDetailDescription)) ? Colors.yellowAccent : Colors.white;
 
           list.add(Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
             child: Slidable(
               endActionPane: ActionPane(
                 motion: const ScrollMotion(),
@@ -478,8 +437,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           creditDetail: element,
                           creditDetailList: creditDetailList,
                           creditItemList: creditItemList ?? <CreditItem>[],
-                          subscriptionItemList:
-                              subscriptionItemList ?? <SubscriptionItem>[],
+                          subscriptionItemList: subscriptionItemList ?? <SubscriptionItem>[],
                         ),
                       );
                     },
@@ -513,12 +471,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(element.creditDetailDate,
-                          style: TextStyle(color: subscriptionColor)),
+                      Text(element.creditDetailDate, style: TextStyle(color: subscriptionColor)),
                       Text(element.creditDetailDescription,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: subscriptionColor)),
+                          maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: subscriptionColor)),
                     ],
                   )),
                   const SizedBox(width: 10),
@@ -533,18 +488,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         padding: const EdgeInsets.symmetric(vertical: 3),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: Color(lineColor!.toInt()).withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10)),
+                            color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                         child: FittedBox(
                             child: Text(element.creditDetailItem,
-                                style: TextStyle(
-                                    fontSize: 10, color: subscriptionColor))),
+                                style: TextStyle(fontSize: 10, color: subscriptionColor))),
                       ),
                     ],
                   ),
                   const SizedBox(width: 10),
-                  Icon(Icons.arrow_back_ios_sharp,
-                      color: Colors.white.withOpacity(0.3)),
+                  Icon(Icons.arrow_back_ios_sharp, color: Colors.white.withOpacity(0.3)),
                 ],
               ),
             ),
@@ -556,22 +508,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       final List<Widget> list2 = <Widget>[];
       creditItemList?.forEach((CreditItem element) {
         if (categoriesPriceMap[element.name] != null) {
-          final String? lineColor = (creditItemColorMap[element.name] != null &&
-                  creditItemColorMap[element.name] != '')
+          final String? lineColor = (creditItemColorMap[element.name] != null && creditItemColorMap[element.name] != '')
               ? creditItemColorMap[element.name]
               : '0xffffffff';
 
           int sum = 0;
-          categoriesPriceMap[element.name]?.forEach(
-              (CreditDetail element2) => sum += element2.creditDetailPrice);
+          categoriesPriceMap[element.name]?.forEach((CreditDetail element2) => sum += element2.creditDetailPrice);
 
           if (sum > 0) {
             list2.add(Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(color: Colors.white.withOpacity(0.3)))),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -580,12 +527,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       CreditDialog(
                         context: context,
                         widget: MonthlyCreditItemListAlert(
-                          date: DateTime.parse(
-                              '$homeListSelectedYearmonth-01 00:00:00'),
+                          date: DateTime.parse('$homeListSelectedYearmonth-01 00:00:00'),
                           isar: widget.isar,
                           item: element.name,
-                          creditDetailList:
-                              creditDetailList ?? <CreditDetail>[],
+                          creditDetailList: creditDetailList ?? <CreditDetail>[],
                         ),
                       );
                     },
@@ -595,13 +540,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Color(lineColor!.toInt()).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10)),
+                          color: Color(lineColor!.toInt()).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                       child: FittedBox(
                           child: Text(element.name,
-                              style: const TextStyle(fontSize: 10),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis)),
+                              style: const TextStyle(fontSize: 10), maxLines: 3, overflow: TextOverflow.ellipsis)),
                     ),
                   ),
                   Text(sum.toString().toCurrency()),
@@ -624,20 +566,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   context: context,
                   widget: CategoriesPriceListAlert(
                     isar: widget.isar,
-                    date: DateTime.parse(
-                        '$homeListSelectedYearmonth-01 00:00:00'),
+                    date: DateTime.parse('$homeListSelectedYearmonth-01 00:00:00'),
                     configList: configList,
                     creditItemList: creditItemList,
                     creditDetailList: creditDetailList,
-                    index: (selectedYearmonthList
-                          ..sort((String a, String b) => -1 * a.compareTo(b)))
-                        .indexWhere((String element) =>
-                            element == homeListSelectedYearmonth),
+                    index: (selectedYearmonthList..sort((String a, String b) => -1 * a.compareTo(b)))
+                        .indexWhere((String element) => element == homeListSelectedYearmonth),
                   ),
                 );
               },
-              icon: Icon(Icons.pages_rounded,
-                  color: Colors.greenAccent.withOpacity(0.4)),
+              icon: Icon(Icons.pages_rounded, color: Colors.greenAccent.withOpacity(0.4)),
             ),
           ],
         ))
@@ -648,8 +586,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => DefaultTextStyle(
-                style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
+            (BuildContext context, int index) =>
+                DefaultTextStyle(style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
             childCount: list.length,
           ),
         ),
@@ -678,23 +616,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     final List<Widget> list = <Widget>[];
 
-    final String homeListSelectedYearmonth = ref.watch(appParamProvider.select(
-        (AppParamsResponseState value) => value.homeListSelectedYearmonth));
+    final String homeListSelectedYearmonth =
+        ref.watch(appParamProvider.select((AppParamsResponseState value) => value.homeListSelectedYearmonth));
 
-    if (settingConfigMap['start_yearmonth'] != null &&
-        settingConfigMap['start_yearmonth'] != '') {
-      final List<String> exYearmonth =
-          settingConfigMap['start_yearmonth']!.split('-');
+    if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
+      final List<String> exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
 
       if (exYearmonth.length > 1) {
         if (exYearmonth[0] != '' && exYearmonth[1] != '') {
-          final DateTime firstDate =
-              DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
+          final DateTime firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
 
           final int diff = DateTime.now().difference(firstDate).inDays;
 
-          final int addNum =
-              DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
+          final int addNum = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
 
           final List<String> yearmonthList = <String>[];
 
@@ -715,8 +649,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               //===============================
 
               //===============================
-              final List<CreditDetail> itemBlankCreditDetailList =
-                  <CreditDetail>[];
+              final List<CreditDetail> itemBlankCreditDetailList = <CreditDetail>[];
               creditDetailList?.forEach((CreditDetail element) {
                 if (yearmonth == element.yearmonth) {
                   if (element.creditDate == '' && element.creditPrice == '') {
@@ -728,10 +661,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
               list.add(Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom:
-                            BorderSide(color: Colors.white.withOpacity(0.3)))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -744,13 +674,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 2),
+                                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
                                     decoration: BoxDecoration(
-                                        color: (yearmonth ==
-                                                homeListSelectedYearmonth)
-                                            ? Colors.yellowAccent
-                                                .withOpacity(0.3)
+                                        color: (yearmonth == homeListSelectedYearmonth)
+                                            ? Colors.yellowAccent.withOpacity(0.3)
                                             : Colors.transparent),
                                     child: Text(yearmonth),
                                   ),
@@ -759,25 +686,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () {
-                                        ref
-                                            .read(appParamProvider.notifier)
-                                            .setInputButtonClicked(flag: false);
+                                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
                                         CreditDialog(
                                           context: context,
                                           widget: CreditInputAlert(
                                             isar: widget.isar,
-                                            date: DateTime.parse(
-                                                '$yearmonth-01 00:00:00'),
+                                            date: DateTime.parse('$yearmonth-01 00:00:00'),
                                             creditList: creList,
-                                            creditBlankCreditDetailList:
-                                                itemBlankCreditDetailList,
+                                            creditBlankCreditDetailList: itemBlankCreditDetailList,
                                           ),
                                         );
                                       },
-                                      child: Icon(Icons.input,
-                                          color: Colors.greenAccent
-                                              .withOpacity(0.4)),
+                                      child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -787,15 +708,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       onTap: () {
                                         ref
                                             .read(appParamProvider.notifier)
-                                            .setHomeListSelectedYearmonth(
-                                                yearmonth: yearmonth);
+                                            .setHomeListSelectedYearmonth(yearmonth: yearmonth);
 
-                                        _scaffoldKey.currentState!
-                                            .openEndDrawer();
+                                        _scaffoldKey.currentState!.openEndDrawer();
                                       },
-                                      child: Icon(Icons.list,
-                                          color: Colors.greenAccent
-                                              .withOpacity(0.4)),
+                                      child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                   ),
                                 ],
@@ -807,9 +724,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     Expanded(
                       child: Container(
                         height: context.screenSize.height / 10,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.white.withOpacity(0.2))),
+                        decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2))),
                         child: Scrollbar(
                           thumbVisibility: true,
                           controller: _scrollControllers[i],
@@ -817,21 +732,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             controller: _scrollControllers[i],
                             itemBuilder: (BuildContext context, int index) {
                               //-----------------------------
-                              final List<CreditDetail> creDetList =
-                                  <CreditDetail>[];
+                              final List<CreditDetail> creDetList = <CreditDetail>[];
                               creditDetailList?.forEach((CreditDetail element) {
                                 if (element.creditDate == creList[index].date &&
-                                    element.creditPrice ==
-                                        creList[index].price.toString()) {
+                                    element.creditPrice == creList[index].price.toString()) {
                                   creDetList.add(element);
                                 }
                               });
                               //-----------------------------
 
                               creDetList.sort(
-                                  (CreditDetail a, CreditDetail b) => a
-                                      .creditDetailDate
-                                      .compareTo(b.creditDetailDate));
+                                  (CreditDetail a, CreditDetail b) => a.creditDetailDate.compareTo(b.creditDetailDate));
 
                               ////////////////////////// 同数チェック
                               int inputedCreditDetailDateCount = 0;
@@ -861,13 +772,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               }
 
                               ////////////////////////// 同数チェック
-                              final Map<int, String> countCheck =
-                                  <int, String>{};
+                              final Map<int, String> countCheck = <int, String>{};
                               countCheck[inputedCreditDetailDateCount] = '';
                               countCheck[inputedCreditDetailItemCount] = '';
                               countCheck[inputedCreditDetailPriceCount] = '';
-                              countCheck[inputedCreditDetailDescriptionCount] =
-                                  '';
+                              countCheck[inputedCreditDetailDescriptionCount] = '';
                               final bool sameNumFlag;
                               if (countCheck.length > 1) {
                                 sameNumFlag = false;
@@ -882,60 +791,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               ////////////////////////// 同数チェック
 
                               return Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.white
-                                                .withOpacity(0.3)))),
+                                    border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
                                 child: Row(
                                   children: <Widget>[
                                     SizedBox(
                                         width: 30,
-                                        child: Text(DateTime.parse(
-                                                '${creList[index].date} 00:00:00')
+                                        child: Text(DateTime.parse('${creList[index].date} 00:00:00')
                                             .day
                                             .toString()
                                             .padLeft(2, '0'))),
                                     Expanded(
                                       child: Text(creList[index].name,
-                                          style: const TextStyle(
-                                              color: Colors.grey),
+                                          style: const TextStyle(color: Colors.grey),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis),
                                     ),
                                     Container(
                                         width: 60,
                                         alignment: Alignment.topRight,
-                                        child: Text(creList[index]
-                                            .price
-                                            .toString()
-                                            .toCurrency())),
+                                        child: Text(creList[index].price.toString().toCurrency())),
                                     const SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: () {
-                                        ref
-                                            .read(appParamProvider.notifier)
-                                            .setInputButtonClicked(flag: false);
+                                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
                                         CreditDialog(
                                           context: context,
                                           widget: CreditDetailInputAlert(
                                             isar: widget.isar,
-                                            creditDate: DateTime.parse(
-                                                '${creList[index].date} 00:00:00'),
+                                            creditDate: DateTime.parse('${creList[index].date} 00:00:00'),
                                             creditPrice: creList[index].price,
-                                            creditItemList: creditItemList ??
-                                                <CreditItem>[],
+                                            creditItemList: creditItemList ?? <CreditItem>[],
                                             creditDetailList: creDetList,
                                           ),
                                         );
                                       },
-                                      child: Icon(Icons.input,
-                                          size: 20,
-                                          color: Colors.greenAccent
-                                              .withOpacity(0.4)),
+                                      child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
                                     const SizedBox(width: 10),
                                     Container(
@@ -944,10 +837,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       decoration: BoxDecoration(
                                         color: (creList[index].price == sum)
                                             ? sameNumFlag
-                                                ? Colors.greenAccent
-                                                    .withOpacity(0.3)
-                                                : Colors.yellowAccent
-                                                    .withOpacity(0.3)
+                                                ? Colors.greenAccent.withOpacity(0.3)
+                                                : Colors.yellowAccent.withOpacity(0.3)
                                             : Colors.black.withOpacity(0.3),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -956,18 +847,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                               );
                             },
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    Container(),
+                            separatorBuilder: (BuildContext context, int index) => Container(),
                             itemCount: creList.length,
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                        width: 70,
-                        alignment: Alignment.topRight,
-                        child: Text(sum.toString().toCurrency())),
+                    Container(width: 70, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),
                   ],
                 ),
               ));
@@ -987,8 +873,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => DefaultTextStyle(
-                style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
+            (BuildContext context, int index) =>
+                DefaultTextStyle(style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
             childCount: list.length,
           ),
         ),
@@ -1002,20 +888,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       .then((List<Credit>? value) => setState(() => creditList = value));
 
   ///
-  Future<void> _makeCreditItemList() async =>
-      CreditItemsRepository().getCreditItemList(isar: widget.isar).then(
-          (List<CreditItem>? value) => setState(() => creditItemList = value));
+  Future<void> _makeCreditItemList() async => CreditItemsRepository()
+      .getCreditItemList(isar: widget.isar)
+      .then((List<CreditItem>? value) => setState(() => creditItemList = value));
 
   ///
   Future<void> _makeCreditDetailList() async => CreditDetailsRepository()
       .getCreditDetailList(isar: widget.isar)
-      .then((List<CreditDetail>? value) =>
-          setState(() => creditDetailList = value));
+      .then((List<CreditDetail>? value) => setState(() => creditDetailList = value));
 
   ///
-  Future<void> _makeSubscriptionItemList() async =>
-      SubscriptionItemsRepository()
-          .getSubscriptionItemList(isar: widget.isar)
-          .then((List<SubscriptionItem>? value) =>
-              setState(() => subscriptionItemList = value));
+  Future<void> _makeSubscriptionItemList() async => SubscriptionItemsRepository()
+      .getSubscriptionItemList(isar: widget.isar)
+      .then((List<SubscriptionItem>? value) => setState(() => subscriptionItemList = value));
 }

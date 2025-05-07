@@ -60,7 +60,14 @@ class _DownloadDataListAlertState extends ConsumerState<DownloadDataListAlert> {
   ///
   Future<void> getPublicDirectoryPath() async {
     final String path = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOWNLOADS);
+        ExternalPath.DIRECTORY_DOWNLOAD
+
+
+//        DIRECTORY_DOWNLOADS
+
+
+
+    );
     setState(() {
       externalStoragePublicDirectoryPath = path;
     });

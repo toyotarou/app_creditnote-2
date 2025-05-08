@@ -665,62 +665,68 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    /////////////
+
                     SizedBox(
-                        width: 80,
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-                                    decoration: BoxDecoration(
-                                        color: (yearmonth == homeListSelectedYearmonth)
-                                            ? Colors.yellowAccent.withOpacity(0.3)
-                                            : Colors.transparent),
-                                    child: Text(yearmonth),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Container(
-                                    alignment: Alignment.topRight,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
+                      width: 80,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+                                  decoration: BoxDecoration(
+                                      color: (yearmonth == homeListSelectedYearmonth)
+                                          ? Colors.yellowAccent.withOpacity(0.3)
+                                          : Colors.transparent),
+                                  child: Text(yearmonth),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
-                                        CreditDialog(
-                                          context: context,
-                                          widget: CreditInputAlert(
-                                            isar: widget.isar,
-                                            date: DateTime.parse('$yearmonth-01 00:00:00'),
-                                            creditList: creList,
-                                            creditBlankCreditDetailList: itemBlankCreditDetailList,
-                                          ),
-                                        );
-                                      },
-                                      child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
-                                    ),
+                                      CreditDialog(
+                                        context: context,
+                                        widget: CreditInputAlert(
+                                          isar: widget.isar,
+                                          date: DateTime.parse('$yearmonth-01 00:00:00'),
+                                          creditList: creList,
+                                          creditBlankCreditDetailList: itemBlankCreditDetailList,
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(Icons.input, color: Colors.greenAccent.withOpacity(0.4)),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    alignment: Alignment.topRight,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        ref
-                                            .read(appParamProvider.notifier)
-                                            .setHomeListSelectedYearmonth(yearmonth: yearmonth);
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      ref
+                                          .read(appParamProvider.notifier)
+                                          .setHomeListSelectedYearmonth(yearmonth: yearmonth);
 
-                                        _scaffoldKey.currentState!.openEndDrawer();
-                                      },
-                                      child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
-                                    ),
+                                      _scaffoldKey.currentState!.openEndDrawer();
+                                    },
+                                    child: Icon(Icons.list, color: Colors.greenAccent.withOpacity(0.4)),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 20),
-                          ],
-                        )),
+                          ),
+                          const SizedBox(width: 20),
+                        ],
+                      ),
+                    ),
+
+                    /////////////
+
                     Expanded(
                       child: Container(
                         height: context.screenSize.height / 10,
@@ -796,23 +802,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                     border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
                                 child: Row(
                                   children: <Widget>[
+                                    //------------------
+
                                     SizedBox(
-                                        width: 30,
-                                        child: Text(DateTime.parse('${creList[index].date} 00:00:00')
+                                      width: 30,
+                                      child: Text(
+                                        DateTime.parse('${creList[index].date} 00:00:00')
                                             .day
                                             .toString()
-                                            .padLeft(2, '0'))),
-                                    Expanded(
-                                      child: Text(creList[index].name,
-                                          style: const TextStyle(color: Colors.grey),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis),
+                                            .padLeft(2, '0'),
+                                      ),
                                     ),
-                                    Container(
-                                        width: 60,
-                                        alignment: Alignment.topRight,
-                                        child: Text(creList[index].price.toString().toCurrency())),
+
+                                    //------------------
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            creList[index].name,
+                                            style: const TextStyle(color: Colors.grey),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Container(
+                                            alignment: Alignment.topRight,
+                                            child: Text(creList[index].price.toString().toCurrency()),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    //------------------
+
                                     const SizedBox(width: 10),
+
+                                    //------------------
                                     GestureDetector(
                                       onTap: () {
                                         ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
@@ -830,7 +855,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                       },
                                       child: Icon(Icons.input, size: 20, color: Colors.greenAccent.withOpacity(0.4)),
                                     ),
+
+                                    //------------------
+
                                     const SizedBox(width: 10),
+
+                                    //------------------
+
                                     Container(
                                       width: 10,
                                       height: 10,
@@ -843,6 +874,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
+
+                                    //------------------
                                   ],
                                 ),
                               );
@@ -853,7 +886,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                         ),
                       ),
                     ),
-                    Container(width: 70, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),
+
+                    /////////////
+
+                    Container(width: 60, alignment: Alignment.topRight, child: Text(sum.toString().toCurrency())),
+
+                    /////////////
                   ],
                 ),
               ));

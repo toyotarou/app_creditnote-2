@@ -281,6 +281,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     await widget.isar.writeTxn(() async =>
         // ignore: avoid_function_literals_in_foreach_calls
         getCreditDetails
+            // ignore: avoid_function_literals_in_foreach_calls
             .forEach((CreditDetail element) async => widget.isar.creditDetails.put(element..creditDetailItem = '')));
     //-----------------------------------
 

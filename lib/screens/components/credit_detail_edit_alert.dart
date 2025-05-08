@@ -107,7 +107,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                 onTap: _showDeleteDialog,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Container(),
                     Text('クレジット詳細レコードを削除する',
                         style: TextStyle(

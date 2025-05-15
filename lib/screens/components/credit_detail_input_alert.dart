@@ -47,12 +47,17 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
 
   int roopNum = 60;
 
+  List<FocusNode> focusNodeList = <FocusNode>[];
+
   ///
   @override
   void initState() {
     super.initState();
 
     _makeTecs();
+
+    // ignore: always_specify_types
+    focusNodeList = List.generate(200, (int index) => FocusNode());
   }
 
   ///
@@ -291,6 +296,8 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                       }
                     },
                     onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                    focusNode: focusNodeList[i],
+                    onTap: () => context.showKeyboard(focusNodeList[i]),
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -308,6 +315,8 @@ class _CreditDetailInputAlertState extends ConsumerState<CreditDetailInputAlert>
                         .read(creditDetailInputProvider.notifier)
                         .setCreditDetailDescription(pos: i, description: value),
                     onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                    focusNode: focusNodeList[i + 100],
+                    onTap: () => context.showKeyboard(focusNodeList[i + 100]),
                   ),
 
                   const SizedBox(height: 10),

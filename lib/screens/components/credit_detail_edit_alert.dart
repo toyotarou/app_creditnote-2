@@ -16,11 +16,7 @@ import 'parts/error_dialog.dart';
 
 class CreditDetailEditAlert extends ConsumerStatefulWidget {
   const CreditDetailEditAlert(
-      {super.key,
-      required this.isar,
-      required this.creditDetail,
-      required this.creditItemList,
-      required this.from});
+      {super.key, required this.isar, required this.creditDetail, required this.creditItemList, required this.from});
 
   final Isar isar;
   final CreditDetail creditDetail;
@@ -28,14 +24,14 @@ class CreditDetailEditAlert extends ConsumerStatefulWidget {
   final String from;
 
   @override
-  ConsumerState<CreditDetailEditAlert> createState() =>
-      _CreditDetailEditAlertState();
+  ConsumerState<CreditDetailEditAlert> createState() => _CreditDetailEditAlertState();
 }
 
 class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
   TextEditingController priceTextEditingController = TextEditingController();
-  TextEditingController descriptionTextEditingController =
-      TextEditingController();
+  TextEditingController descriptionTextEditingController = TextEditingController();
+
+  List<FocusNode> focusNodeList = <FocusNode>[];
 
   ///
   @override
@@ -43,19 +39,19 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
     super.initState();
 
     _makeTecs();
+
+    // ignore: always_specify_types
+    focusNodeList = List.generate(100, (int index) => FocusNode());
   }
 
   ///
   Future<void> _makeTecs() async {
     // ignore: always_specify_types
-    await Future(() => ref
-        .read(creditDetailEditProvider.notifier)
-        .setUpdateCreditDetail(updateCreditDetail: widget.creditDetail));
+    await Future(() =>
+        ref.read(creditDetailEditProvider.notifier).setUpdateCreditDetail(updateCreditDetail: widget.creditDetail));
 
-    priceTextEditingController.text =
-        widget.creditDetail.creditDetailPrice.toString().trim();
-    descriptionTextEditingController.text =
-        widget.creditDetail.creditDetailDescription.trim();
+    priceTextEditingController.text = widget.creditDetail.creditDetailPrice.toString().trim();
+    descriptionTextEditingController.text = widget.creditDetail.creditDetailDescription.trim();
   }
 
   ///
@@ -79,10 +75,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Text('Credit Detail Edit'),
-                  Container()
-                ],
+                children: <Widget>[const Text('Credit Detail Edit'), Container()],
               ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               _displayInputParts(),
@@ -95,9 +88,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                     onTap: _inputEditCreditDetail,
                     child: Text(
                       'クレジット詳細レコードを更新する',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).colorScheme.primary),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
@@ -110,9 +101,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   children: <Widget>[
                     Container(),
                     Text('クレジット詳細レコードを削除する',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.primary)),
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary)),
                   ],
                 ),
               ),
@@ -125,8 +114,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
   ///
   void _showDeleteDialog() {
-    final Widget cancelButton = TextButton(
-        onPressed: () => Navigator.pop(context), child: const Text('いいえ'));
+    final Widget cancelButton = TextButton(onPressed: () => Navigator.pop(context), child: const Text('いいえ'));
 
     final Widget continueButton = TextButton(
         onPressed: () {
@@ -158,14 +146,12 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
   ///
   Widget _displayInputParts() {
-    final CreditDetailEditResponseState creditDetailEditState =
-        ref.watch(creditDetailEditProvider);
+    final CreditDetailEditResponseState creditDetailEditState = ref.watch(creditDetailEditProvider);
 
     final String date = creditDetailEditState.creditDetailEditDate;
     final String item = creditDetailEditState.creditDetailEditItem;
     final int price = creditDetailEditState.creditDetailEditPrice;
-    final String description =
-        creditDetailEditState.creditDetailEditDescription;
+    final String description = creditDetailEditState.creditDetailEditDescription;
 
     bool blankAlert = false;
     if (price != 0) {
@@ -181,12 +167,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              blurRadius: 24,
-              spreadRadius: 16,
-              color: Colors.black.withOpacity(0.2))
-        ],
+        boxShadow: <BoxShadow>[BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -199,8 +180,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
-              border:
-                  Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+              border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
             ),
             child: Column(
               children: <Widget>[
@@ -210,23 +190,17 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: _showDP,
-                          child: Icon(Icons.calendar_month,
-                              color: Colors.greenAccent.withOpacity(0.6)),
+                          child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
                         ),
                         const SizedBox(width: 10),
                         SizedBox(
                           width: context.screenSize.width / 6,
-                          child: Text(
-                              creditDetailEditState.creditDetailEditDate,
-                              style: const TextStyle(fontSize: 10)),
+                          child: Text(creditDetailEditState.creditDetailEditDate, style: const TextStyle(fontSize: 10)),
                         ),
                       ],
                     ),
                     const Spacer(),
-                    GestureDetector(
-                        onTap: _clearOneBox,
-                        child:
-                            const Icon(Icons.close, color: Colors.redAccent)),
+                    GestureDetector(onTap: _clearOneBox, child: const Icon(Icons.close, color: Colors.redAccent)),
                   ],
                 ),
                 // ignore: always_specify_types
@@ -236,15 +210,13 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   iconEnabledColor: Colors.white,
                   items: itemList
                       // ignore: always_specify_types
-                      .map((CreditItem e) => DropdownMenuItem(
-                          value: e.name,
-                          child: Text(e.name,
-                              style: const TextStyle(fontSize: 12))))
+                      .map((CreditItem e) =>
+                          // ignore: always_specify_types
+                          DropdownMenuItem(value: e.name, child: Text(e.name, style: const TextStyle(fontSize: 12))))
                       .toList(),
                   value: creditDetailEditState.creditDetailEditItem,
-                  onChanged: (String? value) => ref
-                      .read(creditDetailEditProvider.notifier)
-                      .setCreditDetailItem(item: value!),
+                  onChanged: (String? value) =>
+                      ref.read(creditDetailEditProvider.notifier).setCreditDetailItem(item: value!),
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -252,54 +224,45 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
                   controller: priceTextEditingController,
                   decoration: const InputDecoration(
                     isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     hintText: '金額(10桁以内)',
                     filled: true,
                     border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white54)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
                   ),
                   style: const TextStyle(fontSize: 12),
                   onChanged: (String value) {
                     if (value != '') {
-                      ref
-                          .read(creditDetailEditProvider.notifier)
-                          .setCreditDetailPrice(price: value.trim().toInt());
+                      ref.read(creditDetailEditProvider.notifier).setCreditDetailPrice(price: value.trim().toInt());
                     }
                   },
-                  onTapOutside: (PointerDownEvent event) =>
-                      FocusManager.instance.primaryFocus?.unfocus(),
+                  onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                  focusNode: focusNodeList[0],
+                  onTap: () => context.showKeyboard(focusNodeList[0]),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: descriptionTextEditingController,
                   decoration: const InputDecoration(
                     isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     hintText: '詳細(30文字以内)',
                     filled: true,
                     border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white54)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
                   ),
                   style: const TextStyle(fontSize: 12),
-                  onChanged: (String value) => ref
-                      .read(creditDetailEditProvider.notifier)
-                      .setCreditDetailDescription(description: value),
-                  onTapOutside: (PointerDownEvent event) =>
-                      FocusManager.instance.primaryFocus?.unfocus(),
+                  onChanged: (String value) =>
+                      ref.read(creditDetailEditProvider.notifier).setCreditDetailDescription(description: value),
+                  onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+                  focusNode: focusNodeList[1],
+                  onTap: () => context.showKeyboard(focusNodeList[1]),
                 ),
                 if (blankAlert) ...<Widget>[
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(),
-                      const Icon(Icons.ac_unit,
-                          size: 16, color: Colors.yellowAccent)
-                    ],
+                    children: <Widget>[Container(), const Icon(Icons.ac_unit, size: 16, color: Colors.yellowAccent)],
                   ),
                 ],
               ],
@@ -316,27 +279,15 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
       barrierColor: Colors.transparent,
       locale: const Locale('ja'),
       context: context,
-      initialDate:
-          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00'),
-      firstDate: DateTime(
-          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00')
-              .year,
-          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00')
-                  .month -
-              1),
-      lastDate: DateTime(
-          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00')
-              .year,
-          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00')
-                  .month +
-              2,
-          0),
+      initialDate: DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00'),
+      firstDate: DateTime(DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00').year,
+          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00').month - 1),
+      lastDate: DateTime(DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00').year,
+          DateTime.parse('${widget.creditDetail.creditDetailDate} 00:00:00').month + 2, 0),
     );
 
     if (selectedDate != null) {
-      await ref
-          .read(creditDetailEditProvider.notifier)
-          .setCreditDetailDate(date: selectedDate.yyyymmdd);
+      await ref.read(creditDetailEditProvider.notifier).setCreditDetailDate(date: selectedDate.yyyymmdd);
     }
   }
 
@@ -350,14 +301,12 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
 
   ///
   Future<void> _inputEditCreditDetail() async {
-    final CreditDetailEditResponseState creditDetailEditState =
-        ref.watch(creditDetailEditProvider);
+    final CreditDetailEditResponseState creditDetailEditState = ref.watch(creditDetailEditProvider);
 
     final String date = creditDetailEditState.creditDetailEditDate;
     final String item = creditDetailEditState.creditDetailEditItem;
     final int price = creditDetailEditState.creditDetailEditPrice;
-    final String description =
-        creditDetailEditState.creditDetailEditDescription;
+    final String description = creditDetailEditState.creditDetailEditDescription;
 
     bool errFlg = false;
 
@@ -376,8 +325,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
         <int>[price, 10],
         <Object>[description, 30]
       ]) {
-        if (!checkInputValueLengthCheck(
-            value: element[0].toString(), length: element[1] as int)) {
+        if (!checkInputValueLengthCheck(value: element[0].toString(), length: element[1] as int)) {
           errFlg = true;
         }
       }
@@ -389,8 +337,7 @@ class _CreditDetailEditAlertState extends ConsumerState<CreditDetailEditAlert> {
         Duration.zero,
         () {
           if (mounted) {
-            return error_dialog(
-                context: context, title: '登録できません。', content: '値を正しく入力してください。');
+            return error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。');
           }
         },
       );

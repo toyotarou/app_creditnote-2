@@ -582,6 +582,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         ..add(Column(children: list2));
     }
 
+    list.add(const SizedBox(height: 50));
+
     return CustomScrollView(
       slivers: <Widget>[
         SliverList(

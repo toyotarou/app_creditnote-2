@@ -43,6 +43,8 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   Map<int, String> creditItemNameMap = <int, String>{};
 
+  List<FocusNode> focusNodeList = <FocusNode>[];
+
   ///
   @override
   void initState() {
@@ -71,6 +73,9 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
     }
 
     ddList.add(DragAndDropList(children: creditItemDDItemList));
+
+    // ignore: always_specify_types
+    focusNodeList = List.generate(100, (int index) => FocusNode());
   }
 
   ///
@@ -181,6 +186,8 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
               decoration: const InputDecoration(labelText: '分類アイテム(20文字以内)'),
               style: const TextStyle(fontSize: 13, color: Colors.white),
               onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+              focusNode: focusNodeList[0],
+              onTap: () => context.showKeyboard(focusNodeList[0]),
             ),
           ),
         ),

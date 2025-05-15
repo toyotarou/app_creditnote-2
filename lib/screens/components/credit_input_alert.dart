@@ -22,11 +22,7 @@ import 'parts/error_dialog.dart';
 
 class CreditInputAlert extends ConsumerStatefulWidget {
   const CreditInputAlert(
-      {super.key,
-      required this.isar,
-      required this.date,
-      this.creditList,
-      required this.creditBlankCreditDetailList});
+      {super.key, required this.isar, required this.date, this.creditList, required this.creditBlankCreditDetailList});
 
   final Isar isar;
   final DateTime date;
@@ -40,10 +36,11 @@ class CreditInputAlert extends ConsumerStatefulWidget {
 
 class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   final List<TextEditingController> _creditNameTecs = <TextEditingController>[];
-  final List<TextEditingController> _creditPriceTecs =
-      <TextEditingController>[];
+  final List<TextEditingController> _creditPriceTecs = <TextEditingController>[];
 
   List<Credit> deleteCreditList = <Credit>[];
+
+  List<FocusNode> focusNodeList = <FocusNode>[];
 
   ///
   @override
@@ -51,6 +48,9 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     super.initState();
 
     _makeTecs();
+
+    // ignore: always_specify_types
+    focusNodeList = List.generate(200, (int index) => FocusNode());
   }
 
   ///
@@ -62,14 +62,11 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
     if (widget.creditList!.isNotEmpty) {
       // ignore: always_specify_types
-      await Future(() => ref
-          .read(creditProvider.notifier)
-          .setUpdateCredit(updateCredit: widget.creditList!));
+      await Future(() => ref.read(creditProvider.notifier).setUpdateCredit(updateCredit: widget.creditList!));
 
       for (int i = 0; i < widget.creditList!.length; i++) {
         _creditNameTecs[i].text = widget.creditList![i].name.trim();
-        _creditPriceTecs[i].text =
-            widget.creditList![i].price.toString().trim();
+        _creditPriceTecs[i].text = widget.creditList![i].price.toString().trim();
       }
     }
   }
@@ -77,8 +74,8 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final bool inputButtonClicked = ref.watch(appParamProvider
-        .select((AppParamsResponseState value) => value.inputButtonClicked));
+    final bool inputButtonClicked =
+        ref.watch(appParamProvider.select((AppParamsResponseState value) => value.inputButtonClicked));
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -95,23 +92,17 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                 children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('Credit Input'),
-                      Text(widget.date.yyyymm)
-                    ],
+                    children: <Widget>[const Text('Credit Input'), Text(widget.date.yyyymm)],
                   ),
                   ElevatedButton(
                     onPressed: inputButtonClicked
                         ? null
                         : () {
-                            ref
-                                .read(appParamProvider.notifier)
-                                .setInputButtonClicked(flag: true);
+                            ref.read(appParamProvider.notifier).setInputButtonClicked(flag: true);
 
                             _inputCredit();
                           },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
                     child: const Text('input'),
                   ),
                 ],
@@ -123,21 +114,15 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                     Expanded(
                       child: Text(
                         'クレジットカードに紐づいていない当月の詳細情報が存在します。',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.primary),
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        ref
-                            .read(appParamProvider.notifier)
-                            .setInputButtonClicked(flag: false);
+                        ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
-                        ref
-                            .read(appParamProvider.notifier)
-                            .setCreditBlankDefaultMap();
+                        ref.read(appParamProvider.notifier).setCreditBlankDefaultMap();
 
                         CreditDialog(
                           context: context,
@@ -145,13 +130,11 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                             isar: widget.isar,
                             date: widget.date,
                             creditList: widget.creditList,
-                            creditBlankCreditDetailList:
-                                widget.creditBlankCreditDetailList,
+                            creditBlankCreditDetailList: widget.creditBlankCreditDetailList,
                           ),
                         );
                       },
-                      child: Icon(Icons.info_outline,
-                          color: Colors.greenAccent.withOpacity(0.6)),
+                      child: Icon(Icons.info_outline, color: Colors.greenAccent.withOpacity(0.6)),
                     ),
                   ],
                 ),
@@ -178,12 +161,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
       list.add(DecoratedBox(
         decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                blurRadius: 24,
-                spreadRadius: 16,
-                color: Colors.black.withOpacity(0.2))
-          ],
+          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 24, spreadRadius: 16, color: Colors.black.withOpacity(0.2))],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
@@ -226,14 +204,12 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () => _showDP(pos: i),
-                                child: Icon(Icons.calendar_month,
-                                    color: Colors.greenAccent.withOpacity(0.6)),
+                                child: Icon(Icons.calendar_month, color: Colors.greenAccent.withOpacity(0.6)),
                               ),
                               const SizedBox(width: 10),
                               SizedBox(
                                   width: context.screenSize.width / 6,
-                                  child: Text(date,
-                                      style: const TextStyle(fontSize: 10))),
+                                  child: Text(date, style: const TextStyle(fontSize: 10))),
                             ],
                           ),
                           GestureDetector(
@@ -242,8 +218,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
 
                               _clearOneBox(pos: i);
                             },
-                            child: const Icon(Icons.close,
-                                color: Colors.redAccent),
+                            child: const Icon(Icons.close, color: Colors.redAccent),
                           ),
                         ],
                       ),
@@ -252,20 +227,16 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                           Expanded(
                             child: TextField(
                               controller: _creditNameTecs[i],
-                              decoration: const InputDecoration(
-                                  labelText: 'クレジット名(15文字以内)'),
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.white),
-                              onTapOutside: (PointerDownEvent event) =>
-                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              decoration: const InputDecoration(labelText: 'クレジット名(15文字以内)'),
+                              style: const TextStyle(fontSize: 13, color: Colors.white),
+                              onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (String value) {
                                 if (value != '') {
-                                  ref
-                                      .read(creditProvider.notifier)
-                                      .setCreditName(
-                                          pos: i, name: value.trim());
+                                  ref.read(creditProvider.notifier).setCreditName(pos: i, name: value.trim());
                                 }
                               },
+                              focusNode: focusNodeList[i],
+                              onTap: () => context.showKeyboard(focusNodeList[i]),
                             ),
                           ),
                         ],
@@ -276,20 +247,16 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                             child: TextField(
                               keyboardType: TextInputType.number,
                               controller: _creditPriceTecs[i],
-                              decoration:
-                                  const InputDecoration(labelText: '金額(10桁以内)'),
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.white),
-                              onTapOutside: (PointerDownEvent event) =>
-                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              decoration: const InputDecoration(labelText: '金額(10桁以内)'),
+                              style: const TextStyle(fontSize: 13, color: Colors.white),
+                              onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
                               onChanged: (String value) {
                                 if (value != '') {
-                                  ref
-                                      .read(creditProvider.notifier)
-                                      .setCreditPrice(
-                                          pos: i, price: value.trim().toInt());
+                                  ref.read(creditProvider.notifier).setCreditPrice(pos: i, price: value.trim().toInt());
                                 }
                               },
+                              focusNode: focusNodeList[i + 100],
+                              onTap: () => context.showKeyboard(focusNodeList[i + 100]),
                             ),
                           ),
                         ],
@@ -328,9 +295,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
     );
 
     if (selectedDate != null) {
-      await ref
-          .read(creditProvider.notifier)
-          .setCreditDate(pos: pos, date: selectedDate.yyyymmdd);
+      await ref.read(creditProvider.notifier).setCreditDate(pos: pos, date: selectedDate.yyyymmdd);
     }
   }
 
@@ -395,8 +360,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
           <Object>[element.name, 15],
           <int>[element.price, 10]
         ]) {
-          if (!checkInputValueLengthCheck(
-              value: element2[0].toString(), length: element2[1] as int)) {
+          if (!checkInputValueLengthCheck(value: element2[0].toString(), length: element2[1] as int)) {
             errFlg = true;
           }
         }
@@ -409,29 +373,21 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
         Duration.zero,
         () {
           if (mounted) {
-            return error_dialog(
-                context: context, title: '登録できません。', content: '値を正しく入力してください。');
+            return error_dialog(context: context, title: '登録できません。', content: '値を正しく入力してください。');
           }
         },
       );
 
-      await ref
-          .read(appParamProvider.notifier)
-          .setInputButtonClicked(flag: false);
+      await ref.read(appParamProvider.notifier).setInputButtonClicked(flag: false);
 
       return;
     }
 
     //---------------------------//
-    final IsarCollection<Credit> creditsCollection =
-        CreditsRepository().getCollection(isar: widget.isar);
-    final List<Credit> getCredits = await creditsCollection
-        .filter()
-        .dateStartsWith(widget.date.yyyymm)
-        .findAll();
+    final IsarCollection<Credit> creditsCollection = CreditsRepository().getCollection(isar: widget.isar);
+    final List<Credit> getCredits = await creditsCollection.filter().dateStartsWith(widget.date.yyyymm).findAll();
     if (getCredits.isNotEmpty) {
-      await CreditsRepository()
-          .deleteCreditList(isar: widget.isar, creditList: getCredits);
+      await CreditsRepository().deleteCreditList(isar: widget.isar, creditList: getCredits);
     }
     //---------------------------//
 
@@ -440,15 +396,13 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
       final Map<String, dynamic> param = <String, dynamic>{};
       param['date'] = element.date;
       param['price'] = element.price.toString();
-      CreditDetailsRepository()
-          .getCreditDetailListByDateAndPrice(isar: widget.isar, param: param)
-          .then((List<CreditDetail>? value) async => widget.isar.writeTxn(
-              () async => value?.forEach((CreditDetail element2) =>
-                  CreditDetailsRepository().updateCreditDetail(
-                      isar: widget.isar,
-                      creditDetail: element2
-                        ..creditDate = ''
-                        ..creditPrice = ''))));
+      CreditDetailsRepository().getCreditDetailListByDateAndPrice(isar: widget.isar, param: param).then(
+          (List<CreditDetail>? value) async => widget.isar.writeTxn(
+              () async => value?.forEach((CreditDetail element2) => CreditDetailsRepository().updateCreditDetail(
+                  isar: widget.isar,
+                  creditDetail: element2
+                    ..creditDate = ''
+                    ..creditPrice = ''))));
     }
     //---------------------------//
 
@@ -467,8 +421,7 @@ class _CreditInputAlertState extends ConsumerState<CreditInputAlert> {
                   context,
                   // ignore: inference_failure_on_instance_creation, always_specify_types
                   MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        HomeScreen(isar: widget.isar),
+                    builder: (BuildContext context) => HomeScreen(isar: widget.isar),
                   ),
                 );
               }

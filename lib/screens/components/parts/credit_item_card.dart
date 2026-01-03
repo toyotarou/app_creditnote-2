@@ -38,7 +38,7 @@ class CreditItemCard extends StatelessWidget {
           Expanded(child: Text(name, style: TextStyle(color: Color(colorCode.toInt())), maxLines: 1, overflow: TextOverflow.ellipsis)),
           const SizedBox(width: 10),
           Container(
-            width: context.screenSize.width * 0.3,
+            width: context.screenSize.width * 0.35,
             alignment: Alignment.topRight,
             child: Row(
               children: <Widget>[

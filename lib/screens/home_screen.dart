@@ -16,7 +16,7 @@ import '../repository/credits_repository.dart';
 import '../repository/subscription_items_repository.dart';
 import '../state/app_params/app_params_notifier.dart';
 import '../state/app_params/app_params_response_state.dart';
-import 'components/categories_price_list_alert.dart';
+import 'components/categories_price_tab_alert.dart';
 import 'components/config_setting_alert.dart';
 import 'components/credit_detail_edit_alert.dart';
 import 'components/credit_detail_input_alert.dart';
@@ -31,7 +31,7 @@ import 'components/parts/credit_dialog.dart';
 import 'components/parts/error_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
 import 'components/same_item_list_alert.dart';
-import 'components/yearly_credit_category_list_alert.dart';
+import 'components/yearly_credit_category_tab_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -126,7 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                               if (creditDetailList!.isNotEmpty) {
                                 CreditDialog(
                                   context: context,
-                                  widget: YearlyCreditCategoryListAlert(
+                                  widget: YearlyCreditCategoryTabAlert(
                                     isar: widget.isar,
                                     creditItemList: creditItemList,
                                     creditDetailList: creditDetailList,
@@ -564,7 +564,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               onPressed: () {
                 CreditDialog(
                   context: context,
-                  widget: CategoriesPriceListAlert(
+                  widget: CategoriesPriceTabAlert(
                     isar: widget.isar,
                     date: DateTime.parse('$homeListSelectedYearmonth-01 00:00:00'),
                     configList: configList,

@@ -17,8 +17,8 @@ class TabInfo {
   Widget widget;
 }
 
-class CategoriesPriceListAlert extends HookConsumerWidget {
-  CategoriesPriceListAlert(
+class CategoriesPriceTabAlert extends HookConsumerWidget {
+  CategoriesPriceTabAlert(
       {super.key,
       required this.isar,
       required this.date,
@@ -58,8 +58,7 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             //-------------------------//これを消すと「←」が出てくる（消さない）
-            leading: const Icon(Icons.check_box_outline_blank,
-                color: Colors.transparent),
+            leading: const Icon(Icons.check_box_outline_blank, color: Colors.transparent),
             //-------------------------//これを消すと「←」が出てくる（消さない）
 
             bottom: TabBar(
@@ -89,17 +88,14 @@ class CategoriesPriceListAlert extends HookConsumerWidget {
     tabs.clear();
 
     final Map<String, String> settingConfigMap = <String, String>{};
-    configList?.forEach(
-        (Config element) => settingConfigMap[element.configKey] = element.configValue);
+    configList?.forEach((Config element) => settingConfigMap[element.configKey] = element.configValue);
 
     final List<String> ymList = <String>[];
-    if (settingConfigMap['start_yearmonth'] != null &&
-        settingConfigMap['start_yearmonth'] != '') {
+    if (settingConfigMap['start_yearmonth'] != null && settingConfigMap['start_yearmonth'] != '') {
       final List<String> exYearmonth = settingConfigMap['start_yearmonth']!.split('-');
       if (exYearmonth.length > 1) {
         if (exYearmonth[0] != '' && exYearmonth[1] != '') {
-          final DateTime firstDate =
-              DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
+          final DateTime firstDate = DateTime(exYearmonth[0].toInt(), exYearmonth[1].toInt());
           final int diff = DateTime.now().difference(firstDate).inDays;
           final List<String> yearmonthList = <String>[];
           for (int i = 0; i <= diff; i++) {

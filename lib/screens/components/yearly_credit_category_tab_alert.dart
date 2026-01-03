@@ -12,8 +12,8 @@ class TabInfo {
   Widget widget;
 }
 
-class YearlyCreditCategoryListAlert extends StatefulWidget {
-  const YearlyCreditCategoryListAlert({
+class YearlyCreditCategoryTabAlert extends StatefulWidget {
+  const YearlyCreditCategoryTabAlert({
     super.key,
     required this.isar,
     required this.creditItemList,
@@ -27,10 +27,10 @@ class YearlyCreditCategoryListAlert extends StatefulWidget {
   final List<String> selectedYearmonthList;
 
   @override
-  State<YearlyCreditCategoryListAlert> createState() => _YearlyCreditCategoryListAlertState();
+  State<YearlyCreditCategoryTabAlert> createState() => _YearlyCreditCategoryTabAlertState();
 }
 
-class _YearlyCreditCategoryListAlertState extends State<YearlyCreditCategoryListAlert> {
+class _YearlyCreditCategoryTabAlertState extends State<YearlyCreditCategoryTabAlert> {
   final List<TabInfo> tabs = <TabInfo>[];
 
   ///

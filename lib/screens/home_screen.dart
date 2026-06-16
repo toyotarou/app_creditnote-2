@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
@@ -589,7 +588,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) =>
-                DefaultTextStyle(style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
+                DefaultTextStyle(style: const TextStyle(fontFamily: 'KiwiMaru', fontSize: 12), child: list[index]),
             childCount: list.length,
           ),
         ),
@@ -914,7 +913,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) =>
-                DefaultTextStyle(style: GoogleFonts.kiwiMaru(fontSize: 12), child: list[index]),
+                DefaultTextStyle(style: const TextStyle(fontFamily: 'KiwiMaru', fontSize: 12), child: list[index]),
             childCount: list.length,
           ),
         ),

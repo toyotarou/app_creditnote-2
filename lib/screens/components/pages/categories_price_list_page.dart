@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 
 import '../../../collections/credit_detail.dart';
@@ -32,7 +31,7 @@ class _CategoriesPriceListPageState extends State<CategoriesPriceListPage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: DefaultTextStyle(
-          style: GoogleFonts.kiwiMaru(fontSize: 12),
+          style: const TextStyle(fontFamily: 'KiwiMaru', fontSize: 12),
           child: Column(
             children: <Widget>[
               const SizedBox(height: 10),

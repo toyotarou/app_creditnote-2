@@ -44,37 +44,54 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   List<FocusNode> focusNodeList = <FocusNode>[];
 
+  final ScrollController _listScrollController = ScrollController();
+
   ///
   @override
   void initState() {
     super.initState();
 
-    for (final CreditItem element in widget.creditItemList) {
-      final String colorCode = (element.color != '') ? element.color : '0xffffffff';
-
-      creditItemDDItemList.add(
-        DragAndDropItem(
-          child: CreditItemCard(
-            key: Key(element.id.toString()),
-            name: element.name,
-            deleteButtonPress: () => _showDeleteDialog(id: element.id),
-            colorPickerButtonPress: () => _showColorPickerDialog(id: element.id),
-            colorCode: colorCode,
-            isar: widget.isar,
-            creditItemCountMap: widget.creditItemCountMap,
-          ),
-        ),
-      );
-
-      creditItemColorMap[element.id] = element.color;
-
-      creditItemNameMap[element.id] = element.name;
-    }
+    widget.creditItemList.forEach(_addCreditItemToList);
 
     ddList.add(DragAndDropList(children: creditItemDDItemList));
 
     // ignore: always_specify_types
     focusNodeList = List.generate(100, (int index) => FocusNode());
+  }
+
+  ///
+  @override
+  void dispose() {
+    _creditItemEditingController.dispose();
+    _listScrollController.dispose();
+    for (final FocusNode element in focusNodeList) {
+      element.dispose();
+    }
+
+    super.dispose();
+  }
+
+  ///
+  void _addCreditItemToList(CreditItem element) {
+    final String colorCode = (element.color != '') ? element.color : '0xffffffff';
+
+    creditItemDDItemList.add(
+      DragAndDropItem(
+        child: CreditItemCard(
+          key: Key(element.id.toString()),
+          name: element.name,
+          deleteButtonPress: () => _showDeleteDialog(id: element.id),
+          colorPickerButtonPress: () => _showColorPickerDialog(id: element.id),
+          colorCode: colorCode,
+          isar: widget.isar,
+          creditItemCountMap: widget.creditItemCountMap,
+        ),
+      ),
+    );
+
+    creditItemColorMap[element.id] = element.color;
+
+    creditItemNameMap[element.id] = element.name;
   }
 
   ///
@@ -139,6 +156,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                     removeTop: true,
                     child: DragAndDropLists(
                       children: ddList,
+                      scrollController: _listScrollController,
                       onItemReorder: _itemReorder,
                       onListReorder: _listReorder,
 
@@ -228,7 +246,7 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
     final CreditItem creditItem = CreditItem()
       ..name = _creditItemEditingController.text.trim()
-      ..order = widget.creditItemList.length + 1
+      ..order = creditItemDDItemList.length + 1
       ..color = '0xffffffff';
 
     // ignore: always_specify_types
@@ -238,9 +256,25 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
         .then((value) {
       _creditItemEditingController.clear();
 
-      if (mounted) {
-        Navigator.pop(context);
+      if (!mounted) {
+        return;
       }
+
+      setState(() {
+        _addCreditItemToList(creditItem);
+        ddList = <DragAndDropList>[DragAndDropList(children: creditItemDDItemList)];
+      });
+
+      // ignore: always_specify_types
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_listScrollController.hasClients) {
+          _listScrollController.animateTo(
+            _listScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
     });
   }
 
@@ -435,12 +469,19 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _updateColorCode({required int id, required String color}) async {
-    await widget.isar.writeTxn(() async {
-      await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((CreditItem? value) async {
-        value!.color = color;
+    print(color);
 
-        await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);
-      });
-    });
+    //
+    //
+    // await widget.isar.writeTxn(() async {
+    //   await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((CreditItem? value) async {
+    //     value!.color = color;
+    //
+    //     await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);
+    //   });
+    // });
+    //
+    //
+    //
   }
 }

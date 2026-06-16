@@ -416,7 +416,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                 pickerColor: mycolor,
                 onColorChanged: (Color color) async {
                   mycolor = color;
-                  final String colorCode = color.toString().replaceAll('Color(', '').replaceAll(')', '');
+
+                  // BlockPicker は availableColorsList の中からしか選べないため、
+                  // Color.toString() をパースせず colorCodeList から対応する元の16進文字列を引く。
+                  // (Flutter のバージョンによって Color.toString() の形式が変わり、
+                  //  'Color(0xff...)' 形式の文字列パースに依存できなくなったため)
+                  final int colorIndex = availableColorsList.indexOf(color);
+                  final String colorCode = (colorIndex != -1) ? colorCodeList[colorIndex] : colorCodeList[0];
+
                   // ignore: always_specify_types
                   await _updateColorCode(id: id, color: colorCode)
                       // ignore: always_specify_types
@@ -442,14 +449,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                child: CircleAvatar(radius: 20, backgroundColor: Color(e.toInt()).withOpacity(0.3)),
+                                child: CircleAvatar(radius: 12, backgroundColor: Color(e.toInt()).withOpacity(0.3)),
                               ),
                               Positioned(
                                 bottom: 0,
                                 right: 0,
                                 child: Text(
                                   (usingColorCode.contains(e)) ? 'USING' : '',
-                                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6)),
+                                  style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6)),
                                 ),
                               ),
                             ],
@@ -469,19 +476,14 @@ class _CreditItemInputAlertState extends ConsumerState<CreditItemInputAlert> {
 
   ///
   Future<void> _updateColorCode({required int id, required String color}) async {
-    print(color);
+    await widget.isar.writeTxn(() async {
+      await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((CreditItem? value) async {
+        value!.color = color;
 
-    //
-    //
-    // await widget.isar.writeTxn(() async {
-    //   await CreditItemsRepository().getCreditItem(isar: widget.isar, id: id).then((CreditItem? value) async {
-    //     value!.color = color;
-    //
-    //     await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);
-    //   });
-    // });
-    //
-    //
-    //
+        await CreditItemsRepository().updateCreditItem(isar: widget.isar, creditItem: value);
+      });
+    });
+
+    creditItemColorMap[id] = color;
   }
 }

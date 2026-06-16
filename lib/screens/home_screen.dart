@@ -30,6 +30,7 @@ import 'components/parts/credit_dialog.dart';
 import 'components/parts/error_dialog.dart';
 import 'components/parts/menu_head_icon.dart';
 import 'components/same_item_list_alert.dart';
+import 'components/table_data_delete_alert.dart';
 import 'components/yearly_credit_category_tab_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -311,6 +312,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                       margin: const EdgeInsets.all(5),
                       child: const Text('データインポート'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            GestureDetector(
+              onTap: () => CreditDialog(context: context, widget: TableDataDeleteAlert(isar: widget.isar)),
+              child: Row(
+                children: <Widget>[
+                  const MenuHeadIcon(),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                      margin: const EdgeInsets.all(5),
+                      child: const Text('テーブルデータ削除'),
                     ),
                   ),
                 ],
